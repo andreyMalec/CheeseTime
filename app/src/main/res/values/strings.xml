@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">CheeseTime</string>
+
+    <string name="authorization">Authorization</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
 </resources>
