@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="recipes">
+        <item>Parmesan</item>
+        <item>Brie</item>
+        <item>Camembert</item>
+        <item>Gouda</item>
+        <item>Cheddar</item>
+    </string-array>
+</resources>

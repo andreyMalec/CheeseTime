@@ -6,4 +6,21 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
+
+    <string name="toolbar_manage_cheese">Manage cheese</string>
+
+    <string name="cheese_name">Name:</string>
+    <string name="cheese_date">Maturation date:</string>
+    <string name="cheese_recipe">Recipe:</string>
+    <string name="cheese_comment">Comment:</string>
+    <string name="cheese_milk">Milk</string>
+    <string name="cheese_composition">Composition</string>
+    <string name="cheese_stages">Stages</string>
+    <string name="cheese_color">Badge color</string>
+
+    <string name="milk_type">Type:</string>
+    <string name="milk_volume">Volume:</string>
+    <string name="milk_age">Age:</string>
+
+    <string name="n_stage">%1$d stage:</string>
 </resources>
