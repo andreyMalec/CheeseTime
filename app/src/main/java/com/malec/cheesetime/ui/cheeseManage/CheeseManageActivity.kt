@@ -1,13 +1,16 @@
-package com.malec.cheesetime.ui
+package com.malec.cheesetime.ui.cheeseManage
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 import android.os.Handler
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AnimationUtils
 import android.widget.LinearLayout
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -15,10 +18,24 @@ import androidx.core.view.children
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.malec.cheesetime.R
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_cheese_manage.*
+import javax.inject.Inject
 
-class CheeseManageActivity : AppCompatActivity() {
-    private var viewModel: CheeseManageViewModel? = null
+class CheeseManageActivity : AppCompatActivity(), HasAndroidInjector {
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: CheeseManageViewModel by viewModels {
+        viewModelFactory
+    }
+
+    override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 
     private var oldToolbarColor = 0
 
@@ -40,11 +57,32 @@ class CheeseManageActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_cheese_manage, menu)
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.saveButton -> saveCheese()
+            R.id.deleteButton -> deleteCheese()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun saveCheese() {
+
+    }
+
+    private fun deleteCheese() {
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cheese_manage)
-
-        viewModel = ViewModelProvider(this).get(CheeseManageViewModel::class.java)
 
         initViewModelListeners()
         initColorClickListener()
@@ -54,7 +92,7 @@ class CheeseManageActivity : AppCompatActivity() {
 
     private fun initViewModelListeners() {
 
-        viewModel?.badgeColor?.observe(this, Observer { color ->
+        viewModel.badgeColor.observe(this, Observer { color ->
             Handler().postDelayed({
                 animateToolbarColorChange(color)
             }, 200)
@@ -130,7 +168,7 @@ class CheeseManageActivity : AppCompatActivity() {
             child.setOnClickListener {
                 if (it is CardView) {
                     val newColor = it.cardBackgroundColor.defaultColor
-                    viewModel?.badgeColor?.value = newColor
+                    viewModel.badgeColor.value = newColor
                 }
             }
         }
