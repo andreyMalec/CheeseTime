@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#efca34</color>
     <color name="colorAccent">#333</color>
     <color name="backgroundLight">#FFF9C0</color>
+    <color name="colorError">#FF575D</color>
+    <color name="colorWhite">#FFF</color>
+
 
     <color name="badge1">#FFA114</color>
     <color name="badge2">#FFEF58</color>

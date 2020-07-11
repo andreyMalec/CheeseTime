@@ -6,11 +6,13 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
+    <string name="empty_fields_error">Fields can\'t be empty</string>
 
     <string name="toolbar_manage_cheese">Manage cheese</string>
 
     <string name="cheese_name">Name:</string>
     <string name="cheese_date">Maturation date:</string>
+    <string name="cheese_date_format">dd/MM/yyyy</string>
     <string name="cheese_recipe">Recipe:</string>
     <string name="cheese_comment">Comment:</string>
     <string name="cheese_milk">Milk</string>

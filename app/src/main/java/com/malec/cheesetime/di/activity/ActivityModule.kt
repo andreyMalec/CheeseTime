@@ -4,6 +4,7 @@ import com.malec.cheesetime.di.module.DbModule
 import com.malec.cheesetime.di.module.NetworkModule
 import com.malec.cheesetime.ui.MainActivity
 import com.malec.cheesetime.ui.cheeseManage.CheeseManageActivity
+import com.malec.cheesetime.ui.login.LoginActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,8 +15,8 @@ abstract class ActivityModule {
     @ContributesAndroidInjector(modules = [FragmentBuildersModule::class])
     abstract fun contributeMainActivity(): MainActivity
 
-//    @ContributesAndroidInjector
-//    abstract fun contributeLoginActivity(): LoginActivity
+    @ContributesAndroidInjector
+    abstract fun contributeLoginActivity(): LoginActivity
 
     @ContributesAndroidInjector
     abstract fun contributeCheeseManageActivity(): CheeseManageActivity

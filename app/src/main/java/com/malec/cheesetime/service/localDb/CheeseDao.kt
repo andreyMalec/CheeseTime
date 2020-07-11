@@ -13,6 +13,9 @@ interface CheeseDao {
     @Query("SELECT * FROM Cheese")
     fun getAll(): Flow<List<Cheese>>
 
+    @Query("SELECT * FROM Cheese WHERE id = :id")
+    fun getFlowById(id: Long): Flow<Cheese>
+
     @Insert(onConflict = REPLACE)
     fun insert(cheese: Cheese)
 

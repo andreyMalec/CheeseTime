@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AnimationUtils
+import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -22,8 +23,10 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_cheese_manage.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 class CheeseManageActivity : AppCompatActivity(), HasAndroidInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
@@ -73,11 +76,25 @@ class CheeseManageActivity : AppCompatActivity(), HasAndroidInjector {
     }
 
     private fun saveCheese() {
+        val name = nameEditText.text?.toString()?.trim()
+        val date = dateEditText.text?.toString()?.trim()
+        val recipe = recipeSpinner.selectedItem.toString()
+        val comment = commentEditText.text?.toString()?.trim()
+        val milkType = milkTypeEditText.text?.toString()?.trim()
+        val milkVolume = milkVolumeEditText.text?.toString()?.trim()
+        val milkAge = milkAgeEditText.text?.toString()?.trim()
+        val milk = "$milkType;$milkVolume;$milkAge"
+        val composition = compositionEditText.text?.toString()?.trim()
+        var s = ""
+        for (et in stagesParamsLayout.children)
+            s += (et as EditText).text?.toString() + ";"
+        val stages = s.dropLast(1)
 
+        viewModel.checkAndManageCheese(name, date, recipe, comment, milk, composition, stages)
     }
 
     private fun deleteCheese() {
-
+        viewModel.deleteCheese()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

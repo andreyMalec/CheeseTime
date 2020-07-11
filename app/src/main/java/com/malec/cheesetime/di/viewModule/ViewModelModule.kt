@@ -6,6 +6,7 @@ import com.malec.cheesetime.di.module.NetworkModule
 import com.malec.cheesetime.di.module.UserStorageModule
 import com.malec.cheesetime.ui.MainViewModel
 import com.malec.cheesetime.ui.cheeseManage.CheeseManageViewModel
+import com.malec.cheesetime.ui.login.LoginViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -18,6 +19,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MainViewModel::class)
     abstract fun mainViewModel(viewModel: MainViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginViewModel::class)
+    abstract fun loginViewModel(viewModel: LoginViewModel): ViewModel
 
     @Binds
     @IntoMap
