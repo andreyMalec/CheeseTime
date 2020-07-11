@@ -90,7 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/cheese_recipe"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <Spinner
                     android:id="@+id/recipeSpinner"
@@ -277,7 +277,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/cheese_color"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
