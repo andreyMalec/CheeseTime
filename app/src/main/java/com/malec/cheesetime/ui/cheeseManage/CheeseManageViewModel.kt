@@ -1,17 +1,14 @@
 package com.malec.cheesetime.ui.cheeseManage
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.repo.CheeseRepo
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-
 
 @ExperimentalCoroutinesApi
 class CheeseManageViewModel @Inject constructor(
@@ -37,12 +34,6 @@ class CheeseManageViewModel @Inject constructor(
             viewModelScope.launch {
                 repo.deleteById(it)
             }
-        }
-    }
-
-    fun getAll() {
-        viewModelScope.launch {
-            Log.e("test", "testMessage: " + repo.getAll().first())
         }
     }
 
@@ -83,7 +74,8 @@ class CheeseManageViewModel @Inject constructor(
                         milk,
                         composition,
                         stages,
-                        color
+                        color,
+                        {}, {}
                     )
                 else
                     repo.update(

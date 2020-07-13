@@ -15,4 +15,30 @@ data class Cheese(
     val composition: String,
     val stages: String,
     val badgeColor: Int
-)
+) {
+    fun toMap() = mapOf(
+        "id" to id,
+        "name" to name,
+        "date" to date,
+        "recipe" to recipe,
+        "comment" to comment,
+        "milk" to milk,
+        "composition" to composition,
+        "stages" to stages,
+        "badgeColor" to badgeColor
+    )
+}
+
+class CheeseF {
+    val id: Long = 0
+    val name: String = ""
+    val date: Long = 0
+    val recipe: String = ""
+    val comment: String = ""
+    val milk: String = ""
+    val composition: String = ""
+    val stages: String = ""
+    val badgeColor: Int = 0
+
+    fun convert() = Cheese(id, name, date, recipe, comment, milk, composition, stages, badgeColor)
+}

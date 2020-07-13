@@ -10,6 +10,12 @@
 
     <string name="toolbar_manage_cheese">Manage cheese</string>
 
+    <string name="pressAgainExit">Press again to exit</string>
+
+    <string name="tabTaskList">Tasks</string>
+    <string name="tabCheeseList">Cheeses</string>
+    <string name="tabReport">Report</string>
+
     <string name="cheese_name">Name:</string>
     <string name="cheese_date">Maturation date:</string>
     <string name="cheese_date_format">dd/MM/yyyy</string>

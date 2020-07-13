@@ -1,18 +1,28 @@
 package com.malec.cheesetime.repo
 
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestoreSettings
 import com.malec.cheesetime.model.Cheese
-import com.malec.cheesetime.service.localDb.CheeseDao
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 import java.util.*
 
-class CheeseRepo(/*private val api: CheeseApi,*/ private val dao: CheeseDao) {
-    fun getAll(): Flow<List<Cheese>> = dao.getAll()
+@ExperimentalCoroutinesApi
+class CheeseRepo {
+    private val db = FirebaseFirestore.getInstance()
 
-    fun getById(id: Long): Flow<Cheese> = dao.getFlowById(id)
+    init {
+        val settings = firestoreSettings {
+            isPersistenceEnabled = true
+        }
+        db.firestoreSettings = settings
+    }
 
-    suspend fun create(
+    fun getAll(): Flow<List<Cheese>> = TODO()
+
+    fun getById(id: Long): Flow<Cheese> = TODO()
+
+    fun create(
         name: String,
         date: Long,
         recipe: String,
@@ -20,8 +30,10 @@ class CheeseRepo(/*private val api: CheeseApi,*/ private val dao: CheeseDao) {
         milk: String,
         composition: String?,
         stages: String?,
-        badgeColor: Int?
-    ) = withContext(Dispatchers.IO) {
+        badgeColor: Int?,
+        onSuccess: () -> Unit,
+        onFailure: (t: Throwable?) -> Unit
+    ) {
         val time = Calendar.getInstance().timeInMillis
 
         val newCheese = Cheese(
@@ -35,10 +47,11 @@ class CheeseRepo(/*private val api: CheeseApi,*/ private val dao: CheeseDao) {
             stages ?: "",
             badgeColor ?: 0
         )
-        dao.insert(newCheese)
+        db.collection("cheese").add(newCheese)
+            .addOnCompleteListener(dataCompleteListener(onSuccess, onFailure))
     }
 
-    suspend fun update(
+    fun update(
         name: String,
         date: Long,
         recipe: String,
@@ -48,7 +61,7 @@ class CheeseRepo(/*private val api: CheeseApi,*/ private val dao: CheeseDao) {
         stages: String?,
         badgeColor: Int?,
         cheese: Cheese
-    ) = withContext(Dispatchers.IO) {
+    ) {
         val updatedCheese = Cheese(
             cheese.id,
             name,
@@ -60,10 +73,16 @@ class CheeseRepo(/*private val api: CheeseApi,*/ private val dao: CheeseDao) {
             stages ?: "",
             badgeColor ?: 0
         )
-        dao.update(updatedCheese)
+        db.collection("cheese").whereEqualTo("id", cheese.id).get().addOnCompleteListener {
+            val docId = it.result?.documents?.get(0)?.id
+            db.collection("cheese").document(docId.toString()).update(updatedCheese.toMap())
+        }
     }
 
-    suspend fun deleteById(id: Long) = withContext(Dispatchers.IO) {
-        dao.deleteById(id)
+    fun deleteById(id: Long) {
+        db.collection("cheese").whereEqualTo("id", id).get().addOnCompleteListener {
+            val docId = it.result?.documents?.get(0)?.id
+            db.collection("cheese").document(docId.toString()).delete()
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.malec.cheesetime.ui.login
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -9,12 +8,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.malec.cheesetime.R
-import com.malec.cheesetime.ui.MainActivity
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -24,6 +24,11 @@ class LoginActivity : AppCompatActivity(), HasAndroidInjector {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var navHolder: NavigatorHolder
+
+    private val navigator = SupportAppNavigator(this, -1)
 
     private val viewModel: LoginViewModel by viewModels {
         viewModelFactory
@@ -44,14 +49,6 @@ class LoginActivity : AppCompatActivity(), HasAndroidInjector {
             if (message != null) {
                 showError(message)
                 viewModel.isLoginError.value = null
-            }
-        })
-
-        viewModel.isLoginSuccess.observe(this, Observer { isSuccess ->
-            if (isSuccess) {
-                val i = Intent(this, MainActivity::class.java)
-                startActivity(i)
-                finish()
             }
         })
     }
@@ -75,5 +72,15 @@ class LoginActivity : AppCompatActivity(), HasAndroidInjector {
             val pass = passEditText.text?.toString()?.trim()
             viewModel.register(email, pass)
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        navHolder.removeNavigator()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        navHolder.setNavigator(navigator)
     }
 }
