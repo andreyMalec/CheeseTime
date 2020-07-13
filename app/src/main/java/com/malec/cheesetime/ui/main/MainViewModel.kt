@@ -36,6 +36,10 @@ class MainViewModel @Inject constructor(
         router.replaceScreen(Screens.ReportsScreen)
     }
 
+    fun onScanClick() {
+
+    }
+
     fun onBackPressed() {
         if (pressAgain) {
             pressAgain = false

@@ -11,6 +11,7 @@
     <string name="toolbar_manage_cheese">Manage cheese</string>
 
     <string name="pressAgainExit">Press again to exit</string>
+    <string name="search_hint">Search…</string>
 
     <string name="tabTaskList">Tasks</string>
     <string name="tabCheeseList">Cheeses</string>

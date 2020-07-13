@@ -1,9 +1,13 @@
 package com.malec.cheesetime.ui.main
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
@@ -35,7 +39,26 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         R.id.navHostFragment
     )
 
+    private var searchView: SearchView? = null
+
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+
+        searchView = menu?.findItem(R.id.appBarSearch)?.actionView as SearchView?
+        initSearchView()
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.scanButton -> viewModel.onScanClick()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +66,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
         initViewModelListeners()
         initTabHost()
+        initToolbar()
     }
 
     private fun initViewModelListeners() {
@@ -66,6 +90,31 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
                     1 -> viewModel.onCheeseListClick()
                     2 -> viewModel.onReportsClick()
                 }
+            }
+        })
+    }
+
+    private fun initToolbar() {
+        toolbar.setTitle(R.string.app_name)
+        setSupportActionBar(toolbar)
+    }
+
+    private fun initSearchView() {
+        searchView?.findViewById<View>(androidx.appcompat.R.id.search_plate)
+            ?.setBackgroundResource(android.R.color.transparent)
+        searchView?.queryHint = getString(R.string.search_hint)
+
+        initSearchViewListener()
+    }
+
+    private fun initSearchViewListener() {
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?) = false
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+//                viewModel.searchQuery.value = newText
+
+                return false
             }
         })
     }

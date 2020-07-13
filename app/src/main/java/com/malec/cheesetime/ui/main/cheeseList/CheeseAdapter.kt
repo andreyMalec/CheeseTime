@@ -52,7 +52,7 @@ class CheeseAdapter(private val vm: CheeseAction) :
         val binding: ItemCheeseBinding? = DataBindingUtil.bind(view)
 
         init {
-            binding?.root?.setOnClickListener { v ->
+            binding?.root?.setOnClickListener {
                 binding.cheese?.let {
                     vm.editCheese(it)
                 }
