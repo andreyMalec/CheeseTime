@@ -8,7 +8,7 @@ import com.malec.cheesetime.ui.cheeseManage.CheeseManageViewModel
 import com.malec.cheesetime.ui.login.LoginViewModel
 import com.malec.cheesetime.ui.main.MainViewModel
 import com.malec.cheesetime.ui.main.cheeseList.CheeseListViewModel
-import com.malec.cheesetime.ui.main.report.ReportViewModel
+import com.malec.cheesetime.ui.main.report.ReportsViewModel
 import com.malec.cheesetime.ui.main.taskList.TaskListViewModel
 import dagger.Binds
 import dagger.Module
@@ -45,8 +45,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ReportViewModel::class)
-    abstract fun reportViewModel(viewModel: ReportViewModel): ViewModel
+    @ViewModelKey(ReportsViewModel::class)
+    abstract fun reportsViewModel(viewModel: ReportsViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

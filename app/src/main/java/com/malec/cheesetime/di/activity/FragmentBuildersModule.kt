@@ -1,7 +1,7 @@
 package com.malec.cheesetime.di.activity
 
 import com.malec.cheesetime.ui.main.cheeseList.CheeseListFragment
-import com.malec.cheesetime.ui.main.report.ReportFragment
+import com.malec.cheesetime.ui.main.report.ReportsFragment
 import com.malec.cheesetime.ui.main.taskList.TaskListFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -17,5 +17,5 @@ abstract class FragmentBuildersModule {
     abstract fun contributeCheeseListFragment(): CheeseListFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeReportFragment(): ReportFragment
+    abstract fun contributeReportsFragment(): ReportsFragment
 }

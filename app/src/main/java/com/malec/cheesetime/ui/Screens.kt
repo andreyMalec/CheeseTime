@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import com.malec.cheesetime.ui.login.LoginActivity
 import com.malec.cheesetime.ui.main.MainActivity
 import com.malec.cheesetime.ui.main.cheeseList.CheeseListFragment
-import com.malec.cheesetime.ui.main.report.ReportFragment
+import com.malec.cheesetime.ui.main.report.ReportsFragment
 import com.malec.cheesetime.ui.main.taskList.TaskListFragment
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
@@ -23,9 +23,9 @@ object Screens {
         }
     }
 
-    object ReportScreen : SupportAppScreen() {
+    object ReportsScreen : SupportAppScreen() {
         override fun getFragment(): Fragment? {
-            return ReportFragment()
+            return ReportsFragment()
         }
     }
 

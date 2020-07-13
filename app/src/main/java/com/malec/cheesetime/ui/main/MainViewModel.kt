@@ -32,8 +32,8 @@ class MainViewModel @Inject constructor(
         router.replaceScreen(Screens.CheeseListScreen)
     }
 
-    fun onReportClick() {
-        router.replaceScreen(Screens.ReportScreen)
+    fun onReportsClick() {
+        router.replaceScreen(Screens.ReportsScreen)
     }
 
     fun onBackPressed() {

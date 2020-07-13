@@ -11,11 +11,11 @@ import com.malec.cheesetime.R
 import com.malec.cheesetime.di.Injectable
 import javax.inject.Inject
 
-class ReportFragment : Fragment(), Injectable {
+class ReportsFragment : Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val viewModel: ReportViewModel by viewModels {
+    private val viewModel: ReportsViewModel by viewModels {
         viewModelFactory
     }
 

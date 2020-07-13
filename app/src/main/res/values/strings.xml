@@ -14,7 +14,7 @@
 
     <string name="tabTaskList">Tasks</string>
     <string name="tabCheeseList">Cheeses</string>
-    <string name="tabReport">Report</string>
+    <string name="tabReports">Reports</string>
 
     <string name="cheese_name">Name:</string>
     <string name="cheese_date">Maturation date:</string>

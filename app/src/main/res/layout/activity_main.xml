@@ -44,7 +44,7 @@
                 android:id="@+id/tabReport"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tabReport" />
+                android:text="@string/tabReports" />
         </com.google.android.material.tabs.TabLayout>
 
     </com.google.android.material.appbar.AppBarLayout>

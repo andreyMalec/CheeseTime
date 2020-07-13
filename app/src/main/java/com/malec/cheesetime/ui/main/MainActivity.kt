@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
                 when (tab?.position) {
                     0 -> viewModel.onTaskListClick()
                     1 -> viewModel.onCheeseListClick()
-                    2 -> viewModel.onReportClick()
+                    2 -> viewModel.onReportsClick()
                 }
             }
         })
