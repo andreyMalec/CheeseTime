@@ -1,18 +1,22 @@
 package com.malec.cheesetime.ui.cheeseManage
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.repo.CheeseRepo
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import ru.terrakok.cicerone.Router
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 class CheeseManageViewModel @Inject constructor(
-    private val repo: CheeseRepo
+    private val repo: CheeseRepo,
+    private val router: Router
 ) : ViewModel() {
 
     private val _isManageError = MutableLiveData(false)
@@ -21,12 +25,9 @@ class CheeseManageViewModel @Inject constructor(
 
     val badgeColor = MutableLiveData<Int>()
     val cheeseId = MutableLiveData<Long>(null)
-    val cheese: LiveData<Cheese>
+    val cheese = MutableLiveData<Cheese>(null)
 
     init {
-        cheese = cheeseId.asFlow().flatMapLatest { id ->
-            repo.getById(id)
-        }.asLiveData()
     }
 
     fun deleteCheese() {
@@ -51,7 +52,7 @@ class CheeseManageViewModel @Inject constructor(
             return
         } else {
             val regex =
-                Regex("^(?:(?:(?:0?[13578]|1[02])(\\/|-|\\.)31)\\1|(?:(?:0?[1,3-9]|1[0-2])(\\/|-|\\.)(?:29|30)\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})\$|^(?:0?2(\\/|-|\\.)29\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))\$|^(?:(?:0?[1-9])|(?:1[0-2]))(\\/|-|\\.)(?:0?[1-9]|1\\d|2[0-8])\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})\$")
+                Regex("^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[13-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})\$|^(?:29(\\/|-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))\$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})\$")
             if (!date.matches(regex)) {
                 _isManageError.value = true
                 return

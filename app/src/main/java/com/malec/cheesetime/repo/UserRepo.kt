@@ -1,5 +1,7 @@
 package com.malec.cheesetime.repo
 
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 
 class UserRepo {
@@ -25,5 +27,15 @@ class UserRepo {
     ) {
         auth.signInWithEmailAndPassword(email, pass)
             .addOnCompleteListener(authCompleteListener(onSuccess, onFailure))
+    }
+
+    private fun authCompleteListener(
+        onSuccess: () -> Unit,
+        onFailure: (t: Throwable?) -> Unit
+    ) = OnCompleteListener<AuthResult> {
+        if (it.isSuccessful)
+            onSuccess()
+        else
+            onFailure(it.exception)
     }
 }

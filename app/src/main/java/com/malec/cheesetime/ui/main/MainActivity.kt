@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         initViewModelListeners()
         initTabHost()
         initToolbar()
+        initFAClickListener()
     }
 
     private fun initViewModelListeners() {
@@ -117,6 +118,12 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
                 return false
             }
         })
+    }
+
+    private fun initFAClickListener() {
+        addFAB.setOnClickListener {
+            viewModel.onFABClick()
+        }
     }
 
     override fun onPause() {

@@ -93,6 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:backgroundTint="@color/colorPrimaryDark"
+                android:enabled="false"
                 android:text="@string/register"
                 android:textColor="@color/colorPrimary" />
         </LinearLayout>

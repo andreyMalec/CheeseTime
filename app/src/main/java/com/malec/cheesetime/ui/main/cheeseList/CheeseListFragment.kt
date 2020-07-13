@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.malec.cheesetime.R
 import com.malec.cheesetime.di.Injectable
 import kotlinx.android.synthetic.main.fragment_cheese_list.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 class CheeseListFragment : Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -34,7 +36,12 @@ class CheeseListFragment : Fragment(), Injectable {
 
         viewModel.cheeseList.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
+            swipeRefresh.isRefreshing = false
         })
+
+        swipeRefresh.setOnRefreshListener {
+            viewModel.update()
+        }
     }
 
     override fun onCreateView(
