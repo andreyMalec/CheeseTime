@@ -45,10 +45,10 @@ class LoginActivity : AppCompatActivity(), HasAndroidInjector {
     }
 
     private fun initViewModelListeners() {
-        viewModel.isLoginError.observe(this, Observer { message ->
+        viewModel.loginError.observe(this, Observer { message ->
             if (message != null) {
                 showError(message)
-                viewModel.isLoginError.value = null
+                viewModel.loginError.value = null
             }
         })
     }

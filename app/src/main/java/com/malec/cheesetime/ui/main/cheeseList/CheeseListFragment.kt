@@ -44,6 +44,11 @@ class CheeseListFragment : Fragment(), Injectable {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.update()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

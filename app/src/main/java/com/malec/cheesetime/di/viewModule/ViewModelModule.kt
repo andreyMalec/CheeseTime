@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.malec.cheesetime.di.module.NetworkModule
 import com.malec.cheesetime.di.module.UserStorageModule
-import com.malec.cheesetime.ui.cheeseManage.CheeseManageViewModel
 import com.malec.cheesetime.ui.login.LoginViewModel
 import com.malec.cheesetime.ui.main.MainViewModel
 import com.malec.cheesetime.ui.main.cheeseList.CheeseListViewModel
+import com.malec.cheesetime.ui.main.cheeseManage.CheeseManageViewModel
 import com.malec.cheesetime.ui.main.report.ReportsViewModel
 import com.malec.cheesetime.ui.main.taskList.TaskListViewModel
 import dagger.Binds

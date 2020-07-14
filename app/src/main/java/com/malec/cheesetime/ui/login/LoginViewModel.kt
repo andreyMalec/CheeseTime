@@ -15,7 +15,7 @@ class LoginViewModel @Inject constructor(
     private val router: Router
 ) : ViewModel() {
 
-    val isLoginError = MutableLiveData<String>(null)
+    val loginError = MutableLiveData<String>(null)
 
     init {
         if (repo.isUserAuthorized())
@@ -24,14 +24,14 @@ class LoginViewModel @Inject constructor(
 
     fun register(email: String?, pass: String?) {
         if (email.isNullOrBlank() || pass.isNullOrBlank())
-            isLoginError.value = context.getString(R.string.empty_fields_error)
+            loginError.value = context.getString(R.string.empty_fields_error)
         else
             repo.register(email, pass, { startMainScreen() }, { setError(it) })
     }
 
     fun login(email: String?, pass: String?) {
         if (email.isNullOrBlank() || pass.isNullOrBlank())
-            isLoginError.value = context.getString(R.string.empty_fields_error)
+            loginError.value = context.getString(R.string.empty_fields_error)
         else
             repo.login(email, pass, { startMainScreen() }, { setError(it) })
     }
@@ -43,6 +43,6 @@ class LoginViewModel @Inject constructor(
     private fun setError(t: Throwable?) {
         val msg = t?.toString() ?: ""
         val i = msg.indexOf(": ")
-        isLoginError.value = msg.drop(i + 2)
+        loginError.value = msg.drop(i + 2)
     }
 }

@@ -15,7 +15,7 @@ class CheeseAdapter(private val vm: CheeseAction) :
     companion object {
         private val diffUtilCallback = object : DiffUtil.ItemCallback<Cheese>() {
             override fun areItemsTheSame(oldItem: Cheese, newItem: Cheese): Boolean {
-                return oldItem.name == newItem.name
+                return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: Cheese, newItem: Cheese): Boolean {

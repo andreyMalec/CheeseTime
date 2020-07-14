@@ -1,13 +1,10 @@
 package com.malec.cheesetime.repo
 
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.CheeseF
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import java.util.*
 
 @ExperimentalCoroutinesApi
 class CheeseRepo {
@@ -61,59 +58,35 @@ class CheeseRepo {
     }
 
     fun create(
-        name: String,
-        date: Long,
-        recipe: String,
-        comment: String?,
-        milk: String,
-        composition: String?,
-        stages: String?,
-        badgeColor: Int?,
+        cheese: Cheese,
         onSuccess: () -> Unit,
         onFailure: (t: Throwable?) -> Unit
     ) {
-        val time = Calendar.getInstance().timeInMillis
-
-        val newCheese = Cheese(
-            time,
-            name,
-            date,
-            recipe,
-            comment ?: "",
-            milk,
-            composition ?: "",
-            stages ?: "",
-            badgeColor ?: 0
-        )
-        db.collection("cheese").add(newCheese)
-            .addOnCompleteListener(dataCompleteListener(onSuccess, onFailure))
+        db.collection("cheese").add(cheese).addOnCompleteListener {
+            if (it.isSuccessful)
+                onSuccess()
+            else
+                onFailure(it.exception)
+        }
     }
 
     fun update(
-        name: String,
-        date: Long,
-        recipe: String,
-        comment: String?,
-        milk: String,
-        composition: String?,
-        stages: String?,
-        badgeColor: Int?,
-        cheese: Cheese
+        cheese: Cheese,
+        onSuccess: () -> Unit,
+        onFailure: (t: Throwable?) -> Unit
     ) {
-        val updatedCheese = Cheese(
-            cheese.id,
-            name,
-            date,
-            recipe,
-            comment ?: "",
-            milk,
-            composition ?: "",
-            stages ?: "",
-            badgeColor ?: 0
-        )
-        db.collection("cheese").whereEqualTo("id", cheese.id).get().addOnCompleteListener {
-            val docId = it.result?.documents?.get(0)?.id
-            db.collection("cheese").document(docId.toString()).update(updatedCheese.toMap())
+        db.collection("cheese").whereEqualTo("id", cheese.id).get().addOnCompleteListener { get ->
+            if (get.isSuccessful) {
+                val docId = get.result?.documents?.get(0)?.id
+                db.collection("cheese").document(docId.toString()).update(cheese.toMap())
+                    .addOnCompleteListener { update ->
+                        if (update.isSuccessful)
+                            onSuccess()
+                        else
+                            onFailure(update.exception)
+                    }
+            } else
+                onFailure(get.exception)
         }
     }
 
@@ -122,15 +95,5 @@ class CheeseRepo {
             val docId = it.result?.documents?.get(0)?.id
             db.collection("cheese").document(docId.toString()).delete()
         }
-    }
-
-    private fun dataCompleteListener(
-        onSuccess: () -> Unit,
-        onFailure: (t: Throwable?) -> Unit
-    ) = OnCompleteListener<DocumentReference> {
-        if (it.isSuccessful)
-            onSuccess()
-        else
-            onFailure(it.exception)
     }
 }

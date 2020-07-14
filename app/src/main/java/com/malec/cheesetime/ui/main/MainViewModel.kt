@@ -50,7 +50,7 @@ class MainViewModel @Inject constructor(
             Screens.TaskListScreen -> {
             }
             Screens.CheeseListScreen -> {
-                router.navigateTo(Screens.CheeseManageScreen)
+                router.navigateTo(Screens.CheeseManageScreen())
             }
             Screens.ReportsScreen -> {
             }
