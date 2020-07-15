@@ -16,6 +16,10 @@ class CheeseListViewModel @Inject constructor(
 ) : ViewModel(), CheeseAdapter.CheeseAction {
     val cheeseList = MutableLiveData<List<Cheese>>(null)
 
+    val dateFilterStart = MutableLiveData<String>(null)
+    val dateFilterEnd = MutableLiveData<String>(null)
+    val cheeseTypeFilter = MutableLiveData<String>(null)
+
     init {
         update()
     }

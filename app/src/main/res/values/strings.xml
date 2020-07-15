@@ -20,6 +20,12 @@
     <string name="tabCheeseList">Cheeses</string>
     <string name="tabReports">Reports</string>
 
+    <string name="filter_title">Filter:</string>
+    <string name="filter_date_start">Date (start)</string>
+    <string name="filter_date_end">Date (end)</string>
+    <string name="filter_cheese_type">Cheese type</string>
+    <string name="filter_sort_title">Sort by:</string>
+
     <string name="cheese_created">New cheese successfully created</string>
     <string name="cheese_updated">Selected cheese successfully updated</string>
 

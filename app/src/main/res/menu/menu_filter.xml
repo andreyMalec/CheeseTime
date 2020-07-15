@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/filter_title">
+        <menu>
+            <group android:id="@+id/menuFilterGroup">
+                <item
+                    android:id="@+id/filterDateStart"
+                    android:title="@string/filter_date_start" />
+                <item
+                    android:id="@+id/filterDateEnd"
+                    android:title="@string/filter_date_end" />
+                <item
+                    android:id="@+id/filterCheeseType"
+                    android:title="@string/filter_cheese_type" />
+            </group>
+        </menu>
+    </item>
+    <item android:title="@string/filter_sort_title">
+        <menu>
+            <group
+                android:id="@+id/menuSortGroup"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/sortDateStart"
+                    android:title="@string/filter_date_start" />
+                <item
+                    android:id="@+id/sortDateEnd"
+                    android:title="@string/filter_date_end" />
+                <item
+                    android:id="@+id/sortCheeseType"
+                    android:title="@string/filter_cheese_type" />
+            </group>
+        </menu>
+    </item>
+</menu>

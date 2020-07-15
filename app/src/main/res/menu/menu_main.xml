@@ -9,6 +9,12 @@
         app:showAsAction="always|collapseActionView" />
 
     <item
+        android:id="@+id/filterButton"
+        android:icon="@drawable/icon_filter_list"
+        android:title=""
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/scanButton"
         android:icon="@drawable/icon_scan"
         android:title=""

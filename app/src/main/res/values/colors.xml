@@ -6,6 +6,7 @@
     <color name="backgroundLight">#FFF9C0</color>
     <color name="colorError">#FF575D</color>
     <color name="colorWhite">#FFF</color>
+    <color name="colorTextDisabled">#666</color>
 
 
     <color name="badge1">#FFA114</color>

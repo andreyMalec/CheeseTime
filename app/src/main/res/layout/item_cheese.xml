@@ -27,9 +27,20 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/badgeColor"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="8dp"
+                android:layout_weight="0"
+                app:cardBackgroundColor="@{cheese.badgeColor}"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
@@ -53,16 +64,6 @@
                     app:from="@{cheese.id}"
                     app:to="@{cheese.date}" />
             </LinearLayout>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/noteColor"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp"
-                android:layout_weight="0"
-                app:cardBackgroundColor="@{cheese.badgeColor}"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </layout>
