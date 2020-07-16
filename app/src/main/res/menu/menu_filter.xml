@@ -33,4 +33,8 @@
             </group>
         </menu>
     </item>
+    <item
+        android:id="@+id/filterClear"
+        android:icon="@drawable/icon_clear_all"
+        android:title="@string/filter_clear" />
 </menu>

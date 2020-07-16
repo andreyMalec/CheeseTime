@@ -20,8 +20,7 @@ object CheeseCreator {
     ): Cheese {
         val timeId = id ?: Calendar.getInstance().timeInMillis
 
-        val format = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
-        val dateM = format.parse(date)?.time ?: 0
+        val dateM = dateFromString(date)
 
         return Cheese(
             timeId,
@@ -34,6 +33,14 @@ object CheeseCreator {
             stages?.joinToString("♂") ?: "",
             badgeColor ?: 0
         )
+    }
+
+    fun dateFromString(date: String): Long {
+        val d = date.split("/")
+        val pattern =
+            "d".repeat(d[0].length) + "/" + "M".repeat(d[1].length) + "/" + "y".repeat(d[2].length)
+        val format = SimpleDateFormat(pattern, Locale.ENGLISH)
+        return format.parse(date)?.time ?: 0
     }
 
     fun isDateValid(date: String): Boolean {

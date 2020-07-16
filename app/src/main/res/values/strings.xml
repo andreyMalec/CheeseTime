@@ -25,6 +25,7 @@
     <string name="filter_date_end">Date (end)</string>
     <string name="filter_cheese_type">Cheese type</string>
     <string name="filter_sort_title">Sort by:</string>
+    <string name="filter_clear">Clear filter</string>
 
     <string name="cheese_created">New cheese successfully created</string>
     <string name="cheese_updated">Selected cheese successfully updated</string>

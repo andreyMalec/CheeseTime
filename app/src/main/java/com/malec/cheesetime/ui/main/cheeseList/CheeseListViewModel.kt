@@ -19,17 +19,29 @@ class CheeseListViewModel @Inject constructor(
     val dateFilterStart = MutableLiveData<String>(null)
     val dateFilterEnd = MutableLiveData<String>(null)
     val cheeseTypeFilter = MutableLiveData<String>(null)
+    val sortBy = MutableLiveData<String>(null)
 
     init {
         update()
     }
 
     fun update() {
-        repo.getAll({
-            cheeseList.value = it
-        }, {
+        applyFilters()
+    }
 
-        })
+    fun applyFilters() {
+        repo.getAllFiltered(
+            {
+                cheeseList.value = it
+            },
+            {
+
+            },
+            dateFilterStart.value,
+            dateFilterEnd.value,
+            cheeseTypeFilter.value,
+            sortBy.value
+        )
     }
 
     override fun deleteCheese(cheese: Cheese) {
