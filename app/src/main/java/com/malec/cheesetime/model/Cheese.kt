@@ -8,6 +8,7 @@ data class Cheese(
     @PrimaryKey
     val id: Long,
     val name: String,
+    val dateStart: Long,
     val date: Long,
     val recipe: String,
     val comment: String,
@@ -19,6 +20,7 @@ data class Cheese(
     fun toMap() = mapOf(
         "id" to id,
         "name" to name,
+        "dateStart" to dateStart,
         "date" to date,
         "recipe" to recipe,
         "comment" to comment,
@@ -32,6 +34,7 @@ data class Cheese(
 class CheeseF {
     val id: Long = 0
     val name: String = ""
+    val dateStart: Long = 0
     val date: Long = 0
     val recipe: String = ""
     val comment: String = ""
@@ -40,5 +43,6 @@ class CheeseF {
     val stages: String = ""
     val badgeColor: Int = 0
 
-    fun convert() = Cheese(id, name, date, recipe, comment, milk, composition, stages, badgeColor)
+    fun convert() =
+        Cheese(id, name, dateStart, date, recipe, comment, milk, composition, stages, badgeColor)
 }

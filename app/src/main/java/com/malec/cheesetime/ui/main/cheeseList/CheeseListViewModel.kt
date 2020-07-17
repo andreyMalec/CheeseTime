@@ -2,10 +2,14 @@ package com.malec.cheesetime.ui.main.cheeseList
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.malec.cheesetime.model.Cheese
+import com.malec.cheesetime.model.CheeseFilter
+import com.malec.cheesetime.model.CheeseSort
 import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.ui.Screens
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
@@ -30,18 +34,21 @@ class CheeseListViewModel @Inject constructor(
     }
 
     fun applyFilters() {
-        repo.getAllFiltered(
-            {
-                cheeseList.value = it
-            },
-            {
-
-            },
+        val sort = when (sortBy.value) {
+            "Date (start)" -> CheeseSort.DATE_START
+            "Date (end)" -> CheeseSort.DATE_END
+            "Cheese type" -> CheeseSort.TYPE
+            else -> CheeseSort.ID
+        }
+        val filter = CheeseFilter(
             dateFilterStart.value,
             dateFilterEnd.value,
             cheeseTypeFilter.value,
-            sortBy.value
+            sort
         )
+        viewModelScope.launch {
+            cheeseList.value = repo.getAllFiltered(filter)
+        }
     }
 
     override fun deleteCheese(cheese: Cheese) {

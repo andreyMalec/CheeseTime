@@ -29,6 +29,7 @@
 
     <string name="cheese_created">New cheese successfully created</string>
     <string name="cheese_updated">Selected cheese successfully updated</string>
+    <string name="cheese_deleted">Selected cheese successfully deleted</string>
 
     <string name="cheese_name">Name:</string>
     <string name="cheese_date">Maturation date:</string>

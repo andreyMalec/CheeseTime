@@ -35,10 +35,6 @@ class CheeseManageViewModel @Inject constructor(
     val badgeColor = MutableLiveData<Int>()
     val cheese = MutableLiveData<Cheese>(null)
 
-    init {
-
-    }
-
     fun setCheese(newCheese: Cheese) {
         if (newCheese.id != 0L) {
             cheese.value = newCheese
@@ -49,12 +45,17 @@ class CheeseManageViewModel @Inject constructor(
     fun deleteCheese() {
         cheese.value?.let {
             viewModelScope.launch {
-                repo.deleteById(it.id)
+                try {
+                    repo.deleteById(it.id)
+                    manageResult.value = context.getString(R.string.cheese_deleted)
+                } catch (e: Exception) {
+                    setError(e)
+                }
             }
         }
     }
 
-    fun checkAndManageCheese() {
+    fun checkAndManageCheese() = viewModelScope.launch {
         val mName = name.value
         val mDate = date.value
         val mRecipe = recipe.value
@@ -73,12 +74,12 @@ class CheeseManageViewModel @Inject constructor(
             mMilkVolume.isNullOrBlank() || mMilkAge.isNullOrBlank()
         ) {
             isFieldsEmptyError.value = true
-            return
+            return@launch
         }
 
         if (!CheeseCreator.isDateValid(mDate)) {
             isInvalidDateError.value = true
-            return
+            return@launch
         }
 
         if (mColor == null || mColor == 0)
@@ -95,22 +96,22 @@ class CheeseManageViewModel @Inject constructor(
             mComposition,
             mStages,
             mColor,
-            mCheese?.id
+            mCheese?.id ?: repo.getNextId()
         )
         if (mCheese == null)
-            repo.create(
-                cheese,
-                {
-                    manageResult.value = context.getString(R.string.cheese_created)
-                }, { setError(it) }
-            )
+            try {
+                repo.create(cheese)
+                manageResult.value = context.getString(R.string.cheese_created)
+            } catch (e: Exception) {
+                setError(e)
+            }
         else
-            repo.update(
-                cheese,
-                {
-                    manageResult.value = context.getString(R.string.cheese_updated)
-                }, { setError(it) }
-            )
+            try {
+                repo.update(cheese)
+                manageResult.value = context.getString(R.string.cheese_updated)
+            } catch (e: Exception) {
+                setError(e)
+            }
     }
 
     private fun setError(t: Throwable?) {

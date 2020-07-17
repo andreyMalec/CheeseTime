@@ -50,7 +50,8 @@
                     android:id="@+id/nameText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{cheese.name}"
+                    android:text='@{cheese.name + " №" + cheese.id}'
+                    android:textAlignment="center"
                     android:textColor="@color/colorAccent"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -61,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:textSize="18sp"
-                    app:from="@{cheese.id}"
+                    app:from="@{cheese.dateStart}"
                     app:to="@{cheese.date}" />
             </LinearLayout>
         </LinearLayout>

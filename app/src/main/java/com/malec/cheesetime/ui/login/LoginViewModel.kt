@@ -3,12 +3,16 @@ package com.malec.cheesetime.ui.login
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.malec.cheesetime.R
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.ui.Screens
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 class LoginViewModel @Inject constructor(
     private val context: Context,
     private val repo: UserRepo,
@@ -26,14 +30,28 @@ class LoginViewModel @Inject constructor(
         if (email.isNullOrBlank() || pass.isNullOrBlank())
             loginError.value = context.getString(R.string.empty_fields_error)
         else
-            repo.register(email, pass, { startMainScreen() }, { setError(it) })
+            viewModelScope.launch {
+                try {
+                    repo.register(email, pass)
+                    startMainScreen()
+                } catch (e: Exception) {
+                    setError(e)
+                }
+            }
     }
 
     fun login(email: String?, pass: String?) {
         if (email.isNullOrBlank() || pass.isNullOrBlank())
             loginError.value = context.getString(R.string.empty_fields_error)
         else
-            repo.login(email, pass, { startMainScreen() }, { setError(it) })
+            viewModelScope.launch {
+                try {
+                    repo.login(email, pass)
+                    startMainScreen()
+                } catch (e: Exception) {
+                    setError(e)
+                }
+            }
     }
 
     private fun startMainScreen() {

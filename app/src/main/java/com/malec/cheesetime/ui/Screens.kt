@@ -56,6 +56,7 @@ object Screens {
                 Intent(context, CheeseManageActivity::class.java).apply {
                     putExtra("id", cheese.id)
                     putExtra("name", cheese.name)
+                    putExtra("dateStart", cheese.dateStart)
                     putExtra("date", cheese.date)
                     putExtra("recipe", cheese.recipe)
                     putExtra("comment", cheese.comment)
@@ -69,6 +70,7 @@ object Screens {
                 Cheese(
                     intent.getLongExtra("id", 0),
                     intent.getStringExtra("name") ?: "",
+                    intent.getLongExtra("dateStart", 0),
                     intent.getLongExtra("date", 0),
                     intent.getStringExtra("recipe") ?: "",
                     intent.getStringExtra("comment") ?: "",

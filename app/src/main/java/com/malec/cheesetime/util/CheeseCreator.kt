@@ -16,15 +16,16 @@ object CheeseCreator {
         composition: String?,
         stages: List<String>?,
         badgeColor: Int?,
-        id: Long? = null
+        id: Long
     ): Cheese {
-        val timeId = id ?: Calendar.getInstance().timeInMillis
+        val dateStart = Calendar.getInstance().timeInMillis
 
         val dateM = dateFromString(date)
 
         return Cheese(
-            timeId,
+            id,
             name,
+            dateStart,
             dateM,
             recipe,
             comment ?: "",
