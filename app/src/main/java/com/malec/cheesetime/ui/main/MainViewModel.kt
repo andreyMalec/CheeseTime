@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.zxing.integration.android.IntentIntegrator
+import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.ui.Screens
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 class MainViewModel @Inject constructor(
-    private val router: Router
+    private val router: Router,
+    private val repo: CheeseRepo
 ) : ViewModel() {
     private var pressAgain = true
     private val pressAgainAwait = 2000L
@@ -41,8 +44,18 @@ class MainViewModel @Inject constructor(
         replaceScreen(Screens.ReportsScreen)
     }
 
-    fun onScanClick() {
+    fun onScanClick(activity: MainActivity) {
+        IntentIntegrator(activity).apply {
+            setOrientationLocked(false)
+            setPrompt("Scan a barcode")
+        }.initiateScan()
+    }
 
+    fun onScanSuccess(result: String) {
+        viewModelScope.launch {
+            val cheese = repo.getById(result.toLong())
+            router.navigateTo(Screens.CheeseManageScreen(cheese))
+        }
     }
 
     fun onFABClick() {

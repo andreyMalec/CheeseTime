@@ -11,20 +11,20 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AnimationUtils
-import android.widget.AdapterView
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import com.google.zxing.BarcodeFormat
+import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.ui.Screens
@@ -167,6 +167,9 @@ class CheeseManageActivity : AppCompatActivity(), HasAndroidInjector {
             ContextCompat.getColor(this, R.color.backgroundLight),
             PorterDuff.Mode.SRC_IN
         )
+        toast.view.findViewById<TextView>(android.R.id.message).setTextColor(
+            ContextCompat.getColor(this, R.color.colorAccent)
+        )
         toast.show()
     }
 
@@ -194,6 +197,11 @@ class CheeseManageActivity : AppCompatActivity(), HasAndroidInjector {
             stage2EditText.setText(stages[1])
             stage3EditText.setText(stages[2])
         }
+
+        val bitmap =
+            BarcodeEncoder().encodeBitmap(cheese.id.toString(), BarcodeFormat.CODE_128, 550, 100)
+        barcodeImage.setImageBitmap(bitmap)
+        barcodeImage.isVisible = true
     }
 
     private fun initInputListeners() {
@@ -243,6 +251,10 @@ class CheeseManageActivity : AppCompatActivity(), HasAndroidInjector {
                 }
                 viewModel.stages.value = stages.toList()
             }
+
+        barcodeImage.setOnClickListener {
+            viewModel.shareCheese()
+        }
     }
 
     private fun initToolbar() {

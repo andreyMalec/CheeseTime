@@ -1,5 +1,6 @@
 package com.malec.cheesetime.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,6 +12,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
+import com.google.zxing.integration.android.IntentIntegrator
 import com.malec.cheesetime.R
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -18,6 +20,7 @@ import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -35,7 +38,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         viewModelFactory
     }
 
-    private val navigator = TabNavigator(
+    private val navigator = SupportAppNavigator(
         this,
         supportFragmentManager,
         R.id.navHostFragment
@@ -56,7 +59,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.scanButton -> viewModel.onScanClick()
+            R.id.scanButton -> viewModel.onScanClick(this)
         }
 
         return super.onOptionsItemSelected(item)
@@ -70,6 +73,16 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         initTabHost()
         initToolbar()
         initFAClickListener()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(resultCode, data)
+
+        result.contents?.let {
+            viewModel.onScanSuccess(it)
+        }
+
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun initViewModelListeners() {

@@ -42,6 +42,12 @@ class CheeseManageViewModel @Inject constructor(
         }
     }
 
+    fun shareCheese() {
+        cheese.value?.let {
+            repo.share(it)
+        }
+    }
+
     fun deleteCheese() {
         cheese.value?.let {
             viewModelScope.launch {

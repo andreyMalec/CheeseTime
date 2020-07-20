@@ -314,15 +314,6 @@
                         android:layout_height="40dp"
                         android:layout_margin="8dp"
                         android:foreground="?android:attr/selectableItemBackground"
-                        app:cardBackgroundColor="@color/badge2"
-                        app:cardCornerRadius="6dp"
-                        app:cardElevation="2dp" />
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_margin="8dp"
-                        android:foreground="?android:attr/selectableItemBackground"
                         app:cardBackgroundColor="@color/badge3"
                         app:cardCornerRadius="6dp"
                         app:cardElevation="2dp" />
@@ -332,42 +323,16 @@
                         android:layout_height="40dp"
                         android:layout_margin="8dp"
                         android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge2"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
                         app:cardBackgroundColor="@color/badge4"
-                        app:cardCornerRadius="6dp"
-                        app:cardElevation="2dp" />
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_margin="8dp"
-                        android:foreground="?android:attr/selectableItemBackground"
-                        app:cardBackgroundColor="@color/badge5"
-                        app:cardCornerRadius="6dp"
-                        app:cardElevation="2dp" />
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_margin="8dp"
-                        android:foreground="?android:attr/selectableItemBackground"
-                        app:cardBackgroundColor="@color/badge6"
-                        app:cardCornerRadius="6dp"
-                        app:cardElevation="2dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/colorLayout2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_margin="8dp"
-                        android:foreground="?android:attr/selectableItemBackground"
-                        app:cardBackgroundColor="@color/badge7"
                         app:cardCornerRadius="6dp"
                         app:cardElevation="2dp" />
 
@@ -388,15 +353,14 @@
                         app:cardBackgroundColor="@color/badge9"
                         app:cardCornerRadius="6dp"
                         app:cardElevation="2dp" />
+                </LinearLayout>
 
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_margin="8dp"
-                        android:foreground="?android:attr/selectableItemBackground"
-                        app:cardBackgroundColor="@color/badge10"
-                        app:cardCornerRadius="6dp"
-                        app:cardElevation="2dp" />
+                <LinearLayout
+                    android:id="@+id/colorLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="40dp"
@@ -415,8 +379,54 @@
                         app:cardBackgroundColor="@color/badge12"
                         app:cardCornerRadius="6dp"
                         app:cardElevation="2dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge5"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge6"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge10"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge7"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
                 </LinearLayout>
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/barcodeImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:background="@color/colorWhite"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>
