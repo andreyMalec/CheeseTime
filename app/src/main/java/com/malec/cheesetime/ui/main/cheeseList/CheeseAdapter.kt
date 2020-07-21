@@ -27,7 +27,8 @@ class CheeseAdapter(private val vm: CheeseAction) :
                         oldItem.milk == newItem.milk &&
                         oldItem.composition == newItem.composition &&
                         oldItem.stages == newItem.stages &&
-                        oldItem.badgeColor == newItem.badgeColor
+                        oldItem.badgeColor == newItem.badgeColor &&
+                        oldItem.isSelected == newItem.isSelected
             }
         }
     }
@@ -45,8 +46,8 @@ class CheeseAdapter(private val vm: CheeseAction) :
         val cheese = getItem(position)
 
         holder.binding?.cheese = cheese
+        holder.binding?.selectMarker?.visibility = getMarkerVisibility(cheese)
     }
-
 
     inner class CheeseItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding: ItemCheeseBinding? = DataBindingUtil.bind(view)
@@ -54,23 +55,28 @@ class CheeseAdapter(private val vm: CheeseAction) :
         init {
             binding?.root?.setOnClickListener {
                 binding.cheese?.let {
-                    vm.editCheese(it)
+                    vm.onClick(it)
                 }
             }
             binding?.root?.setOnLongClickListener {
                 binding.cheese?.let {
-                    vm.selectCheese(it)
+                    vm.onLongClick(it)
                 }
                 true
             }
         }
     }
 
+    private fun getMarkerVisibility(cheese: Cheese): Int {
+        return if (cheese.isSelected)
+            View.VISIBLE
+        else
+            View.INVISIBLE
+    }
+
     interface CheeseAction {
-        fun deleteCheese(cheese: Cheese)
+        fun onClick(cheese: Cheese)
 
-        fun editCheese(cheese: Cheese)
-
-        fun selectCheese(cheese: Cheese)
+        fun onLongClick(cheese: Cheese)
     }
 }

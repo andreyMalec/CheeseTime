@@ -15,7 +15,8 @@ data class Cheese(
     val milk: String,
     val composition: String,
     val stages: String,
-    val badgeColor: Int
+    val badgeColor: Int,
+    val isSelected: Boolean
 ) {
     fun toMap() = mapOf(
         "id" to id,
@@ -28,6 +29,20 @@ data class Cheese(
         "composition" to composition,
         "stages" to stages,
         "badgeColor" to badgeColor
+    )
+
+    fun toggleSelect() = Cheese(
+        id,
+        name,
+        dateStart,
+        date,
+        recipe,
+        comment,
+        milk,
+        composition,
+        stages,
+        badgeColor,
+        !isSelected
     )
 }
 
@@ -44,5 +59,17 @@ class CheeseF {
     val badgeColor: Int = 0
 
     fun convert() =
-        Cheese(id, name, dateStart, date, recipe, comment, milk, composition, stages, badgeColor)
+        Cheese(
+            id,
+            name,
+            dateStart,
+            date,
+            recipe,
+            comment,
+            milk,
+            composition,
+            stages,
+            badgeColor,
+            false
+        )
 }

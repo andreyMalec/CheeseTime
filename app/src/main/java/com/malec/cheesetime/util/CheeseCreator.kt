@@ -32,7 +32,8 @@ object CheeseCreator {
             "$milkType♂$milkVolume♂$milkAge",
             composition ?: "",
             stages?.joinToString("♂") ?: "",
-            badgeColor ?: 0
+            badgeColor ?: 0,
+            false
         )
     }
 

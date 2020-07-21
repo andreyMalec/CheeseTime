@@ -51,15 +51,15 @@ class CheeseListViewModel @Inject constructor(
         }
     }
 
-    override fun deleteCheese(cheese: Cheese) {
-
+    override fun onClick(cheese: Cheese) {
+        if (repo.getSelected().isEmpty())
+            router.navigateTo(Screens.CheeseManageScreen(cheese))
+        else
+            onLongClick(cheese)
     }
 
-    override fun editCheese(cheese: Cheese) {
-        router.navigateTo(Screens.CheeseManageScreen(cheese))
-    }
-
-    override fun selectCheese(cheese: Cheese) {
-        TODO("Not yet implemented")
+    override fun onLongClick(cheese: Cheese) {
+        repo.toggleSelect(cheese)
+        update()
     }
 }

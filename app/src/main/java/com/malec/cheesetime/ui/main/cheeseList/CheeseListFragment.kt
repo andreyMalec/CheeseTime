@@ -70,46 +70,13 @@ class CheeseListFragment : Fragment(), Injectable, FilterDialog.DialogListener {
             adapter.submitList(it)
             swipeRefresh.isRefreshing = false
         })
-
-    }
-
-    private fun clearFilter() {
-        viewModel.dateFilterStart.value = null
-        viewModel.dateFilterEnd.value = null
-        viewModel.cheeseTypeFilter.value = null
-        viewModel.sortBy.value = null
-        currentFilter = null
-        currentSort?.isChecked = false
-        currentSort = null
-        dateFilterStart?.title = getString(R.string.filter_date_start)
-        dateFilterEnd?.title = getString(R.string.filter_date_end)
-        cheeseTypeFilter?.title = getString(R.string.filter_cheese_type)
-        cheeseListDrawer.closeDrawer(GravityCompat.START)
-    }
-
-    private fun prepareNavigationDialogContent(item: MenuItem): String? {
-        return when (item.itemId) {
-            R.id.filterDateStart -> {
-                dateFilterStart = item
-                getString(R.string.cheese_date_format)
-            }
-            R.id.filterDateEnd -> {
-                dateFilterEnd = item
-                getString(R.string.cheese_date_format)
-            }
-            R.id.filterCheeseType -> {
-                cheeseTypeFilter = item
-                ""
-            }
-            else -> null
-        }
     }
 
     private fun initNavigationListeners() {
         cheeseNavView.setNavigationItemSelectedListener { item ->
             if (item.itemId == R.id.filterClear) {
                 clearFilter()
-
+                cheeseListDrawer.closeDrawer(GravityCompat.START)
                 return@setNavigationItemSelectedListener true
             }
 
@@ -129,15 +96,44 @@ class CheeseListFragment : Fragment(), Injectable, FilterDialog.DialogListener {
 
         cheeseListDrawer.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerStateChanged(newState: Int) {}
-
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+            override fun onDrawerOpened(drawerView: View) {}
 
             override fun onDrawerClosed(drawerView: View) {
                 viewModel.applyFilters()
             }
-
-            override fun onDrawerOpened(drawerView: View) {}
         })
+    }
+
+    private fun clearFilter() {
+        viewModel.dateFilterStart.value = null
+        viewModel.dateFilterEnd.value = null
+        viewModel.cheeseTypeFilter.value = null
+        viewModel.sortBy.value = null
+        currentFilter = null
+        currentSort?.isChecked = false
+        currentSort = null
+        dateFilterStart?.title = getString(R.string.filter_date_start)
+        dateFilterEnd?.title = getString(R.string.filter_date_end)
+        cheeseTypeFilter?.title = getString(R.string.filter_cheese_type)
+    }
+
+    private fun prepareNavigationDialogContent(item: MenuItem): String? {
+        return when (item.itemId) {
+            R.id.filterDateStart -> {
+                dateFilterStart = item
+                getString(R.string.cheese_date_format)
+            }
+            R.id.filterDateEnd -> {
+                dateFilterEnd = item
+                getString(R.string.cheese_date_format)
+            }
+            R.id.filterCheeseType -> {
+                cheeseTypeFilter = item
+                ""
+            }
+            else -> null
+        }
     }
 
     private fun initRecycler() {

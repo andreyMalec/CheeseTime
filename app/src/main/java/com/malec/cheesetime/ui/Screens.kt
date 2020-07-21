@@ -77,7 +77,8 @@ object Screens {
                     intent.getStringExtra("milk") ?: "",
                     intent.getStringExtra("composition") ?: "",
                     intent.getStringExtra("stages") ?: "",
-                    intent.getIntExtra("badgeColor", 0)
+                    intent.getIntExtra("badgeColor", 0),
+                    false
                 )
         }
     }
