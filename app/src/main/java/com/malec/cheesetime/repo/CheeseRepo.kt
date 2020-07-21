@@ -45,6 +45,10 @@ class CheeseRepo(private val api: CheeseApi, private val sharer: CheeseSharer) {
             selected.remove(cheese.id)
     }
 
+    fun unselect() {
+        selected.clear()
+    }
+
     fun getSelectedIds() = selected.toList()
 
     suspend fun archiveSelected() {

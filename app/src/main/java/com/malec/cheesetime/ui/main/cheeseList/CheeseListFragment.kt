@@ -74,6 +74,10 @@ class CheeseListFragment : Fragment(), Injectable, FilterDialog.DialogListener {
                 viewModel.deleteSelected()
                 true
             }
+            android.R.id.home -> {
+                viewModel.unselect()
+                true
+            }
 
             else -> super.onOptionsItemSelected(item)
         }
@@ -101,9 +105,11 @@ class CheeseListFragment : Fragment(), Injectable, FilterDialog.DialogListener {
             val toolbar = (requireActivity() as AppCompatActivity).supportActionBar
             toolbar?.title = if (count == 0) {
                 showMainMenu()
+                toolbar?.setDisplayHomeAsUpEnabled(false)
                 getString(R.string.app_name)
             } else {
                 showSelectMenu()
+                toolbar?.setDisplayHomeAsUpEnabled(true)
                 getString(R.string.toolbar_n_selected, count)
             }
         })

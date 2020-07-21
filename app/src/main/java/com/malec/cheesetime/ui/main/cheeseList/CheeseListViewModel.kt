@@ -73,6 +73,13 @@ class CheeseListViewModel @Inject constructor(
         }
     }
 
+    fun unselect() {
+        viewModelScope.launch {
+            repo.unselect()
+            update()
+        }
+    }
+
     override fun onClick(cheese: Cheese) {
         if (repo.getSelectedIds().isEmpty())
             router.navigateTo(Screens.CheeseManageScreen(cheese))

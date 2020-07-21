@@ -80,6 +80,7 @@ class CheeseManageActivity : AppCompatActivity(), HasAndroidInjector {
         when (item.itemId) {
             R.id.saveButton -> viewModel.checkAndManageCheese()
             R.id.deleteButton -> viewModel.deleteCheese()
+            android.R.id.home -> onBackPressed()
         }
 
         return super.onOptionsItemSelected(item)
@@ -260,6 +261,7 @@ class CheeseManageActivity : AppCompatActivity(), HasAndroidInjector {
     private fun initToolbar() {
         toolbar.setTitle(R.string.toolbar_manage_cheese)
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         toolbar.setOnApplyWindowInsetsListener { _, insets ->
             val statusBarHeight = insets.systemWindowInsetTop

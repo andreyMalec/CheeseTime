@@ -23,4 +23,8 @@
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog.MinWidth">
         <item name="android:textColorPrimary">@color/colorAccent</item>
     </style>
+
+    <style name="AppTheme.Closeable" parent="AppTheme">
+        <item name="android:homeAsUpIndicator">@drawable/icon_close</item>
+    </style>
 </resources>

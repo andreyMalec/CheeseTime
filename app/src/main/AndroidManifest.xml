@@ -19,7 +19,9 @@
             </intent-filter>
         </activity>
         <activity android:name="com.malec.cheesetime.ui.main.cheeseManage.CheeseManageActivity" />
-        <activity android:name=".ui.main.MainActivity" />
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:theme="@style/AppTheme.Closeable" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
