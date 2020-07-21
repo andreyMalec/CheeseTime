@@ -15,7 +15,6 @@ import com.google.android.material.textfield.TextInputLayout
 import com.malec.cheesetime.R
 import com.malec.cheesetime.util.CheeseCreator
 
-
 class FilterDialog(
     private val target: DialogListener,
     private val title: String,

@@ -57,6 +57,12 @@ class CheeseAdapter(private val vm: CheeseAction) :
                     vm.editCheese(it)
                 }
             }
+            binding?.root?.setOnLongClickListener {
+                binding.cheese?.let {
+                    vm.selectCheese(it)
+                }
+                true
+            }
         }
     }
 
@@ -64,5 +70,7 @@ class CheeseAdapter(private val vm: CheeseAction) :
         fun deleteCheese(cheese: Cheese)
 
         fun editCheese(cheese: Cheese)
+
+        fun selectCheese(cheese: Cheese)
     }
 }

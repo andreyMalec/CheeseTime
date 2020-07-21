@@ -58,4 +58,8 @@ class CheeseListViewModel @Inject constructor(
     override fun editCheese(cheese: Cheese) {
         router.navigateTo(Screens.CheeseManageScreen(cheese))
     }
+
+    override fun selectCheese(cheese: Cheese) {
+        TODO("Not yet implemented")
+    }
 }
