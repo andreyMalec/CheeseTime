@@ -62,6 +62,18 @@ class CheeseListFragment : Fragment(), Injectable, FilterDialog.DialogListener {
                     cheeseListDrawer.openDrawer(GravityCompat.START)
                 true
             }
+            R.id.archiveButton -> {
+                viewModel.archiveSelected()
+                true
+            }
+            R.id.printButton -> {
+                viewModel.printSelected()
+                true
+            }
+            R.id.deleteButton -> {
+                viewModel.deleteSelected()
+                true
+            }
 
             else -> super.onOptionsItemSelected(item)
         }

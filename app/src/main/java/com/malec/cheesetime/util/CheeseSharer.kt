@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.pdf.PdfDocument
 import android.net.Uri
 import androidx.core.content.FileProvider
 import com.google.zxing.BarcodeFormat
@@ -16,8 +17,70 @@ import java.io.FileOutputStream
 import java.lang.Integer.max
 
 class CheeseSharer(private val context: Context) {
+    private val PAGE_WIDTH = 420
+    private val PAGE_HEIGHT = 594
+    private val MARGIN_TOP = 10F
+    private val CODE_WIDTH = 105
+    private val CODE_HEIGHT = 19
+    private val TEXT_SIZE = 8F
+
+    private val MAX_ROWS = 15
+
     fun send(cheese: Cheese) {
-        shareUri(makeUri(makeBitmap(cheese)))
+        send(listOf(cheese))
+    }
+
+    fun send(cheeseList: List<Cheese>) {
+        val doc = PdfDocument()
+        val pageInfo = PdfDocument.PageInfo.Builder(PAGE_WIDTH, PAGE_HEIGHT, 1).create()
+        val page = doc.startPage(pageInfo)
+        drawBarcodeList(page.canvas, cheeseList)
+        doc.finishPage(page)
+        shareUri(makeUri(doc))
+        doc.close()
+    }
+
+    private fun drawBarcodeList(canvas: Canvas, cheeseList: List<Cheese>) {
+        var verticalOffset = MARGIN_TOP / 2
+        var horizontalOffset = 0F
+
+        fun draw(cheese: Cheese) {
+            val codeImage = BarcodeEncoder().encodeBitmap(
+                cheese.id.toString(),
+                BarcodeFormat.CODE_128,
+                CODE_WIDTH,
+                CODE_HEIGHT
+            )
+            val label = cheese.name + " id: " + cheese.id
+            verticalOffset += canvas.drawBarcode(
+                codeImage,
+                label,
+                verticalOffset,
+                horizontalOffset
+            ) + MARGIN_TOP
+        }
+
+        if (cheeseList.size > MAX_ROWS) {
+            val maxTextLengthCheese = cheeseList.maxBy { (it.name + " id: " + it.id).length }
+            val textW =
+                paintForText().measureText(maxTextLengthCheese?.name + " id: " + maxTextLengthCheese?.id)
+            val maxW = max(textW.toInt(), CODE_WIDTH)
+
+            val columnCount = PAGE_WIDTH / maxW
+            for (i in (0..columnCount)) {
+                for (j in (i * MAX_ROWS until i * MAX_ROWS + MAX_ROWS)) {
+                    if (j > cheeseList.size - 1)
+                        break
+
+                    draw(cheeseList[j])
+                }
+                verticalOffset = MARGIN_TOP / 2
+                horizontalOffset += maxW
+            }
+        } else {
+            for (cheese in cheeseList)
+                draw(cheese)
+        }
     }
 
     private fun shareUri(uri: Uri) {
@@ -35,13 +98,13 @@ class CheeseSharer(private val context: Context) {
         context.startActivity(chooserIntent)
     }
 
-    private fun makeUri(bitmap: Bitmap): Uri {
-        val cachePath = File(context.cacheDir, "images")
+    private fun makeUri(document: PdfDocument): Uri {
+        val cachePath = File(context.cacheDir, "docs")
         cachePath.mkdirs()
-        val newFile = File(cachePath, "image.png")
+        val newFile = File(cachePath, "doc.pdf")
 
         val stream = FileOutputStream(newFile)
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        document.writeTo(stream)
 
         stream.flush()
         stream.close()
@@ -49,38 +112,37 @@ class CheeseSharer(private val context: Context) {
         return FileProvider.getUriForFile(context, context.packageName, newFile)
     }
 
-    private fun makeBitmap(cheese: Cheese): Bitmap {
-        val codeImage =
-            BarcodeEncoder().encodeBitmap(cheese.id.toString(), BarcodeFormat.CODE_128, 550, 100)
-        val textImage = textToBitmap(cheese.name + " id: " + cheese.id, codeImage.height / 2F)
-
-        val w = max(codeImage.width, textImage.width)
-        val h = codeImage.height + textImage.height + 10
-
-        val image = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-        val codeImageStart = w / 2F - codeImage.width / 2F
-        val textImageStart = w / 2F - textImage.width / 2F
-
-        val canvas = Canvas(image)
-        canvas.drawBitmap(codeImage, codeImageStart, 0F, null)
-        canvas.drawBitmap(textImage, textImageStart, codeImage.height + 10F, null)
-
-        return image
-    }
-
-    private fun textToBitmap(text: String, textSize: Float): Bitmap {
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-        paint.textSize = textSize
-        paint.color = Color.BLACK
-        paint.textAlign = Paint.Align.LEFT
+    private fun Canvas.drawBarcode(
+        codeImage: Bitmap,
+        label: String,
+        verticalOffset: Float,
+        horizontalOffset: Float
+    ): Float {
+        val paint = paintForText()
         val baseline = -paint.ascent()
 
-        val image = Bitmap.createBitmap(
-            (paint.measureText(text).toInt()),
-            ((baseline + paint.descent()).toInt()), Bitmap.Config.ARGB_8888
+        val textW = paint.measureText(label).toInt()
+        val textH = (baseline + paint.descent()).toInt()
+
+        val maxWidth = max(codeImage.width, textW)
+
+        val codeImageStart = maxWidth / 2F - codeImage.width / 2F
+        val textImageStart = maxWidth / 2F - textW / 2F
+
+        drawBitmap(codeImage, horizontalOffset + codeImageStart, verticalOffset, null)
+        drawText(
+            label,
+            horizontalOffset + textImageStart,
+            verticalOffset + baseline + codeImage.height,
+            paint
         )
-        val canvas = Canvas(image)
-        canvas.drawText(text, 0F, baseline, paint)
-        return image
+
+        return (textH + codeImage.height).toFloat()
+    }
+
+    private fun paintForText() = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textSize = TEXT_SIZE
+        color = Color.BLACK
+        textAlign = Paint.Align.LEFT
     }
 }

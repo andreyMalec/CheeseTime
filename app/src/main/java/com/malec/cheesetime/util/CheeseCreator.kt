@@ -16,6 +16,7 @@ object CheeseCreator {
         composition: String?,
         stages: List<String>?,
         badgeColor: Int?,
+        isArchived: Boolean?,
         id: Long
     ): Cheese {
         val dateStart = Calendar.getInstance().timeInMillis
@@ -33,7 +34,8 @@ object CheeseCreator {
             composition ?: "",
             stages?.joinToString("♂") ?: "",
             badgeColor ?: 0,
-            false
+            false,
+            isArchived ?: false
         )
     }
 

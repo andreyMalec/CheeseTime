@@ -32,7 +32,7 @@ class CheeseListViewModel @Inject constructor(
 
     fun update() {
         applyFilters()
-        selectedCount.value = repo.getSelected().size
+        selectedCount.value = repo.getSelectedIds().size
     }
 
     fun applyFilters() {
@@ -53,8 +53,28 @@ class CheeseListViewModel @Inject constructor(
         }
     }
 
+    fun archiveSelected() {
+        viewModelScope.launch {
+            repo.archiveSelected()
+            update()
+        }
+    }
+
+    fun printSelected() {
+        viewModelScope.launch {
+            repo.share(repo.getAllSelected())
+        }
+    }
+
+    fun deleteSelected() {
+        viewModelScope.launch {
+            repo.deleteSelected()
+            update()
+        }
+    }
+
     override fun onClick(cheese: Cheese) {
-        if (repo.getSelected().isEmpty())
+        if (repo.getSelectedIds().isEmpty())
             router.navigateTo(Screens.CheeseManageScreen(cheese))
         else
             onLongClick(cheese)

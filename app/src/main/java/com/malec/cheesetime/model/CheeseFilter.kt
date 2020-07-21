@@ -24,13 +24,11 @@ fun List<Cheese>.filteredBy(filter: CheeseFilter): List<Cheese> {
             it.recipe.toLowerCase().contains(filter.type.toLowerCase())
         }
     if (filter.sortBy != null) {
-        filteredList = filteredList.sortedBy {
-            when (filter.sortBy) {
-                CheeseSort.DATE_START -> it.date.toString()
-                CheeseSort.DATE_END -> it.date.toString()
-                CheeseSort.TYPE -> it.recipe
-                else -> it.id.toString()
-            }
+        filteredList = when (filter.sortBy) {
+            CheeseSort.DATE_START -> filteredList.sortedBy { it.date }
+            CheeseSort.DATE_END -> filteredList.sortedBy { it.date }
+            CheeseSort.TYPE -> filteredList.sortedBy { it.recipe }
+            else -> filteredList.sortedBy { it.id }
         }
         if (filter.sortBy == CheeseSort.DATE_END)
             filteredList = filteredList.reversed()

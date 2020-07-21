@@ -14,6 +14,10 @@ class CheeseRepo(private val api: CheeseApi, private val sharer: CheeseSharer) {
 
     suspend fun getAll() = api.getAll()
 
+    suspend fun getAllSelected() = api.getAll().filter {
+        selected.contains(it.id)
+    }
+
     suspend fun getAllFiltered(filter: CheeseFilter) =
         api.getAllFiltered(filter).map {
             if (selected.contains(it.id))
@@ -32,6 +36,8 @@ class CheeseRepo(private val api: CheeseApi, private val sharer: CheeseSharer) {
 
     fun share(cheese: Cheese) = sharer.send(cheese)
 
+    fun share(cheeseList: List<Cheese>) = sharer.send(cheeseList)
+
     fun toggleSelect(cheese: Cheese) {
         if (!cheese.isSelected)
             selected.add(cheese.id)
@@ -39,5 +45,19 @@ class CheeseRepo(private val api: CheeseApi, private val sharer: CheeseSharer) {
             selected.remove(cheese.id)
     }
 
-    fun getSelected() = selected.toList()
+    fun getSelectedIds() = selected.toList()
+
+    suspend fun archiveSelected() {
+        for (id in selected)
+            getById(id)?.toggleArchive()?.let {
+                update(it)
+            }
+        selected.clear()
+    }
+
+    suspend fun deleteSelected() {
+        for (id in selected)
+            deleteById(id)
+        selected.clear()
+    }
 }

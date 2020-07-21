@@ -64,6 +64,7 @@ object Screens {
                     putExtra("composition", cheese.composition)
                     putExtra("stages", cheese.stages)
                     putExtra("badgeColor", cheese.badgeColor)
+                    putExtra("isArchived", cheese.isArchived)
                 }
 
             fun parseExtraIntent(intent: Intent) =
@@ -78,7 +79,8 @@ object Screens {
                     intent.getStringExtra("composition") ?: "",
                     intent.getStringExtra("stages") ?: "",
                     intent.getIntExtra("badgeColor", 0),
-                    false
+                    false,
+                    intent.getBooleanExtra("isArchived", false)
                 )
         }
     }

@@ -102,6 +102,7 @@ class CheeseManageViewModel @Inject constructor(
             mComposition,
             mStages,
             mColor,
+            mCheese?.isArchived,
             mCheese?.id ?: repo.getNextId()
         )
         if (mCheese == null)
