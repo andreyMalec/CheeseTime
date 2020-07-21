@@ -1,10 +1,8 @@
 package com.malec.cheesetime.ui.main.cheeseList
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.DialogFragment
@@ -38,6 +36,23 @@ class CheeseListFragment : Fragment(), Injectable, FilterDialog.DialogListener {
     private var dateFilterEnd: MenuItem? = null
     private var cheeseTypeFilter: MenuItem? = null
 
+    private var searchButton: MenuItem? = null
+    private var filterButton: MenuItem? = null
+    private var scanButton: MenuItem? = null
+    private var archiveButton: MenuItem? = null
+    private var printButton: MenuItem? = null
+    private var deleteButton: MenuItem? = null
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        searchButton = menu.findItem(R.id.appBarSearch)
+        filterButton = menu.findItem(R.id.filterButton)
+        scanButton = menu.findItem(R.id.scanButton)
+        archiveButton = menu.findItem(R.id.archiveButton)
+        printButton = menu.findItem(R.id.printButton)
+        deleteButton = menu.findItem(R.id.deleteButton)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.filterButton -> {
@@ -63,13 +78,46 @@ class CheeseListFragment : Fragment(), Injectable, FilterDialog.DialogListener {
 
         setHasOptionsMenu(true)
 
+        initViewModelListeners()
+
         initNavigationListeners()
         initRecycler()
+    }
+
+    private fun initViewModelListeners() {
+        viewModel.selectedCount.observe(viewLifecycleOwner, Observer { count ->
+            val toolbar = (requireActivity() as AppCompatActivity).supportActionBar
+            toolbar?.title = if (count == 0) {
+                showMainMenu()
+                getString(R.string.app_name)
+            } else {
+                showSelectMenu()
+                getString(R.string.toolbar_n_selected, count)
+            }
+        })
 
         viewModel.cheeseList.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
             swipeRefresh.isRefreshing = false
         })
+    }
+
+    private fun showMainMenu() {
+        searchButton?.isVisible = true
+        filterButton?.isVisible = true
+        scanButton?.isVisible = true
+        archiveButton?.isVisible = false
+        printButton?.isVisible = false
+        deleteButton?.isVisible = false
+    }
+
+    private fun showSelectMenu() {
+        searchButton?.isVisible = false
+        filterButton?.isVisible = false
+        scanButton?.isVisible = false
+        archiveButton?.isVisible = true
+        printButton?.isVisible = true
+        deleteButton?.isVisible = true
     }
 
     private fun initNavigationListeners() {

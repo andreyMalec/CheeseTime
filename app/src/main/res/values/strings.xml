@@ -12,6 +12,7 @@
     <string name="invalid_date_error">Invalid date format</string>
 
     <string name="toolbar_manage_cheese">Manage cheese</string>
+    <string name="toolbar_n_selected">Cheeses selected: %1$d</string>
 
     <string name="pressAgainExit">Press again to exit</string>
     <string name="search_hint">Search…</string>

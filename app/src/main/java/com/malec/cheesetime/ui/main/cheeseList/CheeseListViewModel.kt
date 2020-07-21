@@ -19,6 +19,7 @@ class CheeseListViewModel @Inject constructor(
     private val router: Router
 ) : ViewModel(), CheeseAdapter.CheeseAction {
     val cheeseList = MutableLiveData<List<Cheese>>(null)
+    val selectedCount = MutableLiveData(0)
 
     val dateFilterStart = MutableLiveData<String>(null)
     val dateFilterEnd = MutableLiveData<String>(null)
@@ -31,6 +32,7 @@ class CheeseListViewModel @Inject constructor(
 
     fun update() {
         applyFilters()
+        selectedCount.value = repo.getSelected().size
     }
 
     fun applyFilters() {
