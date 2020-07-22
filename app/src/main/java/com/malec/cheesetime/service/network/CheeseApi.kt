@@ -19,10 +19,10 @@ class CheeseApi(private val db: FirebaseFirestore) {
     }
 
     suspend fun getNextId(): Long {
-        val data = db.collection("ids").document("next").get().await()
+        val data = db.collection("ids").document("nextCheese").get().await()
         val id = data.getLong("id")
         return id?.also {
-            db.collection("ids").document("next").update("id", id + 1)
+            db.collection("ids").document("nextCheese").update("id", id + 1)
         } ?: 0
     }
 

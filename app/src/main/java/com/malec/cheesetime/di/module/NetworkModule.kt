@@ -2,6 +2,7 @@ package com.malec.cheesetime.di.module
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.malec.cheesetime.service.network.CheeseApi
+import com.malec.cheesetime.service.network.TaskApi
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,5 +17,9 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun api(db: FirebaseFirestore): CheeseApi = CheeseApi(db)
+    fun cheeseApi(db: FirebaseFirestore): CheeseApi = CheeseApi(db)
+
+    @Provides
+    @Singleton
+    fun taskApi(db: FirebaseFirestore): TaskApi = TaskApi(db)
 }

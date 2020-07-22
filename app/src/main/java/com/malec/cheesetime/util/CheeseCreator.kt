@@ -19,7 +19,7 @@ object CheeseCreator {
         isArchived: Boolean?,
         id: Long
     ): Cheese {
-        val dateStart = Calendar.getInstance().timeInMillis
+        val dateStart = Date().time
 
         val dateM = dateFromString(date)
 
