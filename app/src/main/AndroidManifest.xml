@@ -18,7 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.malec.cheesetime.ui.main.cheeseManage.CheeseManageActivity" />
+        <activity android:name=".ui.main.cheese.cheeseManage.CheeseManageActivity" />
+        <activity android:name=".ui.main.task.taskManage.TaskManageActivity"/>
         <activity
             android:name=".ui.main.MainActivity"
             android:theme="@style/AppTheme.Closeable" />

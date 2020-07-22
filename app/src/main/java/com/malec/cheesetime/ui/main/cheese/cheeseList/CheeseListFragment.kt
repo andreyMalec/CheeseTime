@@ -1,4 +1,4 @@
-package com.malec.cheesetime.ui.main.cheeseList
+package com.malec.cheesetime.ui.main.cheese.cheeseList
 
 import android.os.Bundle
 import android.view.*

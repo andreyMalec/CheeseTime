@@ -61,6 +61,7 @@ class MainViewModel @Inject constructor(
     fun onFABClick() {
         when (currentScreen) {
             Screens.TaskListScreen -> {
+                router.navigateTo(Screens.TaskManageScreen())
             }
             Screens.CheeseListScreen -> {
                 router.navigateTo(Screens.CheeseManageScreen())

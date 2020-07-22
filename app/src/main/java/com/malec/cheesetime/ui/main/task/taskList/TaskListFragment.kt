@@ -1,4 +1,4 @@
-package com.malec.cheesetime.ui.main.taskList
+package com.malec.cheesetime.ui.main.task.taskList
 
 import android.os.Bundle
 import android.view.LayoutInflater

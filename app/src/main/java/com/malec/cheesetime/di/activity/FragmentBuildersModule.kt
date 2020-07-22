@@ -1,8 +1,8 @@
 package com.malec.cheesetime.di.activity
 
-import com.malec.cheesetime.ui.main.cheeseList.CheeseListFragment
+import com.malec.cheesetime.ui.main.cheese.cheeseList.CheeseListFragment
 import com.malec.cheesetime.ui.main.report.ReportsFragment
-import com.malec.cheesetime.ui.main.taskList.TaskListFragment
+import com.malec.cheesetime.ui.main.task.taskList.TaskListFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -6,10 +6,11 @@ import com.malec.cheesetime.di.module.NetworkModule
 import com.malec.cheesetime.di.module.UserStorageModule
 import com.malec.cheesetime.ui.login.LoginViewModel
 import com.malec.cheesetime.ui.main.MainViewModel
-import com.malec.cheesetime.ui.main.cheeseList.CheeseListViewModel
-import com.malec.cheesetime.ui.main.cheeseManage.CheeseManageViewModel
+import com.malec.cheesetime.ui.main.cheese.cheeseList.CheeseListViewModel
+import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageViewModel
 import com.malec.cheesetime.ui.main.report.ReportsViewModel
-import com.malec.cheesetime.ui.main.taskList.TaskListViewModel
+import com.malec.cheesetime.ui.main.task.taskList.TaskListViewModel
+import com.malec.cheesetime.ui.main.task.taskManage.TaskManageViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -42,6 +43,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(TaskListViewModel::class)
     abstract fun taskListViewModel(viewModel: TaskListViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TaskManageViewModel::class)
+    abstract fun taskViewModel(viewModel: TaskManageViewModel): ViewModel
 
     @Binds
     @IntoMap

@@ -4,12 +4,14 @@ import android.content.Context
 import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.malec.cheesetime.model.Cheese
+import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.ui.login.LoginActivity
 import com.malec.cheesetime.ui.main.MainActivity
-import com.malec.cheesetime.ui.main.cheeseList.CheeseListFragment
-import com.malec.cheesetime.ui.main.cheeseManage.CheeseManageActivity
+import com.malec.cheesetime.ui.main.cheese.cheeseList.CheeseListFragment
+import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageActivity
 import com.malec.cheesetime.ui.main.report.ReportsFragment
-import com.malec.cheesetime.ui.main.taskList.TaskListFragment
+import com.malec.cheesetime.ui.main.task.taskList.TaskListFragment
+import com.malec.cheesetime.ui.main.task.taskManage.TaskManageActivity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
@@ -42,6 +44,35 @@ object Screens {
     object LoginScreen : SupportAppScreen() {
         override fun getActivityIntent(context: Context): Intent? {
             return Intent(context, LoginActivity::class.java)
+        }
+    }
+
+    class TaskManageScreen(private var task: Task? = null) : SupportAppScreen() {
+        override fun getActivityIntent(context: Context): Intent? {
+            return task?.let { createExtraIntent(context, it) }
+                ?: Intent(context, TaskManageActivity::class.java)
+        }
+
+        companion object {
+            fun createExtraIntent(context: Context, task: Task) =
+                Intent(context, CheeseManageActivity::class.java).apply {
+                    putExtra("id", task.id)
+                    putExtra("cheeseId", task.cheeseId)
+                    putExtra("cheeseName", task.cheeseName)
+                    putExtra("todo", task.todo)
+                    putExtra("date", task.date)
+                    putExtra("comment", task.comment)
+                }
+
+            fun parseExtraIntent(intent: Intent) =
+                Task(
+                    intent.getLongExtra("id", 0),
+                    intent.getLongExtra("cheeseId", 0),
+                    intent.getStringExtra("cheeseName") ?: "",
+                    intent.getStringExtra("todo") ?: "",
+                    intent.getLongExtra("date", 0),
+                    intent.getStringExtra("comment") ?: ""
+                )
         }
     }
 

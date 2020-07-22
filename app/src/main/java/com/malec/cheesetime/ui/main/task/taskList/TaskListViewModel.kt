@@ -1,4 +1,4 @@
-package com.malec.cheesetime.ui.main.taskList
+package com.malec.cheesetime.ui.main.task.taskList
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

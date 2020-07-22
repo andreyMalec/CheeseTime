@@ -1,4 +1,4 @@
-package com.malec.cheesetime.ui.main.cheeseManage
+package com.malec.cheesetime.ui.main.cheese.cheeseManage
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData

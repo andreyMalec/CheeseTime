@@ -42,12 +42,18 @@
     <string name="cheese_stages">Stages</string>
     <string name="cheese_color">Badge color</string>
 
+    <string name="task_cheese">Choose cheese:</string>
+    <string name="task_todo">What to do:</string>
+    <string name="task_date">Date/time:</string>
+    <string name="task_comment">Comment:</string>
+
     <string name="milk_type">Type:</string>
     <string name="milk_volume">Volume:</string>
     <string name="milk_age">Age:</string>
 
     <string name="n_stage">%1$d stage:</string>
 
+    <string name="date_pick">Pick</string>
     <string name="date_today">Today</string>
     <string name="date_yesterday">Yesterday</string>
     <string name="date_now">Now</string>
