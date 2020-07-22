@@ -27,4 +27,15 @@
     <style name="AppTheme.Closeable" parent="AppTheme">
         <item name="android:homeAsUpIndicator">@drawable/icon_close</item>
     </style>
+
+    <style name="AppTheme.DatePicker" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/colorPrimary</item>
+    </style>
+
+    <style name="AppTheme.TimePicker" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorOnPrimary">@color/colorPrimaryDark</item>
+    </style>
 </resources>

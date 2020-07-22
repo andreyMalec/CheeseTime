@@ -58,6 +58,6 @@ class DateFormatter(private val context: Context) {
         else -> context.getString(R.string.date_now)
     }
 
-    private fun simpleFormat(date: Long) =
+    fun simpleFormat(date: Long) =
         SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH).format(date)
 }
