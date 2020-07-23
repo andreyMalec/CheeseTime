@@ -1,6 +1,8 @@
 package com.malec.cheesetime.di
 
 import android.content.Context
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.malec.cheesetime.di.activity.ActivityModule
 import com.malec.cheesetime.di.viewModule.ViewModelModule
 import com.malec.cheesetime.repo.CheeseRepo
@@ -23,11 +25,11 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun taskRepo(api: TaskApi): TaskRepo = TaskRepo(api)
+    fun taskRepo(api: TaskApi, cheeseApi: CheeseApi): TaskRepo = TaskRepo(api, cheeseApi)
 
     @Provides
     @Singleton
-    fun userRepo(): UserRepo = UserRepo()
+    fun userRepo(auth: FirebaseAuth, db: FirebaseFirestore): UserRepo = UserRepo(auth, db)
 
     @Provides
     @Singleton

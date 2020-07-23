@@ -17,14 +17,14 @@ import java.io.FileOutputStream
 import java.lang.Integer.max
 
 class CheeseSharer(private val context: Context) {
-    private val PAGE_WIDTH = 420
-    private val PAGE_HEIGHT = 594
-    private val MARGIN_TOP = 10F
-    private val CODE_WIDTH = 105
-    private val CODE_HEIGHT = 19
-    private val TEXT_SIZE = 8F
+    private val PAGE_WIDTH = 630
+    private val PAGE_HEIGHT = 891
+    private val MARGIN_TOP = 15F
+    private val CODE_WIDTH = 156
+    private val CODE_HEIGHT = 27
+    private val TEXT_SIZE = 12F
 
-    private val MAX_ROWS = 15
+    private val MAX_ROWS = 17
 
     fun send(cheese: Cheese) {
         send(listOf(cheese))

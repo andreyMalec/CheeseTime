@@ -2,8 +2,6 @@ package com.malec.cheesetime.ui.main.cheese.cheeseManage
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
@@ -11,40 +9,29 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AnimationUtils
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.EditText
+import android.widget.LinearLayout
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Cheese
+import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.Screens
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_cheese_manage.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
-class CheeseManageActivity : AppCompatActivity(), HasAndroidInjector {
-    @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
+class CheeseManageActivity : BaseActivity() {
     private val viewModel: CheeseManageViewModel by viewModels {
         viewModelFactory
     }
@@ -68,10 +55,8 @@ class CheeseManageActivity : AppCompatActivity(), HasAndroidInjector {
         }
     }
 
-    override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_cheese_manage, menu)
+        menuInflater.inflate(R.menu.menu_manage, menu)
 
         return true
     }
@@ -153,25 +138,6 @@ class CheeseManageActivity : AppCompatActivity(), HasAndroidInjector {
                 onBackPressed()
             }
         })
-    }
-
-    private fun showError(message: String) {
-        Snackbar.make(scrollView, message, Snackbar.LENGTH_LONG)
-            .setBackgroundTint(ContextCompat.getColor(this, R.color.colorError))
-            .setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
-            .show()
-    }
-
-    private fun showMessage(message: String) {
-        val toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
-        toast.view.background.colorFilter = PorterDuffColorFilter(
-            ContextCompat.getColor(this, R.color.backgroundLight),
-            PorterDuff.Mode.SRC_IN
-        )
-        toast.view.findViewById<TextView>(android.R.id.message).setTextColor(
-            ContextCompat.getColor(this, R.color.colorAccent)
-        )
-        toast.show()
     }
 
     private fun showCheeseData(cheese: Cheese) {

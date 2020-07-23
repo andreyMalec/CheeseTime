@@ -6,10 +6,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class DateFormatter(private val context: Context) {
-    private val millisecondsInDay: Long = 1000 * 60 * 60 * 24
-    private val millisecondsInHour: Long = 1000 * 60 * 60
-    private val millisecondsInMinute: Long = 1000 * 60
-
     fun format(date: Long): String {
         val now = Date().time
         val diff = date - now
@@ -58,6 +54,23 @@ class DateFormatter(private val context: Context) {
         else -> context.getString(R.string.date_now)
     }
 
-    fun simpleFormat(date: Long) =
-        SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH).format(date)
+    companion object {
+        private const val millisecondsInDay: Long = 1000 * 60 * 60 * 24
+        private const val millisecondsInHour: Long = 1000 * 60 * 60
+        private const val millisecondsInMinute: Long = 1000 * 60
+
+        fun dateFromString(date: String, time: String): Long {
+            val mDate = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH).parse(date) ?: Date()
+            val h = time.split(":")[0].toLong()
+            val m = time.split(":")[1].toLong()
+            val mTime = h * millisecondsInHour + m * millisecondsInMinute
+            return mDate.time + mTime
+        }
+
+        fun simpleFormatTime(date: Long) =
+            SimpleDateFormat("HH:mm", Locale.ENGLISH).format(date)
+
+        fun simpleFormat(date: Long) =
+            SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH).format(date)
+    }
 }

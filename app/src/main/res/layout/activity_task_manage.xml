@@ -2,9 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundLight"
+    android:fitsSystemWindows="true"
     tools:context=".ui.main.task.taskManage.TaskManageActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -62,7 +64,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="6dp"
                 android:hint="@string/task_todo"
-                app:boxBackgroundColor="@color/backgroundLight">
+                app:boxBackgroundColor="@color/backgroundLight"
+                app:errorIconTint="@color/colorError"
+                app:errorTextColor="@color/colorError">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/todoEditText"
@@ -101,7 +105,8 @@
                         android:backgroundTint="@color/colorPrimaryDark"
                         android:drawableLeft="@drawable/icon_date_range"
                         android:text="@string/date_pick"
-                        android:textColor="@color/colorPrimary" />
+                        android:textColor="@color/colorPrimary"
+                        app:errorIconTint="@color/colorError" />
 
                     <Button
                         android:id="@+id/timeButton"
@@ -111,7 +116,8 @@
                         android:backgroundTint="@color/colorPrimaryDark"
                         android:drawableLeft="@drawable/icon_time"
                         android:text="@string/date_pick"
-                        android:textColor="@color/colorPrimary" />
+                        android:textColor="@color/colorPrimary"
+                        app:errorIconTint="@color/colorError" />
                 </LinearLayout>
 
                 <LinearLayout

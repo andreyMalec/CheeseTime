@@ -11,7 +11,7 @@ class DateTimePicker(private val activity: FragmentActivity) {
     fun pickDate(onDatePicked: (date: String) -> Unit) {
         getDatePicker().also {
             it.addOnPositiveButtonClickListener { date ->
-                onDatePicked(DateFormatter(activity).simpleFormat(date))
+                onDatePicked(DateFormatter.simpleFormat(date))
             }
         }.show(activity.supportFragmentManager, "datePicker")
     }

@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.malec.cheesetime.R
 import com.malec.cheesetime.di.Injectable
 import kotlinx.android.synthetic.main.fragment_task_list.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 class TaskListFragment : Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -47,5 +49,10 @@ class TaskListFragment : Fragment(), Injectable {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_task_list, container, false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.update()
     }
 }

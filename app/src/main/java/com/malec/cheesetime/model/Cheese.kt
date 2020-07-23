@@ -60,7 +60,7 @@ data class Cheese(
 }
 
 class CheeseF {
-    val id: Long = 0
+    val id: Long? = null
     val name: String = ""
     val dateStart: Long = 0
     val date: Long = 0
@@ -73,18 +73,21 @@ class CheeseF {
     val isArchived: Boolean = false
 
     fun convert() =
-        Cheese(
-            id,
-            name,
-            dateStart,
-            date,
-            recipe,
-            comment,
-            milk,
-            composition,
-            stages,
-            badgeColor,
-            false,
-            isArchived
-        )
+        if (id == null)
+            null
+        else
+            Cheese(
+                id,
+                name,
+                dateStart,
+                date,
+                recipe,
+                comment,
+                milk,
+                composition,
+                stages,
+                badgeColor,
+                false,
+                isArchived
+            )
 }

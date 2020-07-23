@@ -55,7 +55,7 @@ object Screens {
 
         companion object {
             fun createExtraIntent(context: Context, task: Task) =
-                Intent(context, CheeseManageActivity::class.java).apply {
+                Intent(context, TaskManageActivity::class.java).apply {
                     putExtra("id", task.id)
                     putExtra("cheeseId", task.cheeseId)
                     putExtra("cheeseName", task.cheeseName)

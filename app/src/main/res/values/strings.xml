@@ -12,6 +12,7 @@
     <string name="invalid_date_error">Invalid date format</string>
 
     <string name="toolbar_manage_cheese">Manage cheese</string>
+    <string name="toolbar_manage_task">Manage task</string>
     <string name="toolbar_n_selected">Selected: %1$d</string>
 
     <string name="pressAgainExit">Press again to exit</string>
@@ -31,6 +32,9 @@
     <string name="cheese_created">New cheese successfully created</string>
     <string name="cheese_updated">Selected cheese successfully updated</string>
     <string name="cheese_deleted">Selected cheese successfully deleted</string>
+    <string name="task_created">New task successfully created</string>
+    <string name="task_updated">Selected task successfully updated</string>
+    <string name="task_deleted">Selected task successfully deleted</string>
 
     <string name="cheese_name">Name:</string>
     <string name="cheese_date">Maturation date:</string>

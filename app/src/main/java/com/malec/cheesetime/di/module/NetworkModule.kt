@@ -1,5 +1,6 @@
 package com.malec.cheesetime.di.module
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.malec.cheesetime.service.network.CheeseApi
 import com.malec.cheesetime.service.network.TaskApi
@@ -22,4 +23,8 @@ class NetworkModule {
     @Provides
     @Singleton
     fun taskApi(db: FirebaseFirestore): TaskApi = TaskApi(db)
+
+    @Provides
+    @Singleton
+    fun auth(): FirebaseAuth = FirebaseAuth.getInstance()
 }

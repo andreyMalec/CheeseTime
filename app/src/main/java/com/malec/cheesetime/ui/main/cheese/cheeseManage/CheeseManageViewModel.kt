@@ -103,22 +103,26 @@ class CheeseManageViewModel @Inject constructor(
             mStages,
             mColor,
             mCheese?.isArchived,
-            mCheese?.id ?: repo.getNextId()
+            mCheese?.id ?: getNextId()
         )
-        if (mCheese == null)
-            try {
+        try {
+            manageResult.value = if (mCheese == null) {
                 repo.create(cheese)
-                manageResult.value = context.getString(R.string.cheese_created)
-            } catch (e: Exception) {
-                setError(e)
-            }
-        else
-            try {
+                context.getString(R.string.cheese_created)
+            } else {
                 repo.update(cheese)
-                manageResult.value = context.getString(R.string.cheese_updated)
-            } catch (e: Exception) {
-                setError(e)
+                context.getString(R.string.cheese_updated)
             }
+        } catch (e: Exception) {
+            setError(e)
+        }
+    }
+
+    private suspend fun getNextId() = try {
+        repo.getNextId()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        1L
     }
 
     private fun setError(t: Throwable?) {

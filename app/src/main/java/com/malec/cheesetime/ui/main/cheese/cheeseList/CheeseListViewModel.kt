@@ -49,7 +49,11 @@ class CheeseListViewModel @Inject constructor(
             sort
         )
         viewModelScope.launch {
-            cheeseList.value = repo.getAllFiltered(filter)
+            try {
+                cheeseList.value = repo.getAllFiltered(filter)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 

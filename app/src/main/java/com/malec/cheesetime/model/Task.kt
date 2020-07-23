@@ -19,7 +19,7 @@ data class Task(
 }
 
 class TaskF {
-    val id: Long = 0
+    val id: Long? = null
     val cheeseId: Long = 0
     val cheeseName: String = ""
     val todo: String = ""
@@ -27,12 +27,15 @@ class TaskF {
     val comment: String = ""
 
     fun convert() =
-        Task(
-            id,
-            cheeseId,
-            cheeseName,
-            todo,
-            date,
-            comment
-        )
+        if (id == null)
+            null
+        else
+            Task(
+                id,
+                cheeseId,
+                cheeseName,
+                todo,
+                date,
+                comment
+            )
 }
