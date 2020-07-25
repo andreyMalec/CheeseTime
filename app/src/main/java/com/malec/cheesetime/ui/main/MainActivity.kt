@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.zxing.integration.android.IntentIntegrator
 import com.malec.cheesetime.R
@@ -113,6 +114,15 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
     private fun initToolbar() {
         toolbar.setTitle(R.string.app_name)
         setSupportActionBar(toolbar)
+        toolbar.setOnApplyWindowInsetsListener { _, insets ->
+            val statusBarHeight = insets.systemWindowInsetTop
+
+            val h = (resources.getDimension(R.dimen.toolbar_height) + statusBarHeight).toInt()
+            val lp = toolbar.layoutParams as AppBarLayout.LayoutParams
+            toolbar.layoutParams = lp.also { it.height = h }
+            toolbar.setPadding(0, statusBarHeight, 0, 0)
+            insets
+        }
     }
 
     private fun initSearchView() {

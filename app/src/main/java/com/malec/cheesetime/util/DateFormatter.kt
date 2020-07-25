@@ -22,10 +22,10 @@ class DateFormatter(private val context: Context) {
         in 0..1 -> formatMinutes(diff)
         in 2..23 -> {
             if (diffHours in 2..4 || diffHours in 22..23)
-                context.getString(R.string.date_in_n_hours, diffHours)//"Через $diffHours часа"
+                context.getString(R.string.date_in_n_hours, diffHours)
             else if (diff in 5..20)
-                context.getString(R.string.date_in_n_hours2, diffHours)//"Через $diffHours часов"
-            else context.getString(R.string.date_in_n_hours3, diffHours)//"Через $diffHours час"
+                context.getString(R.string.date_in_n_hours2, diffHours)
+            else context.getString(R.string.date_in_n_hours3, diffHours)
         }
         else -> context.getString(R.string.date_expired)
     }
@@ -38,18 +38,18 @@ class DateFormatter(private val context: Context) {
                 context.getString(
                     R.string.date_in_n_minutes,
                     diffMinutes
-                )//"Через $diffMinutes минуты"
+                )
             else if (diffMinutes in 5..20 || diffMinutes in 25..30 || diffMinutes in 35..40
                 || diffMinutes in 45..50 || diffMinutes in 55..60
             )
                 context.getString(
                     R.string.date_in_n_minutes2,
                     diffMinutes
-                )//"Через $diffMinutes минут"
+                )
             else context.getString(
                 R.string.date_in_n_minutes3,
                 diffMinutes
-            )//"Через $diffMinutes минуту"
+            )
         }
         else -> context.getString(R.string.date_now)
     }
@@ -67,14 +67,14 @@ class DateFormatter(private val context: Context) {
         }
 
         fun dateFromString(date: String): Long {
-            val mDate = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH).parse(date) ?: Date()
+            val mDate = SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).parse(date) ?: Date()
             return mDate.time
         }
 
         fun simpleFormatTime(date: Long) =
-            SimpleDateFormat("HH:mm", Locale.ENGLISH).format(date)
+            SimpleDateFormat("HH:mm", Locale.getDefault()).format(date)
 
         fun simpleFormat(date: Long) =
-            SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH).format(date)
+            SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(date)
     }
 }

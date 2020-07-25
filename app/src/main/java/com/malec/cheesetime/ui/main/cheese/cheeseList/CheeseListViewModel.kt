@@ -25,7 +25,7 @@ class CheeseListViewModel @Inject constructor(
     val dateFilterEnd = MutableLiveData<String>(null)
     val cheeseTypeFilter = MutableLiveData<String>(null)
     val archivedFilter = MutableLiveData<Boolean>(false)
-    val sortBy = MutableLiveData<String>(null)
+    val sortBy = MutableLiveData<CheeseSort>(null)
 
     init {
         update()
@@ -37,7 +37,7 @@ class CheeseListViewModel @Inject constructor(
     }
 
     fun applyFilters() {
-        val sort = CheeseSort.from(sortBy.value)
+        val sort = sortBy.value
         val filter = CheeseFilter(
             dateFilterStart.value,
             dateFilterEnd.value,

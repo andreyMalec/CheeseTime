@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.malec.cheesetime.R
 import com.malec.cheesetime.di.Injectable
+import com.malec.cheesetime.model.CheeseSort
 import com.malec.cheesetime.util.DateTimePicker
 import kotlinx.android.synthetic.main.fragment_cheese_list.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -151,7 +152,12 @@ class CheeseListFragment : Fragment(), Injectable {
             prepareFilterDialog(item.itemId)
 
             if (item.groupId == R.id.menuSortGroup)
-                viewModel.sortBy.value = item.title.toString()
+                viewModel.sortBy.value = when (item.itemId) {
+                    R.id.sortDateStart -> CheeseSort.DATE_START
+                    R.id.sortDateEnd -> CheeseSort.DATE_END
+                    R.id.sortCheeseType -> CheeseSort.TYPE
+                    else -> CheeseSort.ID
+                }
 
             true
         }
@@ -185,7 +191,7 @@ class CheeseListFragment : Fragment(), Injectable {
                     p3: Long
                 ) {
                     val type = adapter?.getItemAtPosition(p2)?.toString()
-                    viewModel.cheeseTypeFilter.value = if (type == "Any") null
+                    viewModel.cheeseTypeFilter.value = if (p2 == 0) null
                     else type
                 }
             }

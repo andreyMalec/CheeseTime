@@ -23,7 +23,7 @@ object CheeseCreator {
         val dateM = DateFormatter.dateFromString(date)
 
         val stagesFiltered = stages?.filter {
-            !it.isNullOrBlank()
+            !it.isBlank()
         }
 
         return Cheese(

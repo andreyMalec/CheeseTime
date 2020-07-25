@@ -75,7 +75,7 @@ class CheeseManageActivity : BaseActivity() {
         for (c in stagesParamsLayout.children)
             if (c.tag == "input")
                 stages.add(
-                    ((c as LinearLayout).getChildAt(0) as EditText).text?.toString()?.trim() ?: ""
+                    c.findViewById<EditText>(R.id.stageEditText).text?.toString()?.trim() ?: ""
                 )
         viewModel.stages.value = stages.toList()
         viewModel.checkAndManageCheese()
@@ -149,9 +149,9 @@ class CheeseManageActivity : BaseActivity() {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val newStageLayout = inflater.inflate(R.layout.item_stage, null) as LinearLayout
         stagesParamsLayout.addView(newStageLayout, stagesParamsLayout.childCount - 1)
-        val editText = (newStageLayout.getChildAt(0) as EditText)
-        newStageLayout.getChildAt(1).setOnClickListener { removeButton ->
-            stagesParamsLayout.removeView(removeButton.parent as View)
+        val editText = newStageLayout.findViewById<EditText>(R.id.stageEditText)
+        newStageLayout.findViewById<View>(R.id.stageButton).setOnClickListener {
+            stagesParamsLayout.removeView(it.parent as View)
         }
         text?.let {
             editText.setText(text)

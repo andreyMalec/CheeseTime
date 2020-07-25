@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="recipes">
+        <item>Пармезан</item>
+        <item>Бри</item>
+        <item>Камамбер</item>
+        <item>Гауда</item>
+        <item>Чеддер</item>
+    </string-array>
+
+    <string-array name="recipes_with_any">
+        <item>Любой</item>
+        <item>Пармезан</item>
+        <item>Бри</item>
+        <item>Камамбер</item>
+        <item>Гауда</item>
+        <item>Чеддер</item>
+    </string-array>
+</resources>

@@ -7,6 +7,12 @@ enum class CheeseSort(val value: String?) {
     ID(null);
 
     companion object {
-        fun from(findValue: String?): CheeseSort = values().first { it.value == findValue }
+        fun from(findValue: String?): CheeseSort {
+            return try {
+                values().first { it.value == findValue }
+            } catch (e: Exception) {
+                ID
+            }
+        }
     }
 }
