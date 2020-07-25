@@ -45,7 +45,7 @@ class CheeseApi(private val db: FirebaseFirestore) {
     }
 
     suspend fun create(cheese: Cheese) {
-        db.collection("$userId|cheese").add(cheese).await()
+        db.collection("$userId|cheese").add(cheese.toMap()).await()
     }
 
     suspend fun update(cheese: Cheese) {

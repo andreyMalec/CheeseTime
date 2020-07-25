@@ -5,6 +5,7 @@ import android.view.*
 import android.widget.AdapterView
 import android.widget.RelativeLayout
 import android.widget.Spinner
+import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -32,10 +33,12 @@ class CheeseListFragment : Fragment(), Injectable {
 
     private lateinit var adapter: CheeseAdapter
     private lateinit var cheeseTypeSpinner: Spinner
+    private lateinit var archivedSwitch: Switch
 
     private var dateFilterStart: MenuItem? = null
     private var dateFilterEnd: MenuItem? = null
     private var cheeseTypeFilter: MenuItem? = null
+    private var archivedFilter: MenuItem? = null
     private var dateSortStart: MenuItem? = null
     private var dateSortEnd: MenuItem? = null
     private var cheeseTypeSort: MenuItem? = null
@@ -103,6 +106,7 @@ class CheeseListFragment : Fragment(), Injectable {
         dateFilterStart = cheeseNavView.menu.findItem(R.id.filterDateStart)
         dateFilterEnd = cheeseNavView.menu.findItem(R.id.filterDateEnd)
         cheeseTypeFilter = cheeseNavView.menu.findItem(R.id.filterCheeseType)
+        archivedFilter = cheeseNavView.menu.findItem(R.id.filterArchived)
         dateSortStart = cheeseNavView.menu.findItem(R.id.sortDateStart)
         dateSortEnd = cheeseNavView.menu.findItem(R.id.sortDateEnd)
         cheeseTypeSort = cheeseNavView.menu.findItem(R.id.sortCheeseType)
@@ -162,6 +166,12 @@ class CheeseListFragment : Fragment(), Injectable {
             }
         })
 
+        archivedSwitch =
+            (archivedFilter?.actionView as RelativeLayout).getChildAt(0) as Switch
+        archivedSwitch.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.archivedFilter.value = isChecked
+        }
+
         cheeseTypeSpinner =
             (cheeseTypeFilter?.actionView as RelativeLayout).getChildAt(0) as Spinner
         cheeseTypeSpinner.onItemSelectedListener =
@@ -193,6 +203,7 @@ class CheeseListFragment : Fragment(), Injectable {
         dateFilterEnd?.title = getString(R.string.filter_date_end)
         cheeseTypeFilter?.title = getString(R.string.filter_cheese_type)
         cheeseTypeSpinner.setSelection(0)
+        archivedSwitch.isChecked = false
     }
 
     private fun prepareFilterDialog(itemId: Int) {
@@ -211,6 +222,9 @@ class CheeseListFragment : Fragment(), Injectable {
             }
             R.id.filterCheeseType -> {
                 cheeseTypeSpinner.performClick()
+            }
+            R.id.filterArchived -> {
+                archivedSwitch.performClick()
             }
         }
     }

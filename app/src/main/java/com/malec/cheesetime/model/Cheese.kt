@@ -25,7 +25,7 @@ data class Cheese(
         "composition" to composition,
         "stages" to stages,
         "badgeColor" to badgeColor,
-        "isArchived" to isArchived
+        "archived" to isArchived
     )
 
     fun toggleSelect() = Cheese(
@@ -70,7 +70,7 @@ class CheeseF {
     val composition: String = ""
     val stages: String = ""
     val badgeColor: Int = 0
-    val isArchived: Boolean = false
+    val archived: Boolean = false
 
     fun convert() =
         if (id == null)
@@ -88,6 +88,6 @@ class CheeseF {
                 stages,
                 badgeColor,
                 false,
-                isArchived
+                archived
             )
 }

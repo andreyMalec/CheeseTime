@@ -15,6 +15,11 @@
                     android:id="@+id/filterCheeseType"
                     android:title="@string/filter_cheese_type"
                     app:actionLayout="@layout/item_type_spinner"
+                    app:showAsAction="ifRoom" />
+                <item
+                    android:id="@+id/filterArchived"
+                    android:title="@string/filter_archived"
+                    app:actionLayout="@layout/item_switch"
                     app:showAsAction="always" />
             </group>
         </menu>

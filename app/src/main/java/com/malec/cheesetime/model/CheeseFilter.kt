@@ -6,6 +6,7 @@ data class CheeseFilter(
     val dateStart: String? = null,
     val dateEnd: String? = null,
     val type: String? = null,
+    val archived: Boolean? = null,
     val sortBy: CheeseSort? = null
 )
 
@@ -22,6 +23,10 @@ fun List<Cheese>.filteredBy(filter: CheeseFilter): List<Cheese> {
     if (filter.type != null)
         filteredList = filteredList.filter {
             it.recipe.toLowerCase().contains(filter.type.toLowerCase())
+        }
+    if (filter.archived != null)
+        filteredList = filteredList.filter {
+            it.isArchived == filter.archived
         }
     if (filter.sortBy != null) {
         filteredList = when (filter.sortBy) {

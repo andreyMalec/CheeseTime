@@ -10,7 +10,7 @@ class TaskRepo(private val api: TaskApi, private val cheeseApi: CheeseApi) {
     suspend fun getAll() = api.getAll()
 
     suspend fun getCheeseList() =
-        cheeseApi.getAllFiltered(CheeseFilter())//TODO фильтр для не архивных
+        cheeseApi.getAllFiltered(CheeseFilter())
 
     suspend fun getNextId() = api.getNextId()
 
