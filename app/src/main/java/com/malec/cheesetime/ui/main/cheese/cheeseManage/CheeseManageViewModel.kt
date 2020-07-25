@@ -19,7 +19,6 @@ class CheeseManageViewModel @Inject constructor(
 ) : ViewModel() {
 
     val isFieldsEmptyError = MutableLiveData(false)
-    val isInvalidDateError = MutableLiveData(false)
     val manageError = MutableLiveData<String>(null)
     val manageResult = MutableLiveData<String>(null)
 
@@ -80,11 +79,6 @@ class CheeseManageViewModel @Inject constructor(
             mMilkVolume.isNullOrBlank() || mMilkAge.isNullOrBlank()
         ) {
             isFieldsEmptyError.value = true
-            return@launch
-        }
-
-        if (!CheeseCreator.isDateValid(mDate)) {
-            isInvalidDateError.value = true
             return@launch
         }
 

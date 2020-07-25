@@ -25,10 +25,10 @@ import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.Screens
+import com.malec.cheesetime.util.DateFormatter
+import com.malec.cheesetime.util.DateTimePicker
 import kotlinx.android.synthetic.main.activity_cheese_manage.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import java.text.SimpleDateFormat
-import java.util.*
 
 @ExperimentalCoroutinesApi
 class CheeseManageActivity : BaseActivity() {
@@ -104,23 +104,14 @@ class CheeseManageActivity : BaseActivity() {
 
                 if (nameEditText.text.isNullOrBlank())
                     nameLayout.error = getString(R.string.required_field_error)
-                if (dateEditText.text.isNullOrBlank())
-                    dateLayout.error = getString(R.string.required_field_error)
+                if (dateText.text.isNullOrBlank())
+                    dateButton.error = getString(R.string.required_field_error)
                 if (milkTypeEditText.text.isNullOrBlank())
                     milkTypeEditText.error = getString(R.string.required_field_error)
                 if (milkVolumeEditText.text.isNullOrBlank())
                     milkVolumeEditText.error = getString(R.string.required_field_error)
                 if (milkAgeEditText.text.isNullOrBlank())
                     milkAgeEditText.error = getString(R.string.required_field_error)
-            }
-        })
-
-        viewModel.isInvalidDateError.observe(this, Observer { isError ->
-            if (isError) {
-                showError(getString(R.string.invalid_date_error))
-                viewModel.isInvalidDateError.value = false
-                dateLayout.error = getString(R.string.invalid_date_error) +
-                        " (" + getString(R.string.cheese_date_format) + ")"
             }
         })
 
@@ -143,8 +134,7 @@ class CheeseManageActivity : BaseActivity() {
     private fun showCheeseData(cheese: Cheese) {
         nameEditText.setText(cheese.name)
 
-        val format = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
-        dateEditText.setText(format.format(cheese.date))
+        dateText.text = DateFormatter.simpleFormat(cheese.date)
 
         val recipes = resources.getStringArray(R.array.recipes)
         recipeSpinner.setSelection(recipes.indexOf(cheese.recipe))
@@ -177,10 +167,15 @@ class CheeseManageActivity : BaseActivity() {
                 nameLayout.error = null
             viewModel.name.value = it?.toString()?.trim()
         }
-        dateEditText.doAfterTextChanged {
-            if (dateLayout.error != null)
-                dateLayout.error = null
-            viewModel.date.value = it?.toString()?.trim()
+        dateText.doAfterTextChanged {
+            if (dateButton.error != null)
+                dateButton.error = null
+            viewModel.date.value = it?.toString()
+        }
+        dateButton.setOnClickListener {
+            DateTimePicker(this).pickDate {
+                dateText.text = it
+            }
         }
         recipeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {}
