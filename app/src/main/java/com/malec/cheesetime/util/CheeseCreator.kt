@@ -1,7 +1,6 @@
 package com.malec.cheesetime.util
 
 import com.malec.cheesetime.model.Cheese
-import java.text.SimpleDateFormat
 import java.util.*
 
 object CheeseCreator {
@@ -21,7 +20,7 @@ object CheeseCreator {
     ): Cheese {
         val dateStart = Date().time
 
-        val dateM = dateFromString(date)
+        val dateM = DateFormatter.dateFromString(date)
 
         return Cheese(
             id,
@@ -37,14 +36,6 @@ object CheeseCreator {
             false,
             isArchived ?: false
         )
-    }
-
-    fun dateFromString(date: String): Long {
-        val d = date.split("/")
-        val pattern =
-            "d".repeat(d[0].length) + "/" + "M".repeat(d[1].length) + "/" + "y".repeat(d[2].length)
-        val format = SimpleDateFormat(pattern, Locale.ENGLISH)
-        return format.parse(date)?.time ?: 0
     }
 
     fun isDateValid(date: String): Boolean {

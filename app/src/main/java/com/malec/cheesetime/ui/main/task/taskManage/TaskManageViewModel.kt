@@ -72,7 +72,7 @@ class TaskManageViewModel @Inject constructor(
             return@launch
         }
 
-        val date = DateFormatter.dateFromString(mDate, mTime)
+        val date = DateFormatter.dateTimeFromString(mDate, mTime)
 
         val task = Task(
             mTask?.id ?: getNextId(),

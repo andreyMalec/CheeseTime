@@ -20,7 +20,7 @@
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog.MinWidth">
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog.MinWidth">
         <item name="android:textColorPrimary">@color/colorAccent</item>
     </style>
 

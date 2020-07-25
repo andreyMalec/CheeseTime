@@ -59,12 +59,16 @@ class DateFormatter(private val context: Context) {
         private const val millisecondsInHour: Long = 1000 * 60 * 60
         private const val millisecondsInMinute: Long = 1000 * 60
 
-        fun dateFromString(date: String, time: String): Long {
-            val mDate = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH).parse(date) ?: Date()
+        fun dateTimeFromString(date: String, time: String): Long {
             val h = time.split(":")[0].toLong()
             val m = time.split(":")[1].toLong()
             val mTime = h * millisecondsInHour + m * millisecondsInMinute
-            return mDate.time + mTime
+            return dateFromString(date) + mTime
+        }
+
+        fun dateFromString(date: String): Long {
+            val mDate = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH).parse(date) ?: Date()
+            return mDate.time
         }
 
         fun simpleFormatTime(date: Long) =

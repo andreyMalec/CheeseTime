@@ -1,6 +1,6 @@
 package com.malec.cheesetime.model
 
-import com.malec.cheesetime.util.CheeseCreator
+import com.malec.cheesetime.util.DateFormatter
 
 data class CheeseFilter(
     val dateStart: String? = null,
@@ -12,11 +12,11 @@ data class CheeseFilter(
 fun List<Cheese>.filteredBy(filter: CheeseFilter): List<Cheese> {
     var filteredList = toList()
     if (filter.dateStart != null) {
-        val start = CheeseCreator.dateFromString(filter.dateStart)
+        val start = DateFormatter.dateFromString(filter.dateStart)
         filteredList = filteredList.filter { it.date >= start }
     }
     if (filter.dateEnd != null) {
-        val end = CheeseCreator.dateFromString(filter.dateEnd)
+        val end = DateFormatter.dateFromString(filter.dateEnd)
         filteredList = filteredList.filter { it.date <= end }
     }
     if (filter.type != null)

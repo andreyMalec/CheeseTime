@@ -131,18 +131,22 @@ class TaskManageActivity : BaseActivity() {
         todoEditText.doAfterTextChanged {
             viewModel.todo.value = it?.toString()?.trim()
         }
+        dateText.doAfterTextChanged {
+            viewModel.date.value = it?.toString()?.trim()
+        }
         dateButton.setOnClickListener {
             dateButton.error = null
             DateTimePicker(this).pickDate {
                 dateText.text = it
-                viewModel.date.value = it
             }
+        }
+        timeText.doAfterTextChanged {
+            viewModel.time.value = it?.toString()?.trim()
         }
         timeButton.setOnClickListener {
             timeButton.error = null
             DateTimePicker(this).pickTime {
                 timeText.text = it
-                viewModel.time.value = it
             }
         }
         commentEditText.doAfterTextChanged {

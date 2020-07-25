@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:title="@string/filter_title">
         <menu>
@@ -12,7 +13,9 @@
                     android:title="@string/filter_date_end" />
                 <item
                     android:id="@+id/filterCheeseType"
-                    android:title="@string/filter_cheese_type" />
+                    android:title="@string/filter_cheese_type"
+                    app:actionLayout="@layout/item_type_spinner"
+                    app:showAsAction="always" />
             </group>
         </menu>
     </item>

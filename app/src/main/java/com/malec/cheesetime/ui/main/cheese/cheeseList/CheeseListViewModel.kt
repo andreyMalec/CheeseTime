@@ -36,12 +36,7 @@ class CheeseListViewModel @Inject constructor(
     }
 
     fun applyFilters() {
-        val sort = when (sortBy.value) {
-            "Date (start)" -> CheeseSort.DATE_START
-            "Date (end)" -> CheeseSort.DATE_END
-            "Cheese type" -> CheeseSort.TYPE
-            else -> CheeseSort.ID
-        }
+        val sort = CheeseSort.from(sortBy.value)
         val filter = CheeseFilter(
             dateFilterStart.value,
             dateFilterEnd.value,
