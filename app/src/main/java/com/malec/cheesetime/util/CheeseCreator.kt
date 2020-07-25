@@ -22,6 +22,10 @@ object CheeseCreator {
 
         val dateM = DateFormatter.dateFromString(date)
 
+        val stagesFiltered = stages?.filter {
+            !it.isNullOrBlank()
+        }
+
         return Cheese(
             id,
             name,
@@ -31,7 +35,7 @@ object CheeseCreator {
             comment ?: "",
             "$milkType♂$milkVolume♂$milkAge",
             composition ?: "",
-            stages?.joinToString("♂") ?: "",
+            stagesFiltered?.joinToString("♂") ?: "",
             badgeColor ?: 0,
             false,
             isArchived ?: false

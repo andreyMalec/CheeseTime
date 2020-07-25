@@ -46,7 +46,8 @@
             android:background="@color/backgroundLight"
             android:orientation="vertical"
             android:paddingLeft="24dp"
-            android:paddingRight="24dp">
+            android:paddingRight="24dp"
+            android:paddingBottom="48dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/nameLayout"
@@ -277,26 +278,27 @@
                         android:id="@+id/stagesParamsLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="end"
                         android:orientation="vertical"
                         android:visibility="gone">
 
-                        <EditText
-                            android:id="@+id/stage1EditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ems="10" />
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/stageAddButton"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_margin="8dp"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            app:cardBackgroundColor="@color/colorPrimaryDark"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="2dp">
 
-                        <EditText
-                            android:id="@+id/stage2EditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ems="10" />
+                            <View
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/icon_add" />
 
-                        <EditText
-                            android:id="@+id/stage3EditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ems="10" />
+                        </androidx.cardview.widget.CardView>
                     </LinearLayout>
 
                 </LinearLayout>

@@ -11,14 +11,18 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.login.LoginActivity">
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.cheese.cheeseManage.CheeseManageActivity" />
+        <activity
+            android:name=".ui.main.cheese.cheeseManage.CheeseManageActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.main.task.taskManage.TaskManageActivity" />
         <activity
             android:name=".ui.main.MainActivity"

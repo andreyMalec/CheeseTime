@@ -2,12 +2,10 @@ package com.malec.cheesetime.ui.main.cheese.cheeseManage
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewAnimationUtils
+import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.EditText
@@ -37,6 +35,8 @@ class CheeseManageActivity : BaseActivity() {
     }
     private var oldToolbarColor = 0
 
+    private val stages = mutableSetOf<String>()
+
     private val dropDownButtonClick = object : View.OnClickListener {
         override fun onClick(v: View?) {
             if (v == null) return
@@ -63,12 +63,22 @@ class CheeseManageActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.saveButton -> viewModel.checkAndManageCheese()
+            R.id.saveButton -> saveCheese()
             R.id.deleteButton -> viewModel.deleteCheese()
             android.R.id.home -> onBackPressed()
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun saveCheese() {
+        for (c in stagesParamsLayout.children)
+            if (c.tag == "input")
+                stages.add(
+                    ((c as LinearLayout).getChildAt(0) as EditText).text?.toString()?.trim() ?: ""
+                )
+        viewModel.stages.value = stages.toList()
+        viewModel.checkAndManageCheese()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,6 +93,10 @@ class CheeseManageActivity : BaseActivity() {
         initParamsClickListeners()
         initToolbar()
         initInputListeners()
+
+        stageAddButton.setOnClickListener {
+            addStage()
+        }
     }
 
     private fun initViewModelListeners() {
@@ -131,6 +145,19 @@ class CheeseManageActivity : BaseActivity() {
         })
     }
 
+    private fun addStage(text: String? = null) {
+        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val newStageLayout = inflater.inflate(R.layout.item_stage, null) as LinearLayout
+        stagesParamsLayout.addView(newStageLayout, stagesParamsLayout.childCount - 1)
+        val editText = (newStageLayout.getChildAt(0) as EditText)
+        newStageLayout.getChildAt(1).setOnClickListener { removeButton ->
+            stagesParamsLayout.removeView(removeButton.parent as View)
+        }
+        text?.let {
+            editText.setText(text)
+        }
+    }
+
     private fun showCheeseData(cheese: Cheese) {
         nameEditText.setText(cheese.name)
 
@@ -149,11 +176,8 @@ class CheeseManageActivity : BaseActivity() {
         compositionEditText.setText(cheese.composition)
 
         val stages = cheese.stages.split("♂")
-        if (stages.size >= 3) {
-            stage1EditText.setText(stages[0])
-            stage2EditText.setText(stages[1])
-            stage3EditText.setText(stages[2])
-        }
+        for (stage in stages)
+            addStage(stage)
 
         val bitmap =
             BarcodeEncoder().encodeBitmap(cheese.id.toString(), BarcodeFormat.CODE_128, 550, 100)
@@ -205,14 +229,6 @@ class CheeseManageActivity : BaseActivity() {
         compositionEditText.doAfterTextChanged {
             viewModel.composition.value = it?.toString()?.trim()
         }
-        val stages = mutableSetOf<String>()
-        for (child in stagesParamsLayout.children)
-            (child as EditText).doAfterTextChanged {
-                it?.toString()?.trim()?.let { stage ->
-                    stages.add(stage)
-                }
-                viewModel.stages.value = stages.toList()
-            }
 
         barcodeImage.setOnClickListener {
             viewModel.shareCheese()
@@ -260,6 +276,7 @@ class CheeseManageActivity : BaseActivity() {
 
             override fun onAnimationEnd(animation: Animator?) {
                 oldToolbarColor = newColor
+                window.statusBarColor = newColor
             }
         })
 
