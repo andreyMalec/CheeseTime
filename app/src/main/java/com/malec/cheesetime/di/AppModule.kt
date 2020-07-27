@@ -9,6 +9,7 @@ import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.repo.TaskRepo
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.service.network.CheeseApi
+import com.malec.cheesetime.service.network.StorageApi
 import com.malec.cheesetime.service.network.TaskApi
 import com.malec.cheesetime.util.CheeseSharer
 import dagger.Module
@@ -21,7 +22,8 @@ import javax.inject.Singleton
 class AppModule {
     @Provides
     @Singleton
-    fun cheeseRepo(api: CheeseApi, sharer: CheeseSharer): CheeseRepo = CheeseRepo(api, sharer)
+    fun cheeseRepo(api: CheeseApi, storageApi: StorageApi, sharer: CheeseSharer): CheeseRepo =
+        CheeseRepo(api, storageApi, sharer)
 
     @Provides
     @Singleton

@@ -12,7 +12,8 @@ data class Cheese(
     val stages: String,
     val badgeColor: Int,
     val isSelected: Boolean,
-    val isArchived: Boolean
+    val isArchived: Boolean,
+    val photo: String
 ) {
     fun toMap() = mapOf(
         "id" to id,
@@ -25,7 +26,8 @@ data class Cheese(
         "composition" to composition,
         "stages" to stages,
         "badgeColor" to badgeColor,
-        "archived" to isArchived
+        "archived" to isArchived,
+        "photo" to photo
     )
 
     fun toggleSelect() = Cheese(
@@ -40,7 +42,8 @@ data class Cheese(
         stages,
         badgeColor,
         !isSelected,
-        isArchived
+        isArchived,
+        photo
     )
 
     fun toggleArchive() = Cheese(
@@ -55,7 +58,8 @@ data class Cheese(
         stages,
         badgeColor,
         isSelected,
-        !isArchived
+        !isArchived,
+        photo
     )
 }
 
@@ -71,6 +75,7 @@ class CheeseF {
     val stages: String = ""
     val badgeColor: Int = 0
     val archived: Boolean = false
+    val photo: String = ""
 
     fun convert() =
         if (id == null)
@@ -88,6 +93,7 @@ class CheeseF {
                 stages,
                 badgeColor,
                 false,
-                archived
+                archived,
+                photo
             )
 }

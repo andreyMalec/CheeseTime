@@ -44,6 +44,13 @@
     <string name="cheese_composition">Состав</string>
     <string name="cheese_stages">Этапы</string>
     <string name="cheese_color">Цвет значка</string>
+    <string name="cheese_photo">Галерея</string>
+
+    <string-array name="attach_source">
+        <item>Выбрать из галереи</item>
+        <item>Сделать новое фото</item>
+    </string-array>
+    <string name="attach_text">Выберите источник изображения</string>
 
     <string name="task_cheese">Выберите сыр:</string>
     <string name="task_todo">Что сделать:</string>

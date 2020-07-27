@@ -9,7 +9,6 @@
 
     <string name="empty_fields_error">Fields can\'t be empty</string>
     <string name="required_field_error">Required field</string>
-    <string name="invalid_date_error">Invalid date format</string>
 
     <string name="toolbar_manage_cheese">Manage cheese</string>
     <string name="toolbar_manage_task">Manage task</string>
@@ -39,13 +38,19 @@
 
     <string name="cheese_name">Name:</string>
     <string name="cheese_date">Maturation date:</string>
-    <string name="cheese_date_format">dd/MM/yyyy</string>
     <string name="cheese_recipe">Recipe:</string>
     <string name="cheese_comment">Comment:</string>
     <string name="cheese_milk">Milk</string>
     <string name="cheese_composition">Composition</string>
     <string name="cheese_stages">Stages</string>
     <string name="cheese_color">Badge color</string>
+    <string name="cheese_photo">Gallery</string>
+
+    <string-array name="attach_source">
+        <item>Select from gallery</item>
+        <item>Make a new photo</item>
+    </string-array>
+    <string name="attach_text">Select image source</string>
 
     <string name="task_cheese">Choose cheese:</string>
     <string name="task_todo">What to do:</string>

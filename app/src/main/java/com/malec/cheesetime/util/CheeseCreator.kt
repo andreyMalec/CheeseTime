@@ -1,6 +1,7 @@
 package com.malec.cheesetime.util
 
 import com.malec.cheesetime.model.Cheese
+import com.malec.cheesetime.model.Photo
 import java.util.*
 
 object CheeseCreator {
@@ -16,9 +17,11 @@ object CheeseCreator {
         stages: List<String>?,
         badgeColor: Int?,
         isArchived: Boolean?,
-        id: Long
+        photo: List<Photo>?,
+        id: Long,
+        dateStart: Long? = null
     ): Cheese {
-        val dateStart = Date().time
+        val now = Date().time
 
         val dateM = DateFormatter.dateFromString(date)
 
@@ -26,19 +29,33 @@ object CheeseCreator {
             !it.isBlank()
         }
 
+        val milk = makeString(milkType, milkVolume, milkAge)
+
         return Cheese(
             id,
             name,
-            dateStart,
+            dateStart ?: now,
             dateM,
             recipe,
             comment ?: "",
-            "$milkType♂$milkVolume♂$milkAge",
+            milk,
             composition ?: "",
-            stagesFiltered?.joinToString("♂") ?: "",
+            stagesFiltered.makeString(),
             badgeColor ?: 0,
             false,
-            isArchived ?: false
+            isArchived ?: false,
+            photo?.map {
+                it.name
+            }.makeString()
         )
     }
+
+    private fun makeString(vararg values: Any): String {
+        var s = ""
+        for (value in values)
+            s += "$value♂"
+        return s.dropLast(1)
+    }
+
+    private fun List<Any>?.makeString() = this?.joinToString("♂") ?: ""
 }

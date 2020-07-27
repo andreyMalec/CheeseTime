@@ -78,7 +78,7 @@ class CheeseListFragment : Fragment(), Injectable {
                 viewModel.printSelected()
                 true
             }
-            R.id.deleteButton -> {
+            R.id.deleteButton -> {//TODO dialog
                 viewModel.deleteSelected()
                 true
             }

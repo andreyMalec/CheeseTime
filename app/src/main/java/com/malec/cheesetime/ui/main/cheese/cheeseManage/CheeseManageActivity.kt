@@ -1,8 +1,11 @@
 package com.malec.cheesetime.ui.main.cheese.cheeseManage
 
+import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
@@ -13,29 +16,48 @@ import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Cheese
+import com.malec.cheesetime.model.Photo
 import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.Screens
+import com.malec.cheesetime.ui.main.ResultNavigator
+import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageViewModel.Companion.CAMERA
 import com.malec.cheesetime.util.DateFormatter
 import com.malec.cheesetime.util.DateTimePicker
 import kotlinx.android.synthetic.main.activity_cheese_manage.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import ru.terrakok.cicerone.NavigatorHolder
+import java.util.*
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 class CheeseManageActivity : BaseActivity() {
+    @Inject
+    lateinit var navHolder: NavigatorHolder
+
     private val viewModel: CheeseManageViewModel by viewModels {
         viewModelFactory
     }
     private var oldToolbarColor = 0
 
     private val stages = mutableSetOf<String>()
+
+    private val navigator = ResultNavigator(
+        this,
+        supportFragmentManager,
+        R.id.navHostFragment
+    )
+
+    private lateinit var adapter: PhotoAdapter
 
     private val dropDownButtonClick = object : View.OnClickListener {
         override fun onClick(v: View?) {
@@ -78,7 +100,45 @@ class CheeseManageActivity : BaseActivity() {
                     c.findViewById<EditText>(R.id.stageEditText).text?.toString()?.trim() ?: ""
                 )
         viewModel.stages.value = stages.toList()
+        viewModel.photos.value = adapter.currentList
         viewModel.checkAndManageCheese()
+    }
+
+    private fun showImageDialog() {
+        AttachSourceDialog { result ->
+            when (result) {
+                AttachSourceDialog.DialogResult.GALLERY -> {
+                    viewModel.onAttachFromGallery()
+                }
+                AttachSourceDialog.DialogResult.CAMERA -> {
+                    if (ContextCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.CAMERA
+                        ) == PackageManager.PERMISSION_GRANTED
+                    )
+                        viewModel.onAttachFromCamera()
+                    else
+                        requestPermissions(arrayOf(Manifest.permission.CAMERA), CAMERA)
+                }
+            }
+        }.show(supportFragmentManager, "SelectAttachSource")
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == CAMERA && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            viewModel.onAttachFromCamera()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        viewModel.getImageFromResult(requestCode, resultCode, data)
+
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,9 +153,14 @@ class CheeseManageActivity : BaseActivity() {
         initParamsClickListeners()
         initToolbar()
         initInputListeners()
+        initRecycler()
 
         stageAddButton.setOnClickListener {
             addStage()
+        }
+
+        photoAddButton.setOnClickListener {
+            showImageDialog()
         }
     }
 
@@ -109,6 +174,17 @@ class CheeseManageActivity : BaseActivity() {
             Handler().postDelayed({
                 animateToolbarColorChange(color)
             }, 200)
+        })
+
+        viewModel.pickedImage.observe(this, Observer { image ->
+            if (image != null) {
+                val photo = Photo(Date().time.toString(), image, null)
+                adapter.submitList(adapter.currentList + photo)
+            }
+        })
+
+        viewModel.photos.observe(this, Observer {
+            adapter.submitList(it)
         })
 
         viewModel.isFieldsEmptyError.observe(this, Observer { isError ->
@@ -147,7 +223,7 @@ class CheeseManageActivity : BaseActivity() {
 
     private fun addStage(text: String? = null) {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val newStageLayout = inflater.inflate(R.layout.item_stage, null) as LinearLayout
+        val newStageLayout = inflater.inflate(R.layout.item_stage, null)
         stagesParamsLayout.addView(newStageLayout, stagesParamsLayout.childCount - 1)
         val editText = newStageLayout.findViewById<EditText>(R.id.stageEditText)
         newStageLayout.findViewById<View>(R.id.stageButton).setOnClickListener {
@@ -179,9 +255,9 @@ class CheeseManageActivity : BaseActivity() {
         for (stage in stages)
             addStage(stage)
 
-        val bitmap =
+        val barcodeBitmap =
             BarcodeEncoder().encodeBitmap(cheese.id.toString(), BarcodeFormat.CODE_128, 550, 100)
-        barcodeImage.setImageBitmap(bitmap)
+        barcodeImage.setImageBitmap(barcodeBitmap)
         barcodeImage.isVisible = true
     }
 
@@ -257,6 +333,13 @@ class CheeseManageActivity : BaseActivity() {
         }
     }
 
+    private fun initRecycler() {
+        adapter = PhotoAdapter(viewModel)
+        photoRecycler.adapter = adapter
+        photoRecycler.layoutManager =
+            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL)
+    }
+
     private fun animateToolbarColorChange(newColor: Int) {
         if (newColor == oldToolbarColor) return
 
@@ -310,5 +393,15 @@ class CheeseManageActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        navHolder.removeNavigator()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        navHolder.setNavigator(navigator)
     }
 }

@@ -1,8 +1,11 @@
 package com.malec.cheesetime.di.module
 
+import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.malec.cheesetime.service.network.CheeseApi
+import com.malec.cheesetime.service.network.StorageApi
 import com.malec.cheesetime.service.network.TaskApi
 import dagger.Module
 import dagger.Provides
@@ -27,4 +30,13 @@ class NetworkModule {
     @Provides
     @Singleton
     fun auth(): FirebaseAuth = FirebaseAuth.getInstance()
+
+    @Provides
+    @Singleton
+    fun storage(): FirebaseStorage = FirebaseStorage.getInstance()
+
+    @Provides
+    @Singleton
+    fun storageApi(storage: FirebaseStorage, context: Context): StorageApi =
+        StorageApi(storage, context)
 }
