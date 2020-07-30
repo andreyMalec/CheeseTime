@@ -8,8 +8,7 @@ import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.model.TaskF
 import kotlinx.coroutines.tasks.await
 
-class TaskApi(private val db: FirebaseFirestore) {
-    private val auth = FirebaseAuth.getInstance()
+class TaskApi(private val db: FirebaseFirestore, auth: FirebaseAuth) {
     private val userId = auth.currentUser?.uid
 
     init {

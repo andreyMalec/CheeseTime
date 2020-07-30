@@ -20,15 +20,12 @@ class NetworkModule {
     fun database(): FirebaseFirestore = FirebaseFirestore.getInstance()
 
     @Provides
-    @Singleton
-    fun cheeseApi(db: FirebaseFirestore): CheeseApi = CheeseApi(db)
+    fun cheeseApi(db: FirebaseFirestore, auth: FirebaseAuth): CheeseApi = CheeseApi(db, auth)
 
     @Provides
-    @Singleton
-    fun taskApi(db: FirebaseFirestore): TaskApi = TaskApi(db)
+    fun taskApi(db: FirebaseFirestore, auth: FirebaseAuth): TaskApi = TaskApi(db, auth)
 
     @Provides
-    @Singleton
     fun auth(): FirebaseAuth = FirebaseAuth.getInstance()
 
     @Provides

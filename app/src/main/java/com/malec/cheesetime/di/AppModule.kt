@@ -21,16 +21,13 @@ import javax.inject.Singleton
 @Module(includes = [ActivityModule::class, ViewModelModule::class, Navigation::class])
 class AppModule {
     @Provides
-    @Singleton
     fun cheeseRepo(api: CheeseApi, storageApi: StorageApi, sharer: CheeseSharer): CheeseRepo =
         CheeseRepo(api, storageApi, sharer)
 
     @Provides
-    @Singleton
     fun taskRepo(api: TaskApi, cheeseApi: CheeseApi): TaskRepo = TaskRepo(api, cheeseApi)
 
     @Provides
-    @Singleton
     fun userRepo(auth: FirebaseAuth, db: FirebaseFirestore, context: Context): UserRepo =
         UserRepo(auth, db, context)
 

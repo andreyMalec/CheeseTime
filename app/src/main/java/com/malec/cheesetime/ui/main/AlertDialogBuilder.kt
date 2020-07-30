@@ -28,7 +28,7 @@ class AlertDialogBuilder(private val context: Context) {
     }
 
     fun showLogoutDialog() {
-        show(context.getString(R.string.delete_task_dialog_message), R.string.logout_dialog_ok)
+        show(context.getString(R.string.logout_dialog_message), R.string.logout_dialog_ok)
     }
 
     fun setOnOkButtonClickListener(function: () -> Unit): AlertDialogBuilder {

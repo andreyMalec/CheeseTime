@@ -10,8 +10,7 @@ import com.malec.cheesetime.model.CheeseFilter
 import com.malec.cheesetime.model.filteredBy
 import kotlinx.coroutines.tasks.await
 
-class CheeseApi(private val db: FirebaseFirestore) {
-    private val auth = FirebaseAuth.getInstance()
+class CheeseApi(private val db: FirebaseFirestore, auth: FirebaseAuth) {
     private val userId = auth.currentUser?.uid
 
     init {
