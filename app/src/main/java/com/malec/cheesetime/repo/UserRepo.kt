@@ -10,6 +10,8 @@ import kotlinx.coroutines.tasks.await
 class UserRepo(private val auth: FirebaseAuth, private val db: FirebaseFirestore) {
     fun isUserAuthorized() = auth.currentUser != null
 
+    fun getUserLogin() = auth.currentUser?.email
+
     suspend fun register(email: String, pass: String) {
         auth.createUserWithEmailAndPassword(email, pass).await().also {
             createNewCollection(it.user?.uid)

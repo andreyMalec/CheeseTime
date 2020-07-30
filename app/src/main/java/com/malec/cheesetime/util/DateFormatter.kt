@@ -23,7 +23,7 @@ class DateFormatter(private val context: Context) {
         in 2..23 -> {
             if (diffHours in 2..4 || diffHours in 22..23)
                 context.getString(R.string.date_in_n_hours, diffHours)
-            else if (diff in 5..20)
+            else if (diffHours in 5..20)
                 context.getString(R.string.date_in_n_hours2, diffHours)
             else context.getString(R.string.date_in_n_hours3, diffHours)
         }

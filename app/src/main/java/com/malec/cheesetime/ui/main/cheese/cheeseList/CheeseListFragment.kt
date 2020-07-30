@@ -65,10 +65,10 @@ class CheeseListFragment : Fragment(), Injectable {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.filterButton -> {
-                if (cheeseListDrawer.isDrawerOpen(GravityCompat.START))
-                    cheeseListDrawer.closeDrawer(GravityCompat.START)
+                if (cheeseListDrawer.isDrawerOpen(GravityCompat.END))
+                    cheeseListDrawer.closeDrawer(GravityCompat.END)
                 else
-                    cheeseListDrawer.openDrawer(GravityCompat.START)
+                    cheeseListDrawer.openDrawer(GravityCompat.END)
                 true
             }
             R.id.archiveButton -> {

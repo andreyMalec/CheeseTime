@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.zxing.integration.android.IntentIntegrator
 import com.malec.cheesetime.repo.CheeseRepo
+import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.ui.Screens
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class MainViewModel @Inject constructor(
     private val router: Router,
-    private val repo: CheeseRepo
+    private val repo: CheeseRepo,
+    private val userRepo: UserRepo
 ) : ViewModel() {
     private var pressAgain = true
     private val pressAgainAwait = 2000L
@@ -26,10 +28,16 @@ class MainViewModel @Inject constructor(
     val showPressAgain: LiveData<Boolean>
         get() = _showPressAgain
 
+    private val _userLogin = MutableLiveData("")
+    val userLogin: LiveData<String>
+        get() = _userLogin
+
     private lateinit var currentScreen: Screen
 
     init {
         onTaskListClick()
+
+        _userLogin.value = userRepo.getUserLogin()
     }
 
     fun onTaskListClick() {

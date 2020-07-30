@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
@@ -89,7 +92,8 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
     private fun initViewModelListeners() {
         viewModel.showPressAgain.observe(this, Observer { show ->
             if (show)
-                Toast.makeText(this, getString(R.string.press_again_exit), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.press_again_exit), Toast.LENGTH_SHORT)
+                    .show()
         })
     }
 
@@ -114,15 +118,32 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
     private fun initToolbar() {
         toolbar.setTitle(R.string.app_name)
         setSupportActionBar(toolbar)
-        toolbar.setOnApplyWindowInsetsListener { _, insets ->
+        root.setOnApplyWindowInsetsListener { _, insets ->
             val statusBarHeight = insets.systemWindowInsetTop
 
             val h = (resources.getDimension(R.dimen.toolbar_height) + statusBarHeight).toInt()
             val lp = toolbar.layoutParams as AppBarLayout.LayoutParams
             toolbar.layoutParams = lp.also { it.height = h }
-            toolbar.setPadding(0, statusBarHeight, 0, 0)
+            toolbar.updatePadding(top = statusBarHeight)
             insets
         }
+
+        //TODO починить иконку меню при выборе сыров
+//        val drawerToggle = object : ActionBarDrawerToggle(
+//            this,
+//            mainDrawer,
+//            toolbar,
+//            R.string.navigation_drawer_open,
+//            R.string.navigation_drawer_close
+//        ) {
+//
+//        }
+//        mainDrawer.addDrawerListener(drawerToggle)
+//        drawerToggle.syncState()
+
+        viewModel.userLogin.observe(this, Observer {
+            mainNavView.getHeaderView(0).findViewById<TextView>(R.id.userLoginText).text = it
+        })
     }
 
     private fun initSearchView() {
