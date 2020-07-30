@@ -14,8 +14,15 @@
     <string name="toolbar_manage_task">Manage task</string>
     <string name="toolbar_n_selected">Selected: %1$d</string>
 
-    <string name="pressAgainExit">Press again to exit</string>
+    <string name="press_again_exit">Press again to exit</string>
     <string name="search_hint">Search…</string>
+
+    <string name="delete_cheese_dialog_message">Delete cheese?</string>
+    <string name="delete_selected_cheese_dialog_message">Delete selected cheeses: %1$d?</string>
+    <string name="delete_task_dialog_message">Delete task?</string>
+    <string name="delete_selected_task_dialog_message">Delete selected tasks: %1$d?</string>
+    <string name="delete_dialog_ok">Delete</string>
+    <string name="delete_dialog_cancel">Cancel</string>
 
     <string name="tabTaskList">Tasks</string>
     <string name="tabCheeseList">Cheeses</string>

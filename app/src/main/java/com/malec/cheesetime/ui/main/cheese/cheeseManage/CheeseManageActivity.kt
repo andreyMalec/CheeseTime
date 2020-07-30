@@ -29,6 +29,7 @@ import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.Photo
 import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.Screens
+import com.malec.cheesetime.ui.main.DeleteDialog
 import com.malec.cheesetime.ui.main.ResultNavigator
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageViewModel.Companion.CAMERA
 import com.malec.cheesetime.util.DateFormatter
@@ -86,7 +87,10 @@ class CheeseManageActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.saveButton -> saveCheese()
-            R.id.deleteButton -> viewModel.deleteCheese()
+            R.id.deleteButton ->
+                DeleteDialog(this).setOnOkButtonClickListener {
+                    viewModel.deleteCheese()
+                }.showCheeseDialog()
             android.R.id.home -> onBackPressed()
         }
 

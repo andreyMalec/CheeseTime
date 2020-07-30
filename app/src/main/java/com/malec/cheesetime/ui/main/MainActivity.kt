@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
     private fun initViewModelListeners() {
         viewModel.showPressAgain.observe(this, Observer { show ->
             if (show)
-                Toast.makeText(this, getString(R.string.pressAgainExit), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.press_again_exit), Toast.LENGTH_SHORT).show()
         })
     }
 

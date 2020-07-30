@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.malec.cheesetime.R
 import com.malec.cheesetime.di.Injectable
 import com.malec.cheesetime.model.CheeseSort
+import com.malec.cheesetime.ui.main.DeleteDialog
 import com.malec.cheesetime.util.DateTimePicker
 import kotlinx.android.synthetic.main.fragment_cheese_list.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -78,8 +79,11 @@ class CheeseListFragment : Fragment(), Injectable {
                 viewModel.printSelected()
                 true
             }
-            R.id.deleteButton -> {//TODO dialog
-                viewModel.deleteSelected()
+            R.id.deleteButton -> {
+                DeleteDialog(requireContext()).setOnOkButtonClickListener {
+                    viewModel.deleteSelected()
+                }.showCheeseDialog(viewModel.selectedCount.value)
+
                 true
             }
             android.R.id.home -> {
