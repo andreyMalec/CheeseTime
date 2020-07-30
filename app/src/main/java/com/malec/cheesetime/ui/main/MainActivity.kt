@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.updatePadding
@@ -77,6 +76,19 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         initTabHost()
         initToolbar()
         initFAClickListener()
+
+        mainNavView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.settingsButton -> {
+                }
+                R.id.logoutButton ->
+                    AlertDialogBuilder(this).setOnOkButtonClickListener {
+                        viewModel.logout()
+                    }.showLogoutDialog()
+            }
+
+            true
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -94,6 +106,10 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
             if (show)
                 Toast.makeText(this, getString(R.string.press_again_exit), Toast.LENGTH_SHORT)
                     .show()
+        })
+
+        viewModel.userLogin.observe(this, Observer {
+            mainNavView.getHeaderView(0).findViewById<TextView>(R.id.userLoginText).text = it
         })
     }
 
@@ -140,10 +156,6 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 //        }
 //        mainDrawer.addDrawerListener(drawerToggle)
 //        drawerToggle.syncState()
-
-        viewModel.userLogin.observe(this, Observer {
-            mainNavView.getHeaderView(0).findViewById<TextView>(R.id.userLoginText).text = it
-        })
     }
 
     private fun initSearchView() {

@@ -1,5 +1,6 @@
 package com.malec.cheesetime.ui.login
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -63,7 +64,8 @@ class LoginActivity : BaseActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        viewModel.handleActivityResult(requestCode, data)
+        if (resultCode == Activity.RESULT_OK)
+            viewModel.handleActivityResult(requestCode, data)
 
         super.onActivityResult(requestCode, resultCode, data)
     }

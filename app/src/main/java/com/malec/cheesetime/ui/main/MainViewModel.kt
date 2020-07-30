@@ -79,6 +79,13 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun logout() {
+        viewModelScope.launch {
+            userRepo.logout()
+            router.newRootScreen(Screens.LoginScreen)
+        }
+    }
+
     private fun replaceScreen(screen: Screen) {
         currentScreen = screen
         router.replaceScreen(currentScreen)

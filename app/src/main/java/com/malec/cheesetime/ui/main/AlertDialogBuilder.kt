@@ -6,7 +6,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.malec.cheesetime.R
 
-class DeleteDialog(private val context: Context) {
+class AlertDialogBuilder(private val context: Context) {
     private lateinit var onOkClick: () -> Unit
 
     fun showCheeseDialog(selectedCount: Int? = 1) {
@@ -15,7 +15,7 @@ class DeleteDialog(private val context: Context) {
         else
             context.getString(R.string.delete_selected_cheese_dialog_message, selectedCount)
 
-        show(message)
+        show(message, R.string.delete_dialog_ok)
     }
 
     fun showTaskDialog(selectedCount: Int = 1) {
@@ -24,22 +24,26 @@ class DeleteDialog(private val context: Context) {
         else
             context.getString(R.string.delete_selected_task_dialog_message, selectedCount)
 
-        show(message)
+        show(message, R.string.delete_dialog_ok)
     }
 
-    fun setOnOkButtonClickListener(function: () -> Unit): DeleteDialog {
+    fun showLogoutDialog() {
+        show(context.getString(R.string.delete_task_dialog_message), R.string.logout_dialog_ok)
+    }
+
+    fun setOnOkButtonClickListener(function: () -> Unit): AlertDialogBuilder {
         onOkClick = function
 
         return this
     }
 
-    private fun show(message: String) {
+    private fun show(message: String, okTextResource: Int) {
         AlertDialog.Builder(context).apply {
-            setMessage(message)
-            setPositiveButton(R.string.delete_dialog_ok) { _, _ ->
-                onOkClick
+            setTitle(message)
+            setPositiveButton(okTextResource) { _, _ ->
+                onOkClick()
             }
-            setNegativeButton(R.string.delete_dialog_cancel, null)
+            setNegativeButton(R.string.dialog_cancel, null)
         }.show().also {
             changeButtonColor(it)
         }

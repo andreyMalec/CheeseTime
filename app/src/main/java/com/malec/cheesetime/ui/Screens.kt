@@ -5,6 +5,7 @@ import android.content.Intent
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Cheese
@@ -72,13 +73,15 @@ object Screens {
         const val requestCode = 12
 
         override fun getActivityIntent(context: Context): Intent? {
+            return googleSignInClient(context)?.signInIntent
+        }
+
+        fun googleSignInClient(context: Context): GoogleSignInClient? {
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(context.getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
-
-            val googleSignInClient = GoogleSignIn.getClient(context, gso)
-            return googleSignInClient.signInIntent
+            return GoogleSignIn.getClient(context, gso)
         }
     }
 

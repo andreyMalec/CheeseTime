@@ -13,7 +13,7 @@ import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.Screens
-import com.malec.cheesetime.ui.main.DeleteDialog
+import com.malec.cheesetime.ui.main.AlertDialogBuilder
 import com.malec.cheesetime.util.DateFormatter
 import com.malec.cheesetime.util.DateTimePicker
 import kotlinx.android.synthetic.main.activity_task_manage.*
@@ -38,7 +38,7 @@ class TaskManageActivity : BaseActivity() {
         when (item.itemId) {
             R.id.saveButton -> viewModel.checkAndManageTask()
             R.id.deleteButton ->
-                DeleteDialog(this).setOnOkButtonClickListener {
+                AlertDialogBuilder(this).setOnOkButtonClickListener {
                     viewModel.deleteTask()
                 }.showTaskDialog()
             android.R.id.home -> onBackPressed()

@@ -31,7 +31,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun userRepo(auth: FirebaseAuth, db: FirebaseFirestore): UserRepo = UserRepo(auth, db)
+    fun userRepo(auth: FirebaseAuth, db: FirebaseFirestore, context: Context): UserRepo =
+        UserRepo(auth, db, context)
 
     @Provides
     @Singleton
