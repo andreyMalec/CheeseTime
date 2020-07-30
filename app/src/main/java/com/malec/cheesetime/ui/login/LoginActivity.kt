@@ -1,14 +1,15 @@
 package com.malec.cheesetime.ui.login
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.malec.cheesetime.R
 import com.malec.cheesetime.ui.BaseActivity
+import com.malec.cheesetime.ui.main.ResultNavigator
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -16,7 +17,11 @@ class LoginActivity : BaseActivity() {
     @Inject
     lateinit var navHolder: NavigatorHolder
 
-    private val navigator = SupportAppNavigator(this, -1)
+    private val navigator = ResultNavigator(
+        this,
+        supportFragmentManager,
+        R.id.navHostFragment
+    )
 
     private val viewModel: LoginViewModel by viewModels {
         viewModelFactory
@@ -51,6 +56,16 @@ class LoginActivity : BaseActivity() {
             val pass = passEditText.text?.toString()?.trim()
             viewModel.register(email, pass)
         }
+
+        googleLoginButton.setOnClickListener {
+            viewModel.googleLogin()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        viewModel.handleActivityResult(requestCode, data)
+
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onPause() {

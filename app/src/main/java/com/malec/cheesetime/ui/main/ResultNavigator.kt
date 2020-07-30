@@ -37,6 +37,7 @@ class ResultNavigator(
         val requestCode = when (screen) {
             is Screens.GalleryPickScreen -> Screens.GalleryPickScreen.requestCode
             is Screens.CameraPickScreen -> Screens.CameraPickScreen.requestCode
+            is Screens.GoogleLoginScreen -> Screens.GoogleLoginScreen.requestCode
             else -> -1
         }
 

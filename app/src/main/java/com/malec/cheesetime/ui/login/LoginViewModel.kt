@@ -1,6 +1,7 @@
 package com.malec.cheesetime.ui.login
 
 import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -52,6 +53,23 @@ class LoginViewModel @Inject constructor(
                     setError(e)
                 }
             }
+    }
+
+    fun googleLogin() {
+        router.navigateTo(Screens.GoogleLoginScreen)
+    }
+
+    fun handleActivityResult(requestCode: Int, data: Intent?) {
+        if (requestCode == Screens.GoogleLoginScreen.requestCode) {
+            viewModelScope.launch {
+                try {
+                    repo.googleLogin(data)
+                    startMainScreen()
+                } catch (e: Exception) {
+                    setError(e)
+                }
+            }
+        }
     }
 
     private fun startMainScreen() {
