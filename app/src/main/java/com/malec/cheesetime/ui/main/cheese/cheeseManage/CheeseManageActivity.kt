@@ -11,6 +11,7 @@ import android.os.Handler
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.activity.viewModels
@@ -52,6 +53,8 @@ class CheeseManageActivity : BaseActivity() {
 
     private val stages = mutableSetOf<String>()
 
+    private val recipes = mutableListOf<String>()
+
     private val navigator = ResultNavigator(
         this,
         supportFragmentManager,
@@ -59,6 +62,7 @@ class CheeseManageActivity : BaseActivity() {
     )
 
     private lateinit var adapter: PhotoAdapter
+    private lateinit var recipeAdapter: ArrayAdapter<String>
 
     private val dropDownButtonClick = object : View.OnClickListener {
         override fun onClick(v: View?) {
@@ -166,12 +170,24 @@ class CheeseManageActivity : BaseActivity() {
         photoAddButton.setOnClickListener {
             showImageDialog()
         }
+
+        recipeAdapter =
+            ArrayAdapter(this, android.R.layout.simple_list_item_1, android.R.id.text1, recipes)
+        recipeSpinner.adapter = recipeAdapter
     }
 
     private fun initViewModelListeners() {
         viewModel.cheese.observe(this, Observer { cheese ->
             if (cheese != null)
                 showCheeseData(cheese)
+        })
+
+        viewModel.recipes.observe(this, Observer {
+            recipeAdapter.clear()
+            it?.let { recipes ->
+                recipeAdapter.addAll(recipes)
+            }
+            recipeAdapter.notifyDataSetChanged()
         })
 
         viewModel.badgeColor.observe(this, Observer { color ->

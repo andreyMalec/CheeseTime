@@ -2,10 +2,7 @@ package com.malec.cheesetime.ui.main.cheese.cheeseList
 
 import android.os.Bundle
 import android.view.*
-import android.widget.AdapterView
-import android.widget.RelativeLayout
-import android.widget.Spinner
-import android.widget.Switch
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -33,7 +30,10 @@ class CheeseListFragment : Fragment(), Injectable {
         viewModelFactory
     }
 
+    private val cheeseTypes = mutableListOf<String>()
+
     private lateinit var adapter: CheeseAdapter
+    private lateinit var cheeseTypeAdapter: ArrayAdapter<String>
     private lateinit var cheeseTypeSpinner: Spinner
     private lateinit var archivedSwitch: Switch
 
@@ -131,6 +131,14 @@ class CheeseListFragment : Fragment(), Injectable {
             }
         })
 
+        viewModel.cheeseTypes.observe(viewLifecycleOwner, Observer {
+            cheeseTypeAdapter.clear()
+            it?.let { cheeseTypes ->
+                cheeseTypeAdapter.addAll(cheeseTypes)
+            }
+            cheeseTypeAdapter.notifyDataSetChanged()
+        })
+
         viewModel.cheeseList.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
             swipeRefresh.isRefreshing = false
@@ -184,6 +192,14 @@ class CheeseListFragment : Fragment(), Injectable {
 
         cheeseTypeSpinner =
             (cheeseTypeFilter?.actionView as RelativeLayout).getChildAt(0) as Spinner
+        cheeseTypeAdapter =
+            ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_list_item_1,
+                android.R.id.text1,
+                cheeseTypes
+            )
+        cheeseTypeSpinner.adapter = cheeseTypeAdapter
         cheeseTypeSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(p0: AdapterView<*>?) {}

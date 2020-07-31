@@ -15,6 +15,7 @@ import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.Photo
 import com.malec.cheesetime.repo.CheeseRepo
+import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.util.CameraIntentCreator
 import com.malec.cheesetime.util.CheeseCreator
@@ -27,7 +28,8 @@ import javax.inject.Inject
 class CheeseManageViewModel @Inject constructor(
     private val repo: CheeseRepo,
     private val context: Context,
-    private val router: Router
+    private val router: Router,
+    private val userRepo: UserRepo
 ) : ViewModel(), PhotoAdapter.PhotoAction {
 
     val isFieldsEmptyError = MutableLiveData(false)
@@ -49,9 +51,18 @@ class CheeseManageViewModel @Inject constructor(
 
     val pickedImage = MutableLiveData<Bitmap>(null)
 
+    val recipes = MutableLiveData<List<String>>()
+
     companion object {
         const val GALLERY = Screens.GalleryPickScreen.requestCode
         const val CAMERA = Screens.CameraPickScreen.requestCode
+    }
+
+    init {
+        viewModelScope.launch {
+            recipes.value = userRepo.getRecipes().takeIf { it.isNotEmpty() && it[0].isNotBlank() }
+                ?: context.resources.getStringArray(R.array.recipes).toList()
+        }
     }
 
     fun setCheese(newCheese: Cheese) {

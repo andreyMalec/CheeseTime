@@ -32,7 +32,9 @@
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
-    <string name="cheese_recipes">Recipes:</string>
+    <string name="settings_cheese_recipes">Recipes:</string>
+    <string name="settings_barcode">Barcode</string>
+    <string name="settings_qrcode">QR-code</string>
 
     <string name="tabTaskList">Tasks</string>
     <string name="tabCheeseList">Cheeses</string>
@@ -42,6 +44,7 @@
     <string name="filter_date_start">Date (start)</string>
     <string name="filter_date_end">Date (end)</string>
     <string name="filter_cheese_type">Cheese type</string>
+    <string name="filter_cheese_type_any">Any</string>
     <string name="filter_sort_title">Sort by:</string>
     <string name="filter_archived">Archived</string>
     <string name="filter_clear">Clear filter</string>

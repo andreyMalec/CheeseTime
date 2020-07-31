@@ -36,6 +36,10 @@ class UserApi(
         return data.getString("list") ?: ""
     }
 
+    suspend fun setRecipes(recipes: String) {
+        ref.recipes().update("list", recipes).await()
+    }
+
     suspend fun googleLogin(intent: Intent?) {
         val account = GoogleSignIn.getSignedInAccountFromIntent(intent).await()
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)

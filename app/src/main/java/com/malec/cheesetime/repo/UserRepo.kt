@@ -43,5 +43,9 @@ class UserRepo(
         return data.split("♂")
     }
 
+    suspend fun setRecipes(recipes: List<String>) {
+        api.setRecipes(recipes.joinToString("♂"))
+    }
+
     suspend fun googleLogin(intent: Intent?) = api.googleLogin(intent)
 }
