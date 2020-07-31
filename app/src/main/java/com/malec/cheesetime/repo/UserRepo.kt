@@ -3,52 +3,45 @@ package com.malec.cheesetime.repo
 import android.content.Context
 import android.content.Intent
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.FirebaseFirestore
-import com.malec.cheesetime.ui.Screens
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.malec.cheesetime.R
+import com.malec.cheesetime.service.network.UserApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.tasks.await
 
 @ExperimentalCoroutinesApi
 class UserRepo(
-    private val auth: FirebaseAuth,
-    private val db: FirebaseFirestore,
+    private val api: UserApi,
     private val context: Context
 ) {
-    fun isUserAuthorized() = auth.currentUser != null
-
-    fun getUserLogin() = auth.currentUser?.email
-
-    suspend fun logout() {
-        auth.signOut()
-        Screens.GoogleLoginScreen.googleSignInClient(context)?.signOut()?.await()
-    }
-
-    suspend fun register(email: String, pass: String) {
-        auth.createUserWithEmailAndPassword(email, pass).await().also {
-            createNewCollection(it.user?.uid)
+    companion object {
+        fun googleSignInClient(context: Context): GoogleSignInClient? {
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(context.getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+            return GoogleSignIn.getClient(context, gso)
         }
     }
 
-    suspend fun login(email: String, pass: String) {
-        auth.signInWithEmailAndPassword(email, pass).await()
+    fun isUserAuthorized() = api.isUserAuthorized()
+
+    fun getUserLogin() = api.getUserLogin()
+
+    suspend fun logout() {
+        api.logout()
+        googleSignInClient(context)?.signOut()?.await()
     }
 
-    suspend fun googleLogin(intent: Intent?) {
-        val account = GoogleSignIn.getSignedInAccountFromIntent(intent).await()
-        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-        val user = auth.signInWithCredential(credential).await()
+    suspend fun register(email: String, pass: String) = api.register(email, pass)
 
-        val init = db.collection("${user.user?.uid}|cheese").document("init").get().await()
-        if (!init.exists())
-            createNewCollection(user.user?.uid)
+    suspend fun login(email: String, pass: String) = api.login(email, pass)
+
+    suspend fun getRecipes(): List<String> {
+        val data = api.getRecipes()
+        return data.split("♂")
     }
 
-    private fun createNewCollection(userId: String?) {
-        db.collection("$userId|task").document("init").set(mapOf("init" to null))
-        db.collection("$userId|ids").document("nextCheese").set(mapOf("id" to 1))
-        db.collection("$userId|ids").document("nextTask").set(mapOf("id" to 1))
-        db.collection("$userId|cheese").document("init").set(mapOf("init" to null))
-    }
+    suspend fun googleLogin(intent: Intent?) = api.googleLogin(intent)
 }

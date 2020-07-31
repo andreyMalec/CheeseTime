@@ -101,7 +101,7 @@ class CheeseManageActivity : BaseActivity() {
         for (c in stagesParamsLayout.children)
             if (c.tag == "input")
                 stages.add(
-                    c.findViewById<EditText>(R.id.stageEditText).text?.toString()?.trim() ?: ""
+                    c.findViewById<EditText>(R.id.editText).text?.toString()?.trim() ?: ""
                 )
         viewModel.stages.value = stages.toList()
         viewModel.photos.value = adapter.currentList
@@ -227,10 +227,10 @@ class CheeseManageActivity : BaseActivity() {
 
     private fun addStage(text: String? = null) {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val newStageLayout = inflater.inflate(R.layout.item_stage, null)
+        val newStageLayout = inflater.inflate(R.layout.item_removable_text, null)
         stagesParamsLayout.addView(newStageLayout, stagesParamsLayout.childCount - 1)
-        val editText = newStageLayout.findViewById<EditText>(R.id.stageEditText)
-        newStageLayout.findViewById<View>(R.id.stageButton).setOnClickListener {
+        val editText = newStageLayout.findViewById<EditText>(R.id.editText)
+        newStageLayout.findViewById<View>(R.id.removeButton).setOnClickListener {
             stagesParamsLayout.removeView(it.parent as View)
         }
         text?.let {

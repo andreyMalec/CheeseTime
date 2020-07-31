@@ -79,8 +79,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
         mainNavView.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.settingsButton -> {
-                }
+                R.id.settingsButton -> viewModel.showSettings()
                 R.id.logoutButton ->
                     AlertDialogBuilder(this).setOnOkButtonClickListener {
                         viewModel.logout()

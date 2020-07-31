@@ -4,12 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.Task
+import com.malec.cheesetime.repo.UserRepo.Companion.googleSignInClient
 import com.malec.cheesetime.ui.login.LoginActivity
 import com.malec.cheesetime.ui.main.MainActivity
 import com.malec.cheesetime.ui.main.cheese.cheeseList.CheeseListFragment
@@ -17,6 +14,7 @@ import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageActivity
 import com.malec.cheesetime.ui.main.report.ReportsFragment
 import com.malec.cheesetime.ui.main.task.taskList.TaskListFragment
 import com.malec.cheesetime.ui.main.task.taskManage.TaskManageActivity
+import com.malec.cheesetime.ui.settings.SettingsActivity
 import com.malec.cheesetime.util.CameraIntentCreator
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.terrakok.cicerone.android.support.SupportAppScreen
@@ -69,19 +67,17 @@ object Screens {
         }
     }
 
+    object SettingsScreen : SupportAppScreen() {
+        override fun getActivityIntent(context: Context): Intent? {
+            return Intent(context, SettingsActivity::class.java)
+        }
+    }
+
     object GoogleLoginScreen : SupportAppScreen() {
         const val requestCode = 12
 
         override fun getActivityIntent(context: Context): Intent? {
             return googleSignInClient(context)?.signInIntent
-        }
-
-        fun googleSignInClient(context: Context): GoogleSignInClient? {
-            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(context.getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build()
-            return GoogleSignIn.getClient(context, gso)
         }
     }
 

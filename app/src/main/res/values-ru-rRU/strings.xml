@@ -30,6 +30,8 @@
     <string name="menu_settings">Настройки</string>
     <string name="menu_logout">Выйти</string>
 
+    <string name="cheese_recipes">Рецепты:</string>
+
     <string name="tabTaskList">Задачи</string>
     <string name="tabCheeseList">Сыры</string>
     <string name="tabReports">Отчеты</string>

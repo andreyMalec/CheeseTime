@@ -8,6 +8,7 @@ inline operator fun <reified T : Any> SharedPreferences.get(key: String): T {
         String::class -> getString(key, "") as T
         Long::class -> getLong(key, 0) as T
         Boolean::class -> getBoolean(key, false) as T
+        Set::class -> getStringSet(key, setOf()) as T
 
         else -> throw UnsupportedOperationException("Not yet implemented")
     }
@@ -19,6 +20,14 @@ operator fun SharedPreferences.set(key: String, value: Any) {
         is String -> edit { it.putString(key, value) }
         is Long -> edit { it.putLong(key, value) }
         is Boolean -> edit { it.putBoolean(key, value) }
+        is Set<*> -> edit {
+            if (value.stream().allMatch { item ->
+                    String::class.isInstance(item)
+                })
+                it.putStringSet(key, value as Set<String>)
+            else
+                throw UnsupportedOperationException("Not yet implemented")
+        }
 
         else -> throw UnsupportedOperationException("Not yet implemented")
     }

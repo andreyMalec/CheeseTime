@@ -5,6 +5,7 @@ import com.malec.cheesetime.ui.login.LoginActivity
 import com.malec.cheesetime.ui.main.MainActivity
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageActivity
 import com.malec.cheesetime.ui.main.task.taskManage.TaskManageActivity
+import com.malec.cheesetime.ui.settings.SettingsActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,4 +24,7 @@ abstract class ActivityModule {
 
     @ContributesAndroidInjector
     abstract fun contributeTaskManageActivity(): TaskManageActivity
+
+    @ContributesAndroidInjector
+    abstract fun contributeSettingsActivity(): SettingsActivity
 }

@@ -86,6 +86,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun showSettings() {
+        router.navigateTo(Screens.SettingsScreen)
+    }
+
     private fun replaceScreen(screen: Screen) {
         currentScreen = screen
         router.replaceScreen(currentScreen)
