@@ -6,13 +6,13 @@ import java.util.*
 
 object CheeseCreator {
     fun create(
-        name: String,
-        date: String,
-        recipe: String,
+        name: String?,
+        date: String?,
+        recipe: String?,
         comment: String?,
         milkType: String,
         milkVolume: String,
-        milkAge: String,
+        milkAge: String?,
         composition: String?,
         stages: List<String>?,
         badgeColor: Int?,
@@ -33,10 +33,10 @@ object CheeseCreator {
 
         return Cheese(
             id,
-            name,
+            name.takeIf { !it.isNullOrBlank() } ?: recipe ?: "",
             dateStart ?: now,
             dateM,
-            recipe,
+            recipe ?: "",
             comment ?: "",
             milk,
             composition ?: "",
@@ -50,10 +50,11 @@ object CheeseCreator {
         )
     }
 
-    private fun makeString(vararg values: Any): String {
+    private fun makeString(vararg values: Any?): String {
         var s = ""
         for (value in values)
-            s += "$value♂"
+            s += if (value == null) "♂"
+            else "$value♂"
         return s.dropLast(1)
     }
 

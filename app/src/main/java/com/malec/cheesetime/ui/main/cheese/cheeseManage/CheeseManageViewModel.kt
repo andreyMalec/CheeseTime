@@ -137,11 +137,7 @@ class CheeseManageViewModel @Inject constructor(
         val mPhotos = photos.value
         val mCheese = cheese.value
 
-        if (
-            mName.isNullOrBlank() || mDate.isNullOrBlank() ||
-            mRecipe.isNullOrBlank() || mMilkType.isNullOrBlank() ||
-            mMilkVolume.isNullOrBlank() || mMilkAge.isNullOrBlank()
-        ) {
+        if (mMilkType.isNullOrBlank() || mMilkVolume.isNullOrBlank()) {
             isFieldsEmptyError.value = true
             return@launch
         }

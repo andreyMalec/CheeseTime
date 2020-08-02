@@ -212,16 +212,10 @@ class CheeseManageActivity : BaseActivity() {
                 showError(getString(R.string.empty_fields_error))
                 viewModel.isFieldsEmptyError.value = false
 
-                if (nameEditText.text.isNullOrBlank())
-                    nameLayout.error = getString(R.string.required_field_error)
-                if (dateText.text.isNullOrBlank())
-                    dateButton.error = getString(R.string.required_field_error)
                 if (milkTypeEditText.text.isNullOrBlank())
                     milkTypeEditText.error = getString(R.string.required_field_error)
                 if (milkVolumeEditText.text.isNullOrBlank())
                     milkVolumeEditText.error = getString(R.string.required_field_error)
-                if (milkAgeEditText.text.isNullOrBlank())
-                    milkAgeEditText.error = getString(R.string.required_field_error)
             }
         })
 
@@ -283,13 +277,9 @@ class CheeseManageActivity : BaseActivity() {
 
     private fun initInputListeners() {
         nameEditText.doAfterTextChanged {
-            if (nameLayout.error != null)
-                nameLayout.error = null
             viewModel.name.value = it?.toString()?.trim()
         }
         dateText.doAfterTextChanged {
-            if (dateButton.error != null)
-                dateButton.error = null
             viewModel.date.value = it?.toString()
         }
         dateButton.setOnClickListener {
@@ -318,8 +308,6 @@ class CheeseManageActivity : BaseActivity() {
             viewModel.milkVolume.value = it?.toString()?.trim()
         }
         milkAgeEditText.doAfterTextChanged {
-            if (milkAgeEditText.error != null)
-                milkAgeEditText.error = null
             viewModel.milkAge.value = it?.toString()?.trim()
         }
         compositionEditText.doAfterTextChanged {

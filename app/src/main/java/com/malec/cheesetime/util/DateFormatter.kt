@@ -66,7 +66,9 @@ class DateFormatter(private val context: Context) {
             return dateFromString(date) + mTime
         }
 
-        fun dateFromString(date: String): Long {
+        fun dateFromString(date: String?): Long {
+            if (date.isNullOrBlank()) return Date().time
+
             val mDate = SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).parse(date) ?: Date()
             return mDate.time
         }
