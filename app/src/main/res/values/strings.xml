@@ -35,6 +35,7 @@
     <string name="settings_cheese_recipes">Recipes:</string>
     <string name="settings_barcode">Barcode</string>
     <string name="settings_qrcode">QR-code</string>
+    <string name="settings_recipe_manage">Manage recipe</string>
 
     <string name="tabTaskList">Tasks</string>
     <string name="tabCheeseList">Cheeses</string>

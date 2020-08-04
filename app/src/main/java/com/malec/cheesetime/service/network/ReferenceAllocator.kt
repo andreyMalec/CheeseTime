@@ -34,11 +34,17 @@ class ReferenceAllocator(
         db.collection("$userId").document("data").collection("cheeses").document("init")
 
     fun recipes() =
-        db.collection("$userId").document("profile").collection("prefs").document("recipes")
+        db.collection("$userId").document("prefs").collection("recipes")
+
+    fun recipesInit() =
+        db.collection("$userId").document("prefs").collection("recipes").document("init")
 
     fun nextCheese() =
         db.collection("$userId").document("data").collection("ids").document("nextCheese")
 
     fun nextTask() =
         db.collection("$userId").document("data").collection("ids").document("nextTask")
+
+    fun nextRecipe() =
+        db.collection("$userId").document("data").collection("ids").document("nextRecipe")
 }

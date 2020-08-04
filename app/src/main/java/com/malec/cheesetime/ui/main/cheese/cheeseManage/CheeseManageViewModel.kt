@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.Photo
+import com.malec.cheesetime.model.Recipe
 import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.ui.Screens
@@ -22,6 +23,7 @@ import com.malec.cheesetime.util.CheeseCreator
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
+import java.util.*
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -49,9 +51,9 @@ class CheeseManageViewModel @Inject constructor(
     val photos = MutableLiveData<List<Photo>>(listOf())
     val cheese = MutableLiveData<Cheese>(null)
 
-    val pickedImage = MutableLiveData<Bitmap>(null)
-
     val recipes = MutableLiveData<List<String>>()
+
+    private val mRecipes = mutableListOf<Recipe>()
 
     companion object {
         const val GALLERY = Screens.GalleryPickScreen.requestCode
@@ -60,8 +62,18 @@ class CheeseManageViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            recipes.value = userRepo.getRecipes().takeIf { it.isNotEmpty() && it[0].isNotBlank() }
-                ?: context.resources.getStringArray(R.array.recipes).toList()
+            mRecipes.addAll(userRepo.getRecipes())
+            recipes.value =
+                (userRepo.getRecipes().map { it.name }
+                    .takeIf { it.isNotEmpty() }
+                    ?: context.resources.getStringArray(R.array.recipes).toList()).let {
+                    cheese.value?.recipe?.let { currentRecipe ->
+                        if (!it.contains(currentRecipe))
+                            listOf(currentRecipe) + it
+                        else
+                            it
+                    } ?: it
+                }
         }
     }
 
@@ -76,6 +88,13 @@ class CheeseManageViewModel @Inject constructor(
     fun shareCheese() {
         cheese.value?.let {
             repo.share(it)
+        }
+    }
+
+    fun selectRecipe(recipeName: String?) {
+        recipe.value = recipeName
+        mRecipes.find { it.name == recipeName }?.stages?.split("♂")?.let {
+            stages.value = it
         }
     }
 
@@ -119,7 +138,10 @@ class CheeseManageViewModel @Inject constructor(
         }
 
         bitmap?.let {
-            pickedImage.value = bitmap
+            photos.value = photos.value?.let {
+                val photo = Photo(Date().time.toString(), bitmap, null)
+                it + photo
+            }
         }
     }
 

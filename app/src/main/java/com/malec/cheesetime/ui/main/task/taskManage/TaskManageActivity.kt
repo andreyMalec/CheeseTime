@@ -65,11 +65,12 @@ class TaskManageActivity : BaseActivity() {
 
     private fun initViewModelListeners() {
         viewModel.cheeseList.observe(this, Observer { list ->
-            adapter.clear()
             val cheeseNames = list.map {
                 it.name + " id: " + it.id
             }
-            adapter.addAll(cheeseNames)
+            val cheeseSet = cheeseList.toSet()
+            adapter.clear()
+            adapter.addAll(cheeseSet + cheeseNames.toSet())
         })
 
         viewModel.task.observe(this, Observer {

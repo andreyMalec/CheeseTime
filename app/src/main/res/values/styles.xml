@@ -20,6 +20,13 @@
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog.MinWidth">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <style name="AppTheme.Closeable" parent="AppTheme">
         <item name="android:homeAsUpIndicator">@drawable/icon_close</item>
     </style>

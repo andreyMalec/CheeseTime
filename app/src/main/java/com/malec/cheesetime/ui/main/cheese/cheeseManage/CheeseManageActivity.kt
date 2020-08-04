@@ -27,7 +27,6 @@ import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Cheese
-import com.malec.cheesetime.model.Photo
 import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.ui.main.AlertDialogBuilder
@@ -38,7 +37,6 @@ import com.malec.cheesetime.util.DateTimePicker
 import kotlinx.android.synthetic.main.activity_cheese_manage.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.terrakok.cicerone.NavigatorHolder
-import java.util.*
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -102,13 +100,13 @@ class CheeseManageActivity : BaseActivity() {
     }
 
     private fun saveCheese() {
+        stages.clear()
         for (c in stagesParamsLayout.children)
-            if (c.tag == "input")
-                stages.add(
-                    c.findViewById<EditText>(R.id.editText).text?.toString()?.trim() ?: ""
-                )
+            stages.add(
+                c.findViewById<EditText>(R.id.editText).text?.toString()?.trim() ?: ""
+            )
+
         viewModel.stages.value = stages.toList()
-        viewModel.photos.value = adapter.currentList
         viewModel.checkAndManageCheese()
     }
 
@@ -182,6 +180,15 @@ class CheeseManageActivity : BaseActivity() {
                 showCheeseData(cheese)
         })
 
+        viewModel.stages.observe(this, Observer { stages ->
+            if (stages != null && stages.isNotEmpty()) {
+                stagesParamsLayout.removeAllViews()
+
+                for (stage in stages)
+                    addStage(stage)
+            }
+        })
+
         viewModel.recipes.observe(this, Observer {
             recipeAdapter.clear()
             it?.let { recipes ->
@@ -194,13 +201,6 @@ class CheeseManageActivity : BaseActivity() {
             Handler().postDelayed({
                 animateToolbarColorChange(color)
             }, 200)
-        })
-
-        viewModel.pickedImage.observe(this, Observer { image ->
-            if (image != null) {
-                val photo = Photo(Date().time.toString(), image, null)
-                adapter.submitList(adapter.currentList + photo)
-            }
         })
 
         viewModel.photos.observe(this, Observer {
@@ -237,8 +237,8 @@ class CheeseManageActivity : BaseActivity() {
 
     private fun addStage(text: String? = null) {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val newStageLayout = inflater.inflate(R.layout.item_removable_text, null)
-        stagesParamsLayout.addView(newStageLayout, stagesParamsLayout.childCount - 1)
+        val newStageLayout = inflater.inflate(R.layout.item_removable_edittext, null)
+        stagesParamsLayout.addView(newStageLayout, stagesParamsLayout.childCount)
         val editText = newStageLayout.findViewById<EditText>(R.id.editText)
         newStageLayout.findViewById<View>(R.id.removeButton).setOnClickListener {
             stagesParamsLayout.removeView(it.parent as View)
@@ -291,7 +291,8 @@ class CheeseManageActivity : BaseActivity() {
             override fun onNothingSelected(p0: AdapterView<*>?) {}
 
             override fun onItemSelected(adapter: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                viewModel.recipe.value = adapter?.getItemAtPosition(p2)?.toString()?.trim()
+                val recipe = adapter?.getItemAtPosition(p2)?.toString()
+                viewModel.selectRecipe(recipe)
             }
         }
         commentEditText.doAfterTextChanged {

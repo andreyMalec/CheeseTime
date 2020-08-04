@@ -6,6 +6,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.malec.cheesetime.R
+import com.malec.cheesetime.model.Recipe
 import com.malec.cheesetime.service.network.UserApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.tasks.await
@@ -38,14 +39,17 @@ class UserRepo(
 
     suspend fun login(email: String, pass: String) = api.login(email, pass)
 
-    suspend fun getRecipes(): List<String> {
-        val data = api.getRecipes()
-        return data.split("♂")
-    }
+    suspend fun getNextRecipeId() = api.getNextRecipeId()
 
-    suspend fun setRecipes(recipes: List<String>) {
-        api.setRecipes(recipes.joinToString("♂"))
-    }
+    suspend fun getRecipes() = api.getRecipes()
+
+    suspend fun createRecipe(recipe: Recipe) = api.createRecipe(recipe)
+
+    suspend fun updateRecipe(recipe: Recipe) = api.updateRecipe(recipe)
+
+    suspend fun deleteRecipeById(id: Long) = api.deleteRecipeById(id)
+
+    suspend fun getRecipeById(id: Long) = api.getRecipeById(id)
 
     suspend fun googleLogin(intent: Intent?) = api.googleLogin(intent)
 }

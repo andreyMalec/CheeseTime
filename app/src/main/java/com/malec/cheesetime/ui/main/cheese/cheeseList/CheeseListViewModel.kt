@@ -39,7 +39,8 @@ class CheeseListViewModel @Inject constructor(
 
         viewModelScope.launch {
             cheeseTypes.value =
-                (userRepo.getRecipes().takeIf { it.isNotEmpty() && it[0].isNotBlank() }
+                (userRepo.getRecipes().map { it.name }
+                    .takeIf { it.isNotEmpty() }
                     ?: context.resources.getStringArray(R.array.recipes).toList()).let {
                     listOf(context.getString(R.string.filter_cheese_type_any)) + it
                 }

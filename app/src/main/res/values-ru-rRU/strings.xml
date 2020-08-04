@@ -33,6 +33,7 @@
     <string name="settings_cheese_recipes">Рецепты:</string>
     <string name="settings_barcode">Штрих-код</string>
     <string name="settings_qrcode">QR-код</string>
+    <string name="settings_recipe_manage">Управление рецептом</string>
 
     <string name="tabTaskList">Задачи</string>
     <string name="tabCheeseList">Сыры</string>

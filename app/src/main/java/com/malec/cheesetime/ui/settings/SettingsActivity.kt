@@ -1,44 +1,26 @@
 package com.malec.cheesetime.ui.settings
 
-import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.children
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.malec.cheesetime.R
+import com.malec.cheesetime.model.Recipe
 import com.malec.cheesetime.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
-class SettingsActivity : BaseActivity() {
+class SettingsActivity : BaseActivity(), RecipeAdapter.RecipeAction {
     private val viewModel: SettingsViewModel by viewModels {
         viewModelFactory
     }
 
-    private fun addRecipe(text: String? = null) {
-        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val newRecipeLayout = inflater.inflate(R.layout.item_removable_text, null)
-        recipeLayout.addView(newRecipeLayout, recipeLayout.childCount)
-        val editText = newRecipeLayout.findViewById<EditText>(R.id.editText)
-        newRecipeLayout.findViewById<View>(R.id.removeButton).setOnClickListener {
-            recipeLayout.removeView(it.parent as View)
-        }
-        text?.let {
-            editText.setText(text)
-        }
-    }
-
-    private fun clearRecipes() {
-        recipeLayout.removeAllViews()
-    }
+    private lateinit var adapter: RecipeAdapter
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_settings, menu)
@@ -48,24 +30,12 @@ class SettingsActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.saveButton -> saveSettings()
+            R.id.saveButton -> viewModel.saveSettings()
 
             android.R.id.home -> onBackPressed()
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun saveSettings() {
-        val recipes = mutableSetOf<String>()
-        for (c in recipeLayout.children) {
-            val text = c.findViewById<EditText>(R.id.editText).text.toString().trim()
-            val recipe = text[0].toUpperCase() + text.drop(1)
-            recipes.add(recipe)
-        }
-        viewModel.recipes.value = recipes.toList()
-
-        viewModel.saveSettings()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,15 +45,16 @@ class SettingsActivity : BaseActivity() {
         initToolbar()
 
         recipeAddButton.setOnClickListener {
-            addRecipe()
+            manageRecipe()
         }
 
+        adapter = RecipeAdapter(this)
+        recipeRecycler.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recipeRecycler.adapter = adapter
+
         viewModel.recipes.observe(this, Observer {
-            clearRecipes()
-            it?.forEach { recipe ->
-                if (recipe.isNotBlank())
-                    addRecipe(recipe)
-            }
+            adapter.submitList(it)
         })
     }
 
@@ -100,5 +71,19 @@ class SettingsActivity : BaseActivity() {
             toolbar.updatePadding(top = statusBarHeight)
             insets
         }
+    }
+
+    private fun manageRecipe(recipe: Recipe? = null) {
+        RecipeManageDialogFragment(recipe) { updatedRecipe ->
+            viewModel.onSaveRecipe(updatedRecipe)
+        }.show(supportFragmentManager, "")
+    }
+
+    override fun onClick(recipe: Recipe) {
+        manageRecipe(recipe)
+    }
+
+    override fun onRemove(recipe: Recipe) {
+        viewModel.onRemoveRecipe(recipe)
     }
 }
