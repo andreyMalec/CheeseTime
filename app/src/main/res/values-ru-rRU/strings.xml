@@ -83,6 +83,10 @@
 
     <string name="n_stage">%1$d этап:</string>
 
+    <string name="photo_download">Скачать</string>
+    <string name="photo_share">Поделиться</string>
+    <string name="photo_delete">Удалить</string>
+
     <string name="date_pick">Выбрать</string>
     <string name="date_today">Сегодня</string>
     <string name="date_yesterday">Вчера</string>

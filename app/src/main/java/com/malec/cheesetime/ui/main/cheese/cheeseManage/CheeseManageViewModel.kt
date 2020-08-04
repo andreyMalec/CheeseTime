@@ -211,7 +211,7 @@ class CheeseManageViewModel @Inject constructor(
         manageError.value = msg.drop(i + 2)
     }
 
-    fun onDeleteClick(photo: Photo) {
+    fun onPhotoDeleteClick(photo: Photo) {
         photos.value = photos.value?.toMutableList()?.apply {
             remove(photo)
         }

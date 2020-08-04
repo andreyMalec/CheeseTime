@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
+            android:foreground="?android:attr/selectableItemBackground"
             android:maxWidth="150dp"
             android:maxHeight="150dp"
             android:src="@drawable/icon"

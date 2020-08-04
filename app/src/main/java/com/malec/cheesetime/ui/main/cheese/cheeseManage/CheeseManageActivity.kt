@@ -245,13 +245,23 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         })
     }
 
-    override fun onClick(photo: Photo) {
+    override fun onLongClick(photo: Photo) {
+        PhotoMenuBuilder()
+            .setOnDownloadClickListener {
 
+            }
+            .setOnShareClickListener {
+
+            }
+            .setOnDeleteClickListener {
+                deletePhotoDialog(photo)
+            }
+            .show(supportFragmentManager)
     }
 
-    override fun onLongClick(photo: Photo) {
+    private fun deletePhotoDialog(photo: Photo) {
         AlertDialogBuilder(this).setOnOkButtonClickListener {
-            viewModel.onDeleteClick(photo)
+            viewModel.onPhotoDeleteClick(photo)
         }.showPhotoDeleteDialog()
     }
 

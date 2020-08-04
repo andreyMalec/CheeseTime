@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+    <LinearLayout
+        android:id="@+id/downloadButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_download" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="@string/photo_download"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/shareButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_share" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="@string/photo_share"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/deleteButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_delete" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="@string/photo_delete"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
+    </LinearLayout>
+</LinearLayout>

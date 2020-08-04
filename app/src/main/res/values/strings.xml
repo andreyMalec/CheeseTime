@@ -85,6 +85,10 @@
 
     <string name="n_stage">%1$d stage:</string>
 
+    <string name="photo_download">Download</string>
+    <string name="photo_share">Share</string>
+    <string name="photo_delete">Delete</string>
+
     <string name="date_pick">Pick</string>
     <string name="date_today">Today</string>
     <string name="date_yesterday">Yesterday</string>
