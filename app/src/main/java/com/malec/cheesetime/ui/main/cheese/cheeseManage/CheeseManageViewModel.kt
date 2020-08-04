@@ -32,7 +32,7 @@ class CheeseManageViewModel @Inject constructor(
     private val context: Context,
     private val router: Router,
     private val userRepo: UserRepo
-) : ViewModel(), PhotoAdapter.PhotoAction {
+) : ViewModel() {
 
     val isFieldsEmptyError = MutableLiveData(false)
     val manageError = MutableLiveData<String>(null)
@@ -103,6 +103,7 @@ class CheeseManageViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     repo.deleteById(it.id)
+                    repo.deletePhotos(photos.value)
                     manageResult.value = context.getString(R.string.cheese_deleted)
                 } catch (e: Exception) {
                     setError(e)
@@ -184,7 +185,7 @@ class CheeseManageViewModel @Inject constructor(
             mCheese?.dateStart
         )
         try {
-            repo.savePhotos(mPhotos)
+            repo.updatePhotos(mCheese?.photo, mPhotos)
             manageResult.value = if (mCheese == null) {
                 repo.create(cheese)
                 context.getString(R.string.cheese_created)
@@ -210,11 +211,9 @@ class CheeseManageViewModel @Inject constructor(
         manageError.value = msg.drop(i + 2)
     }
 
-    override fun onClick(photo: Photo) {
-
-    }
-
-    override fun onLongClick(photo: Photo) {
-
+    fun onDeleteClick(photo: Photo) {
+        photos.value = photos.value?.toMutableList()?.apply {
+            remove(photo)
+        }
     }
 }

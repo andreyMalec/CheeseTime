@@ -28,7 +28,8 @@ class CheeseAdapter(private val vm: CheeseAction) :
                         oldItem.composition == newItem.composition &&
                         oldItem.stages == newItem.stages &&
                         oldItem.badgeColor == newItem.badgeColor &&
-                        oldItem.isSelected == newItem.isSelected
+                        oldItem.isSelected == newItem.isSelected &&
+                        oldItem.photo == newItem.photo
             }
         }
     }

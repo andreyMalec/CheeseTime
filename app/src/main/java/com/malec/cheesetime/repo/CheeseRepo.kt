@@ -71,9 +71,34 @@ class CheeseRepo(
         selected.clear()
     }
 
-    fun savePhotos(photos: List<Photo>?) {
+    suspend fun deletePhotos(photos: List<Photo>?) {
         photos?.forEach {
-            storageApi.save(it)
+            storageApi.delete(it)
+        }
+    }
+
+    suspend fun updatePhotos(old: String?, new: List<Photo>?) {
+        val oldPhotos = old?.split("♂")
+        val newPhotos = new?.map { it.name }
+
+        if (oldPhotos != null && oldPhotos.isNotEmpty() && oldPhotos[0].isNotBlank()) {
+            if (newPhotos != null && newPhotos.isNotEmpty() && newPhotos[0].isNotBlank()) {
+                val diff1 = oldPhotos.toSet() - newPhotos.toSet()
+                val diff2 = newPhotos.toSet() - oldPhotos.toSet()
+
+                for (oldPhoto in diff1)
+                    storageApi.deleteById(oldPhoto)
+
+                for (newPhoto in new.filter { diff2.contains(it.name) })
+                    storageApi.save(newPhoto)
+
+                return
+            }
+        }
+
+        new?.let {
+            for (newPhoto in it)
+                storageApi.save(newPhoto)
         }
     }
 

@@ -27,6 +27,10 @@ class AlertDialogBuilder(private val context: Context) {
         show(message, R.string.delete_dialog_ok)
     }
 
+    fun showPhotoDeleteDialog() {
+        show(context.getString(R.string.delete_photo_dialog_message), R.string.delete_dialog_ok)
+    }
+
     fun showLogoutDialog() {
         show(context.getString(R.string.logout_dialog_message), R.string.logout_dialog_ok)
     }

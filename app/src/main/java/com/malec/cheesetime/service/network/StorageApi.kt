@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.google.firebase.storage.FirebaseStorage
 import com.malec.cheesetime.model.Photo
+import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -16,14 +17,22 @@ class StorageApi(private val storage: FirebaseStorage, private val context: Cont
     fun getUriById(id: String) =
         storage.getReferenceFromUrl("gs://cheesetime.appspot.com/$id.jpg")
 
-    fun save(photo: Photo) {
+    suspend fun save(photo: Photo) {
         if (photo.content != null) {
             val fileName = photo.name + ".jpg"
             val file = createImageFile(fileName)
             savePhoto(photo, file)
             val u = Uri.fromFile(file)
-            storage.getReference(fileName).putFile(u)
+            storage.getReference(fileName).putFile(u).await()
         }
+    }
+
+    suspend fun delete(photo: Photo) {
+        getUriById(photo.name).delete().await()
+    }
+
+    suspend fun deleteById(id: String) {
+        getUriById(id).delete().await()
     }
 
     private fun createImageFile(path: String): File {

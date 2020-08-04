@@ -27,6 +27,7 @@ import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Cheese
+import com.malec.cheesetime.model.Photo
 import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.ui.main.AlertDialogBuilder
@@ -40,7 +41,7 @@ import ru.terrakok.cicerone.NavigatorHolder
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
-class CheeseManageActivity : BaseActivity() {
+class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
     @Inject
     lateinit var navHolder: NavigatorHolder
 
@@ -100,6 +101,8 @@ class CheeseManageActivity : BaseActivity() {
     }
 
     private fun saveCheese() {
+        progressLayout.visibility = View.VISIBLE
+
         stages.clear()
         for (c in stagesParamsLayout.children)
             stages.add(
@@ -193,6 +196,7 @@ class CheeseManageActivity : BaseActivity() {
             recipeAdapter.clear()
             it?.let { recipes ->
                 recipeAdapter.addAll(recipes)
+                recipeSpinner.setSelection(recipes.indexOf(viewModel.cheese.value?.recipe ?: ""))
             }
             recipeAdapter.notifyDataSetChanged()
         })
@@ -216,6 +220,8 @@ class CheeseManageActivity : BaseActivity() {
                     milkTypeEditText.error = getString(R.string.required_field_error)
                 if (milkVolumeEditText.text.isNullOrBlank())
                     milkVolumeEditText.error = getString(R.string.required_field_error)
+
+                progressLayout.visibility = View.GONE
             }
         })
 
@@ -223,6 +229,8 @@ class CheeseManageActivity : BaseActivity() {
             if (!message.isNullOrBlank()) {
                 showError(message)
                 viewModel.manageError.value = null
+
+                progressLayout.visibility = View.GONE
             }
         })
 
@@ -231,8 +239,20 @@ class CheeseManageActivity : BaseActivity() {
                 showMessage(message)
                 viewModel.manageResult.value = null
                 onBackPressed()
+
+                progressLayout.visibility = View.GONE
             }
         })
+    }
+
+    override fun onClick(photo: Photo) {
+
+    }
+
+    override fun onLongClick(photo: Photo) {
+        AlertDialogBuilder(this).setOnOkButtonClickListener {
+            viewModel.onDeleteClick(photo)
+        }.showPhotoDeleteDialog()
     }
 
     private fun addStage(text: String? = null) {
@@ -253,8 +273,8 @@ class CheeseManageActivity : BaseActivity() {
 
         dateText.text = DateFormatter.simpleFormat(cheese.date)
 
-        val recipes = resources.getStringArray(R.array.recipes)
-        recipeSpinner.setSelection(recipes.indexOf(cheese.recipe))
+        val recipes = viewModel.recipes.value
+        recipeSpinner.setSelection(recipes?.indexOf(cheese.recipe) ?: 0)
 
         commentEditText.setText(cheese.comment)
 
@@ -343,7 +363,7 @@ class CheeseManageActivity : BaseActivity() {
     }
 
     private fun initRecycler() {
-        adapter = PhotoAdapter(viewModel)
+        adapter = PhotoAdapter(this)
         photoRecycler.adapter = adapter
         photoRecycler.layoutManager =
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL)
