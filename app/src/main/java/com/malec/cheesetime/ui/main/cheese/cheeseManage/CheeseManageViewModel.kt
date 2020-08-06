@@ -20,6 +20,7 @@ import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.util.CameraIntentCreator
 import com.malec.cheesetime.util.CheeseCreator
+import com.malec.cheesetime.util.PhotoDownloader
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
@@ -31,12 +32,14 @@ class CheeseManageViewModel @Inject constructor(
     private val repo: CheeseRepo,
     private val context: Context,
     private val router: Router,
-    private val userRepo: UserRepo
+    private val userRepo: UserRepo,
+    private val photoDownloader: PhotoDownloader
 ) : ViewModel() {
 
     val isFieldsEmptyError = MutableLiveData(false)
     val manageError = MutableLiveData<String>(null)
     val manageResult = MutableLiveData<String>(null)
+    val photoManageResult = MutableLiveData<String>(null)
 
     val name = MutableLiveData<String>("")
     val date = MutableLiveData<String>("")
@@ -58,6 +61,7 @@ class CheeseManageViewModel @Inject constructor(
     companion object {
         const val GALLERY = Screens.GalleryPickScreen.requestCode
         const val CAMERA = Screens.CameraPickScreen.requestCode
+        const val STORAGE = 5
     }
 
     init {
@@ -214,6 +218,17 @@ class CheeseManageViewModel @Inject constructor(
     fun onPhotoDeleteClick(photo: Photo) {
         photos.value = photos.value?.toMutableList()?.apply {
             remove(photo)
+        }
+    }
+
+    fun onPhotoDownloadClick(photo: Photo) {
+        viewModelScope.launch {
+            try {
+                photoDownloader.download(photo)
+                photoManageResult.value = context.getString(R.string.photo_downloaded_successful)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }

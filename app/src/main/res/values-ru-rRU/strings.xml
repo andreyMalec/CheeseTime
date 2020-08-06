@@ -84,6 +84,7 @@
     <string name="n_stage">%1$d этап:</string>
 
     <string name="photo_download">Скачать</string>
+    <string name="photo_downloaded_successful">Выбраное фото успешно загружено в галерею</string>
     <string name="photo_share">Поделиться</string>
     <string name="photo_delete">Удалить</string>
 

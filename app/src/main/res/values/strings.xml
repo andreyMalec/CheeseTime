@@ -86,6 +86,7 @@
     <string name="n_stage">%1$d stage:</string>
 
     <string name="photo_download">Download</string>
+    <string name="photo_downloaded_successful">Selected photo successfully downloaded to the gallery</string>
     <string name="photo_share">Share</string>
     <string name="photo_delete">Delete</string>
 

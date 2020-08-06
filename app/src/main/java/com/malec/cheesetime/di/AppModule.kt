@@ -11,6 +11,7 @@ import com.malec.cheesetime.service.network.StorageApi
 import com.malec.cheesetime.service.network.TaskApi
 import com.malec.cheesetime.service.network.UserApi
 import com.malec.cheesetime.util.CheeseSharer
+import com.malec.cheesetime.util.PhotoDownloader
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,4 +36,8 @@ class AppModule {
     @Provides
     @Singleton
     fun cheeseSharer(context: Context): CheeseSharer = CheeseSharer(context)
+
+    @Provides
+    @Singleton
+    fun photoDownloader(context: Context): PhotoDownloader = PhotoDownloader(context)
 }

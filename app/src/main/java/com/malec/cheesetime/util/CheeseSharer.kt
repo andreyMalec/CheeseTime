@@ -26,6 +26,12 @@ class CheeseSharer(private val context: Context) {
 
     private val MAX_ROWS = 17
 
+    private val paintForText = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textSize = TEXT_SIZE
+        color = Color.BLACK
+        textAlign = Paint.Align.LEFT
+    }
+
     fun send(cheese: Cheese) {
         send(listOf(cheese))
     }
@@ -63,7 +69,7 @@ class CheeseSharer(private val context: Context) {
         if (cheeseList.size > MAX_ROWS) {
             val maxTextLengthCheese = cheeseList.maxBy { (it.name + " id: " + it.id).length }
             val textW =
-                paintForText().measureText(maxTextLengthCheese?.name + " id: " + maxTextLengthCheese?.id)
+                paintForText.measureText(maxTextLengthCheese?.name + " id: " + maxTextLengthCheese?.id)
             val maxW = max(textW.toInt(), CODE_WIDTH)
 
             val columnCount = PAGE_WIDTH / maxW
@@ -118,11 +124,10 @@ class CheeseSharer(private val context: Context) {
         verticalOffset: Float,
         horizontalOffset: Float
     ): Float {
-        val paint = paintForText()
-        val baseline = -paint.ascent()
+        val baseline = -paintForText.ascent()
 
-        val textW = paint.measureText(label).toInt()
-        val textH = (baseline + paint.descent()).toInt()
+        val textW = paintForText.measureText(label).toInt()
+        val textH = (baseline + paintForText.descent()).toInt()
 
         val maxWidth = max(codeImage.width, textW)
 
@@ -134,15 +139,9 @@ class CheeseSharer(private val context: Context) {
             label,
             horizontalOffset + textImageStart,
             verticalOffset + baseline + codeImage.height,
-            paint
+            paintForText
         )
 
         return (textH + codeImage.height).toFloat()
-    }
-
-    private fun paintForText() = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        textSize = TEXT_SIZE
-        color = Color.BLACK
-        textAlign = Paint.Align.LEFT
     }
 }

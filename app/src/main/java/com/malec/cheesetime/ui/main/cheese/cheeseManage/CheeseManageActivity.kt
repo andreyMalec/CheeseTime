@@ -33,6 +33,7 @@ import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.ui.main.AlertDialogBuilder
 import com.malec.cheesetime.ui.main.ResultNavigator
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageViewModel.Companion.CAMERA
+import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageViewModel.Companion.STORAGE
 import com.malec.cheesetime.util.DateFormatter
 import com.malec.cheesetime.util.DateTimePicker
 import kotlinx.android.synthetic.main.activity_cheese_manage.*
@@ -243,12 +244,19 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
                 progressLayout.visibility = View.GONE
             }
         })
+
+        viewModel.photoManageResult.observe(this, Observer { message ->
+            if (!message.isNullOrBlank()) {
+                showMessage(message)
+                viewModel.photoManageResult.value = null
+            }
+        })
     }
 
     override fun onLongClick(photo: Photo) {
         PhotoMenuBuilder()
             .setOnDownloadClickListener {
-
+                downloadPhoto(photo)
             }
             .setOnShareClickListener {
 
@@ -257,6 +265,17 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
                 deletePhotoDialog(photo)
             }
             .show(supportFragmentManager)
+    }
+    
+    private fun downloadPhoto(photo: Photo) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        )
+            viewModel.onPhotoDownloadClick(photo)
+        else
+            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), STORAGE)
     }
 
     private fun deletePhotoDialog(photo: Photo) {
