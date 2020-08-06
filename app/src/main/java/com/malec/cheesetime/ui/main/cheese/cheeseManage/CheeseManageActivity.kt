@@ -259,14 +259,14 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
                 downloadPhoto(photo)
             }
             .setOnShareClickListener {
-
+                viewModel.onPhotoShareClick(photo)
             }
             .setOnDeleteClickListener {
                 deletePhotoDialog(photo)
             }
             .show(supportFragmentManager)
     }
-    
+
     private fun downloadPhoto(photo: Photo) {
         if (ContextCompat.checkSelfPermission(
                 this,

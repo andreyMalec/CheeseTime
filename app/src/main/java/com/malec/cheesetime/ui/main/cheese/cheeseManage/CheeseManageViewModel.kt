@@ -21,6 +21,7 @@ import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.util.CameraIntentCreator
 import com.malec.cheesetime.util.CheeseCreator
 import com.malec.cheesetime.util.PhotoDownloader
+import com.malec.cheesetime.util.PhotoSharer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
@@ -33,7 +34,8 @@ class CheeseManageViewModel @Inject constructor(
     private val context: Context,
     private val router: Router,
     private val userRepo: UserRepo,
-    private val photoDownloader: PhotoDownloader
+    private val photoDownloader: PhotoDownloader,
+    private val photoSharer: PhotoSharer
 ) : ViewModel() {
 
     val isFieldsEmptyError = MutableLiveData(false)
@@ -226,6 +228,16 @@ class CheeseManageViewModel @Inject constructor(
             try {
                 photoDownloader.download(photo)
                 photoManageResult.value = context.getString(R.string.photo_downloaded_successful)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun onPhotoShareClick(photo: Photo) {
+        viewModelScope.launch {
+            try {
+                photoSharer.send(photo)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

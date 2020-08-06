@@ -16,7 +16,7 @@ import java.io.OutputStream
 
 class PhotoDownloader(private val context: Context) {
     companion object {
-        private const val folderName = "CheeseTime"
+        private const val folderName = "Pictures/CheeseTime"
     }
 
     suspend fun download(photo: Photo) {
@@ -31,7 +31,7 @@ class PhotoDownloader(private val context: Context) {
     }
 
     private fun saveImage(bitmap: Bitmap, fileName: String) {
-        if (Build.VERSION.SDK_INT >= 29) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val values = contentValues().apply {
                 put(MediaStore.Images.Media.RELATIVE_PATH, folderName)
                 put(MediaStore.Images.Media.IS_PENDING, true)

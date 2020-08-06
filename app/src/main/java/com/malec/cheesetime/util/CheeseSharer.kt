@@ -1,22 +1,18 @@
 package com.malec.cheesetime.util
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
-import android.net.Uri
-import androidx.core.content.FileProvider
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.malec.cheesetime.model.Cheese
-import java.io.File
 import java.io.FileOutputStream
 import java.lang.Integer.max
 
-class CheeseSharer(private val context: Context) {
+class CheeseSharer(context: Context) : UriSharer(context) {
     private val PAGE_WIDTH = 630
     private val PAGE_HEIGHT = 891
     private val MARGIN_TOP = 15F
@@ -42,7 +38,7 @@ class CheeseSharer(private val context: Context) {
         val page = doc.startPage(pageInfo)
         drawBarcodeList(page.canvas, cheeseList)
         doc.finishPage(page)
-        shareUri(makeUri(doc))
+        shareUri(makeUri("doc.pdf", doc))
         doc.close()
     }
 
@@ -89,35 +85,6 @@ class CheeseSharer(private val context: Context) {
         }
     }
 
-    private fun shareUri(uri: Uri) {
-        val shareIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            setDataAndType(uri, context.contentResolver.getType(uri))
-            putExtra(Intent.EXTRA_STREAM, uri)
-        }
-        val chooserIntent = Intent.createChooser(
-            shareIntent,
-            "Choose an app"
-        )
-        chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(chooserIntent)
-    }
-
-    private fun makeUri(document: PdfDocument): Uri {
-        val cachePath = File(context.cacheDir, "docs")
-        cachePath.mkdirs()
-        val newFile = File(cachePath, "doc.pdf")
-
-        val stream = FileOutputStream(newFile)
-        document.writeTo(stream)
-
-        stream.flush()
-        stream.close()
-
-        return FileProvider.getUriForFile(context, context.packageName, newFile)
-    }
-
     private fun Canvas.drawBarcode(
         codeImage: Bitmap,
         label: String,
@@ -143,5 +110,11 @@ class CheeseSharer(private val context: Context) {
         )
 
         return (textH + codeImage.height).toFloat()
+    }
+
+    override fun writeToStream(content: Any, stream: FileOutputStream) {
+        if (content is PdfDocument)
+            content.writeTo(stream)
+        else throw IllegalArgumentException("Unsupported type")
     }
 }
