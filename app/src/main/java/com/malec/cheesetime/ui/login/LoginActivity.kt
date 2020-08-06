@@ -3,6 +3,7 @@ package com.malec.cheesetime.ui.login
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.malec.cheesetime.R
@@ -46,6 +47,13 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun initClickListeners() {
+        passEditText.setOnEditorActionListener { _, id, _ ->
+            return@setOnEditorActionListener if (id == EditorInfo.IME_ACTION_DONE) {
+                loginButton.performClick()
+                true
+            } else false
+        }
+
         loginButton.setOnClickListener {
             val email = emailEditText.text?.toString()?.trim()
             val pass = passEditText.text?.toString()?.trim()
