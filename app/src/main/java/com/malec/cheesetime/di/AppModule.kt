@@ -10,6 +10,7 @@ import com.malec.cheesetime.service.network.CheeseApi
 import com.malec.cheesetime.service.network.StorageApi
 import com.malec.cheesetime.service.network.TaskApi
 import com.malec.cheesetime.service.network.UserApi
+import com.malec.cheesetime.service.notifications.TaskScheduler
 import com.malec.cheesetime.util.CheeseSharer
 import com.malec.cheesetime.util.PhotoDownloader
 import com.malec.cheesetime.util.PhotoSharer
@@ -28,7 +29,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun taskRepo(api: TaskApi, cheeseApi: CheeseApi): TaskRepo = TaskRepo(api, cheeseApi)
+    fun taskRepo(api: TaskApi, cheeseApi: CheeseApi, scheduler: TaskScheduler): TaskRepo =
+        TaskRepo(api, cheeseApi, scheduler)
 
     @Provides
     @Singleton
@@ -45,4 +47,8 @@ class AppModule {
     @Provides
     @Singleton
     fun photoSharer(context: Context): PhotoSharer = PhotoSharer(context)
+
+    @Provides
+    @Singleton
+    fun taskScheduler(context: Context): TaskScheduler = TaskScheduler(context)
 }

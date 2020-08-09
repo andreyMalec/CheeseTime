@@ -8,7 +8,6 @@ import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.repo.TaskRepo
-import com.malec.cheesetime.util.CalendarEventManager
 import com.malec.cheesetime.util.DateFormatter
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -87,12 +86,9 @@ class TaskManageViewModel @Inject constructor(
         try {
             manageResult.value = if (mTask == null) {
                 repo.create(task)
-                CalendarEventManager(context).create(task)
                 context.getString(R.string.task_created)
             } else {
                 repo.update(task)
-                if (mTask.date != date)
-                    CalendarEventManager(context).create(task)
                 context.getString(R.string.task_updated)
             }
         } catch (e: Exception) {
