@@ -51,6 +51,8 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
     }
     private var oldToolbarColor = 0
 
+    private var tmpPhoto: Photo? = null
+
     private val stages = mutableSetOf<String>()
 
     private val recipes = mutableListOf<String>()
@@ -143,6 +145,13 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
 
         if (requestCode == CAMERA && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             viewModel.onAttachFromCamera()
+
+        if (requestCode == STORAGE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            tmpPhoto?.let {
+                viewModel.onPhotoDownloadClick(it)
+            }
+            tmpPhoto = null
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -274,8 +283,10 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
             ) == PackageManager.PERMISSION_GRANTED
         )
             viewModel.onPhotoDownloadClick(photo)
-        else
+        else {
+            tmpPhoto = photo
             requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), STORAGE)
+        }
     }
 
     private fun deletePhotoDialog(photo: Photo) {

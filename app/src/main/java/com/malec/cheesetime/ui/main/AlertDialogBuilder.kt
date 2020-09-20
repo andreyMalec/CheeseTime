@@ -8,6 +8,7 @@ import com.malec.cheesetime.R
 
 class AlertDialogBuilder(private val context: Context) {
     private lateinit var onOkClick: () -> Unit
+    private lateinit var onCancelClick: () -> Unit
 
     fun showCheeseDialog(selectedCount: Int? = 1) {
         val message = if (selectedCount == 1)
@@ -41,13 +42,21 @@ class AlertDialogBuilder(private val context: Context) {
         return this
     }
 
+    fun setOnCancelButtonClickListener(function: () -> Unit): AlertDialogBuilder {
+        onCancelClick = function
+
+        return this
+    }
+
     private fun show(message: String, okTextResource: Int) {
         AlertDialog.Builder(context).apply {
             setTitle(message)
             setPositiveButton(okTextResource) { _, _ ->
                 onOkClick()
             }
-            setNegativeButton(R.string.dialog_cancel, null)
+            setNegativeButton(R.string.dialog_cancel) { _, _ ->
+                onCancelClick()
+            }
         }.show().also {
             changeButtonColor(it)
         }

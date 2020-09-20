@@ -53,18 +53,12 @@ class TaskAdapter(private val vm: TaskAction) :
                     vm.onClick(it)
                 }
             }
-            binding?.root?.setOnLongClickListener {
-                binding.task?.let {
-                    vm.onLongClick(it)
-                }
-                true
-            }
         }
     }
 
     interface TaskAction {
         fun onClick(task: Task)
 
-        fun onLongClick(task: Task)
+        fun onSwipe(task: Task)
     }
 }

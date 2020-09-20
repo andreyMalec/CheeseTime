@@ -2,7 +2,10 @@ package com.malec.cheesetime.ui.main.cheese.cheeseList
 
 import android.os.Bundle
 import android.view.*
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.RelativeLayout
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -12,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.malec.cheesetime.R
 import com.malec.cheesetime.di.Injectable
 import com.malec.cheesetime.model.CheeseSort
@@ -35,7 +39,7 @@ class CheeseListFragment : Fragment(), Injectable {
     private lateinit var adapter: CheeseAdapter
     private lateinit var cheeseTypeAdapter: ArrayAdapter<String>
     private lateinit var cheeseTypeSpinner: Spinner
-    private lateinit var archivedSwitch: Switch
+    private lateinit var archivedSwitch: SwitchMaterial
 
     private var dateFilterStart: MenuItem? = null
     private var dateFilterEnd: MenuItem? = null
@@ -185,7 +189,7 @@ class CheeseListFragment : Fragment(), Injectable {
         })
 
         archivedSwitch =
-            (archivedFilter?.actionView as RelativeLayout).getChildAt(0) as Switch
+            (archivedFilter?.actionView as RelativeLayout).getChildAt(0) as SwitchMaterial
         archivedSwitch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.archivedFilter.value = isChecked
         }
