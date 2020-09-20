@@ -101,4 +101,5 @@
     <string name="date_in_n_minutes">In %1$d minutes</string>
     <string name="date_in_n_minutes2">In %1$d minutes</string>
     <string name="date_in_n_minutes3">In %1$d minutes</string>
+    <string name="date_in_30_min">In 30 min.</string>
 </resources>

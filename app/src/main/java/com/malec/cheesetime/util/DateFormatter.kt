@@ -57,6 +57,7 @@ class DateFormatter(private val context: Context) {
     companion object {
         private const val millisecondsInDay: Long = 1000 * 60 * 60 * 24
         const val millisecondsInHour: Long = 1000 * 60 * 60
+        const val millisecondsIn30Min: Long = 1000 * 60 * 30
         private const val millisecondsInMinute: Long = 1000 * 60
 
         fun dateTimeFromString(date: String, time: String): Long {

@@ -84,7 +84,7 @@ class CheeseManageViewModel @Inject constructor(
     }
 
     fun setCheese(newCheese: Cheese) {
-        if (newCheese.id != 0L) {
+        if (cheese.value == null && newCheese.id != 0L) {
             cheese.value = newCheese
             photos.value = repo.getPhotoUriById(newCheese.photo)
             badgeColor.value = newCheese.badgeColor
