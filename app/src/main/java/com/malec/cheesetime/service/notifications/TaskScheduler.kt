@@ -52,7 +52,7 @@ class TaskScheduler(private val context: Context) {
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, task.date, pendingIntent)
 
-        if (date30Min - Date().time > DateFormatter.millisecondsIn30Min)
+        if (date30Min - Date().time > 0)
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 date30Min,
