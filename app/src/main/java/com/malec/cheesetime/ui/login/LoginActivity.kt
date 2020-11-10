@@ -5,21 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import com.malec.cheesetime.R
 import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.main.ResultNavigator
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import ru.terrakok.cicerone.NavigatorHolder
-import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class LoginActivity : BaseActivity() {
-    @Inject
-    lateinit var navHolder: NavigatorHolder
-
-    private val navigator = ResultNavigator(
+    override val navigator = ResultNavigator(
         this,
         supportFragmentManager,
         R.id.navHostFragment
@@ -33,12 +25,12 @@ class LoginActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        initClickListeners()
         initViewModelListeners()
+        initClickListeners()
     }
 
     private fun initViewModelListeners() {
-        viewModel.loginError.observe(this, Observer { message ->
+        viewModel.loginError.observe(this, { message ->
             if (message != null) {
                 showError(message)
                 viewModel.loginError.value = null
@@ -55,15 +47,13 @@ class LoginActivity : BaseActivity() {
         }
 
         loginButton.setOnClickListener {
-            val email = emailEditText.text?.toString()?.trim()
-            val pass = passEditText.text?.toString()?.trim()
-            viewModel.login(email, pass)
+            val input = getInput()
+            viewModel.login(input.first, input.second)
         }
 
         registerButton.setOnClickListener {
-            val email = emailEditText.text?.toString()?.trim()
-            val pass = passEditText.text?.toString()?.trim()
-            viewModel.register(email, pass)
+            val input = getInput()
+            viewModel.register(input.first, input.second)
         }
 
         googleLoginButton.setOnClickListener {
@@ -71,20 +61,13 @@ class LoginActivity : BaseActivity() {
         }
     }
 
+    private fun getInput() =
+        Pair(emailEditText.text?.toString(), passEditText.text?.toString())
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK)
             viewModel.handleActivityResult(requestCode, data)
 
         super.onActivityResult(requestCode, resultCode, data)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        navHolder.removeNavigator()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        navHolder.setNavigator(navigator)
     }
 }

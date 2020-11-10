@@ -8,12 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.malec.cheesetime.R
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.ui.Screens
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class LoginViewModel @Inject constructor(
     private val context: Context,
     private val repo: UserRepo,
@@ -27,58 +25,44 @@ class LoginViewModel @Inject constructor(
             startMainScreen()
     }
 
-    fun register(email: String?, pass: String?) {
+    fun register(email: String?, pass: String?) = enter(email, pass) { notNullEmail, notNullPass ->
+        repo.register(notNullEmail, notNullPass)
+    }
+
+    fun login(email: String?, pass: String?) = enter(email, pass) { notNullEmail, notNullPass ->
+        repo.login(notNullEmail, notNullPass)
+    }
+
+    private fun enter(email: String?, pass: String?, enter: suspend (String, String) -> Unit) {
         if (email.isNullOrBlank() || pass.isNullOrBlank())
             loginError.value = context.getString(R.string.empty_fields_error)
         else
-            viewModelScope.launch {
-                try {
-                    repo.register(email, pass)
-                    startMainScreen()
-                } catch (e: Exception) {
-                    setError(e)
-                }
-            }
+            safeEnter { enter(email.trim(), pass.trim()) }
     }
 
-    fun login(email: String?, pass: String?) {
-        if (email.isNullOrBlank() || pass.isNullOrBlank())
-            loginError.value = context.getString(R.string.empty_fields_error)
-        else
-            viewModelScope.launch {
-                try {
-                    repo.login(email, pass)
-                    startMainScreen()
-                } catch (e: Exception) {
-                    setError(e)
-                }
-            }
-    }
-
-    fun googleLogin() {
-        router.navigateTo(Screens.GoogleLoginScreen)
-    }
-
-    fun handleActivityResult(requestCode: Int, data: Intent?) {
-        if (requestCode == Screens.GoogleLoginScreen.requestCode) {
-            viewModelScope.launch {
-                try {
-                    repo.googleLogin(data)
-                    startMainScreen()
-                } catch (e: Exception) {
-                    setError(e)
-                }
+    private fun safeEnter(safeEnter: suspend () -> Unit) {
+        viewModelScope.launch {
+            try {
+                safeEnter()
+                startMainScreen()
+            } catch (e: Exception) {
+                setError(e)
             }
         }
     }
 
-    private fun startMainScreen() {
-        router.newRootScreen(Screens.MainScreen)
-    }
+    private fun startMainScreen() = router.newRootScreen(Screens.MainScreen)
 
-    private fun setError(t: Throwable?) {
-        val msg = t?.toString() ?: ""
+    private fun setError(t: Throwable) {
+        val msg = t.toString()
         val i = msg.indexOf(": ")
         loginError.value = msg.drop(i + 2)
+    }
+
+    fun googleLogin() = router.navigateTo(Screens.GoogleLoginScreen)
+
+    fun handleActivityResult(requestCode: Int, data: Intent?) {
+        if (requestCode == Screens.GoogleLoginScreen.requestCode)
+            safeEnter { repo.googleLogin(data) }
     }
 }

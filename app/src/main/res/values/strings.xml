@@ -16,6 +16,7 @@
 
     <string name="press_again_exit">Press again to exit</string>
     <string name="search_hint">Search…</string>
+    <string name="scan_code">Scan a barcode</string>
 
     <string name="logout_dialog_message">Do you really want to logout?</string>
     <string name="delete_photo_dialog_message">Delete photo?</string>
@@ -37,6 +38,7 @@
     <string name="settings_barcode">Barcode</string>
     <string name="settings_qrcode">QR-code</string>
     <string name="settings_recipe_manage">Manage recipe</string>
+    <string name="settings_save">Settings successfully saved</string>
 
     <string name="tabTaskList">Tasks</string>
     <string name="tabCheeseList">Cheeses</string>

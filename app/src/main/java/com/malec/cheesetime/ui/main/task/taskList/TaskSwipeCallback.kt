@@ -15,8 +15,7 @@ import kotlin.math.abs
 class TaskSwipeCallback(
     private val onSwiped: (position: Int) -> Unit,
     private val context: Context
-) :
-    ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START) {
+) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START) {
     private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.icon_delete)
 
     private var vibrate = false
@@ -46,7 +45,7 @@ class TaskSwipeCallback(
 
         vibrate(c.width.toFloat(), dX)
 
-        drawBackgroundIcon(c, viewHolder.itemView, dX)
+        drawBackgroundIcon(c, viewHolder.itemView)
     }
 
     private fun vibrate(maxWidth: Float, dX: Float) {
@@ -67,7 +66,7 @@ class TaskSwipeCallback(
             }
     }
 
-    private fun drawBackgroundIcon(c: Canvas, itemView: View, dX: Float) {
+    private fun drawBackgroundIcon(c: Canvas, itemView: View) {
         if (deleteIcon == null) return
 
         val top = itemView.top + (itemView.height - deleteIcon.intrinsicHeight) / 2

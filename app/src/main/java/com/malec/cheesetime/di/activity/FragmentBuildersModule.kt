@@ -5,10 +5,8 @@ import com.malec.cheesetime.ui.main.report.ReportsFragment
 import com.malec.cheesetime.ui.main.task.taskList.TaskListFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @Module
-@ExperimentalCoroutinesApi
 abstract class FragmentBuildersModule {
     @ContributesAndroidInjector
     abstract fun contributeTaskListFragment(): TaskListFragment

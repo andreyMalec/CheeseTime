@@ -85,10 +85,11 @@
                     android:text="@string/settings_barcode"
                     android:textSize="18sp" />
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/barcodeSwitch"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:enabled="false" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -99,12 +100,6 @@
                     android:textAlignment="textEnd"
                     android:textSize="18sp" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical" />
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,12 +12,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.malec.cheesetime.R
 import com.malec.cheesetime.di.Injectable
-import com.malec.cheesetime.ui.main.AlertDialogBuilder
+import com.malec.cheesetime.ui.allertDialogBuilder.TaskDeleteDialog
 import kotlinx.android.synthetic.main.fragment_task_list.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class TaskListFragment : Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -64,11 +62,11 @@ class TaskListFragment : Fragment(), Injectable {
     }
 
     private fun onTaskSwipe(position: Int) {
-        AlertDialogBuilder(requireContext()).setOnOkButtonClickListener {
+        TaskDeleteDialog(requireContext()).setOnOkButtonClickListener {
             viewModel.onSwipe(adapter.currentList[position])
         }.setOnCancelButtonClickListener {
             adapter.notifyItemChanged(position)
-        }.showTaskDialog()
+        }.show()
     }
 
     override fun onCreateView(

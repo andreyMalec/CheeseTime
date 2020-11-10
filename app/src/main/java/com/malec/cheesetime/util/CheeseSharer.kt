@@ -63,7 +63,7 @@ class CheeseSharer(context: Context) : UriSharer(context) {
         }
 
         if (cheeseList.size > MAX_ROWS) {
-            val maxTextLengthCheese = cheeseList.maxBy { (it.name + " id: " + it.id).length }
+            val maxTextLengthCheese = cheeseList.maxByOrNull { (it.name + " id: " + it.id).length }
             val textW =
                 paintForText.measureText(maxTextLengthCheese?.name + " id: " + maxTextLengthCheese?.id)
             val maxW = max(textW.toInt(), CODE_WIDTH)

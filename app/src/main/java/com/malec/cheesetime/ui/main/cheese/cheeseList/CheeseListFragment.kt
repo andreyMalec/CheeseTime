@@ -19,13 +19,11 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.malec.cheesetime.R
 import com.malec.cheesetime.di.Injectable
 import com.malec.cheesetime.model.CheeseSort
-import com.malec.cheesetime.ui.main.AlertDialogBuilder
+import com.malec.cheesetime.ui.allertDialogBuilder.CheeseDeleteDialog
 import com.malec.cheesetime.util.DateTimePicker
 import kotlinx.android.synthetic.main.fragment_cheese_list.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class CheeseListFragment : Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -84,9 +82,9 @@ class CheeseListFragment : Fragment(), Injectable {
                 true
             }
             R.id.deleteButton -> {
-                AlertDialogBuilder(requireContext()).setOnOkButtonClickListener {
+                CheeseDeleteDialog(requireContext()).setOnOkButtonClickListener {
                     viewModel.deleteSelected()
-                }.showCheeseDialog(viewModel.selectedCount.value)
+                }.show(viewModel.selectedCount.value)
 
                 true
             }

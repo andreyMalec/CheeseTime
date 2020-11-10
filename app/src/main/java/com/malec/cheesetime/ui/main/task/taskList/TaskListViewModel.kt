@@ -6,13 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.repo.TaskRepo
 import com.malec.cheesetime.ui.Screens
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class TaskListViewModel @Inject constructor(
     private val repo: TaskRepo,
     private val router: Router

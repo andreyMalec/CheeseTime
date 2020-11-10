@@ -22,13 +22,11 @@ import com.malec.cheesetime.util.CameraIntentCreator
 import com.malec.cheesetime.util.CheeseCreator
 import com.malec.cheesetime.util.PhotoDownloader
 import com.malec.cheesetime.util.PhotoSharer
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import java.util.*
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class CheeseManageViewModel @Inject constructor(
     private val repo: CheeseRepo,
     private val context: Context,
@@ -43,14 +41,14 @@ class CheeseManageViewModel @Inject constructor(
     val manageResult = MutableLiveData<String>(null)
     val photoManageResult = MutableLiveData<String>(null)
 
-    val name = MutableLiveData<String>("")
-    val date = MutableLiveData<String>("")
-    val recipe = MutableLiveData<String>("")
-    val comment = MutableLiveData<String>("")
-    val milkType = MutableLiveData<String>("")
-    val milkVolume = MutableLiveData<String>("")
-    val milkAge = MutableLiveData<String>("")
-    val composition = MutableLiveData<String>("")
+    val name = MutableLiveData("")
+    val date = MutableLiveData("")
+    val recipe = MutableLiveData("")
+    val comment = MutableLiveData("")
+    val milkType = MutableLiveData("")
+    val milkVolume = MutableLiveData("")
+    val milkAge = MutableLiveData("")
+    val composition = MutableLiveData("")
     val stages = MutableLiveData<List<String>>(listOf())
     val badgeColor = MutableLiveData<Int>()
     val photos = MutableLiveData<List<Photo>>(listOf())
@@ -59,6 +57,8 @@ class CheeseManageViewModel @Inject constructor(
     val recipes = MutableLiveData<List<String>>()
 
     private val mRecipes = mutableListOf<Recipe>()
+
+    private var isStagesFirstLoad = true
 
     companion object {
         const val GALLERY = Screens.GalleryPickScreen.requestCode
@@ -83,10 +83,10 @@ class CheeseManageViewModel @Inject constructor(
         }
     }
 
-    fun setCheese(newCheese: Cheese) {
-        if (cheese.value == null && newCheese.id != 0L) {
+    fun setCheese(newCheese: Cheese?) {
+        if (newCheese != null && cheese.value == null && newCheese.id != 0L) {
             cheese.value = newCheese
-            photos.value = repo.getPhotoUriById(newCheese.photo)
+            photos.value = repo.getPhotosById(newCheese.photo)
             badgeColor.value = newCheese.badgeColor
         }
     }
@@ -99,6 +99,10 @@ class CheeseManageViewModel @Inject constructor(
 
     fun selectRecipe(recipeName: String?) {
         recipe.value = recipeName
+        if (isStagesFirstLoad) {
+            isStagesFirstLoad = false
+            return
+        }
         mRecipes.find { it.name == recipeName }?.stages?.split("♂")?.let {
             stages.value = it
         }

@@ -39,8 +39,8 @@ class TaskManageViewModel @Inject constructor(
         }
     }
 
-    fun setTask(newTask: Task) {
-        if (newTask.id != 0L)
+    fun setTask(newTask: Task?) {
+        if (newTask != null && newTask.id != 0L)
             task.value = newTask
     }
 

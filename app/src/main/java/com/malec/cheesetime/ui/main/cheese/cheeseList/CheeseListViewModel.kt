@@ -11,12 +11,10 @@ import com.malec.cheesetime.model.CheeseSort
 import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.ui.Screens
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class CheeseListViewModel @Inject constructor(
     private val repo: CheeseRepo,
     private val router: Router,

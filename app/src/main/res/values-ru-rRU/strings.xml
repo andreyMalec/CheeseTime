@@ -16,6 +16,7 @@
 
     <string name="press_again_exit">Нажмите еще раз для выхода</string>
     <string name="search_hint">Поиск…</string>
+    <string name="scan_code">Отсканируйте штрих-код</string>
 
     <string name="logout_dialog_message">Вы действительно хотите выйти из системы?</string>
     <string name="delete_photo_dialog_message">Удалить фото?</string>
@@ -35,6 +36,7 @@
     <string name="settings_barcode">Штрих-код</string>
     <string name="settings_qrcode">QR-код</string>
     <string name="settings_recipe_manage">Управление рецептом</string>
+    <string name="settings_save">Настройки успешно сохранены</string>
 
     <string name="tabTaskList">Задачи</string>
     <string name="tabCheeseList">Сыры</string>

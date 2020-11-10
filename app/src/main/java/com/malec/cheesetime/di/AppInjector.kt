@@ -11,9 +11,7 @@ import com.malec.cheesetime.di.module.ContextModule
 import dagger.android.AndroidInjection
 import dagger.android.HasAndroidInjector
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 object AppInjector {
     fun init(app: App) {
         DaggerAppComponent.builder()

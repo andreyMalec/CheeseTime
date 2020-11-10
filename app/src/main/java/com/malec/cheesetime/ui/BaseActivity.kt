@@ -13,14 +13,21 @@ import com.malec.cheesetime.R
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
+import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import javax.inject.Inject
 
-open class BaseActivity : AppCompatActivity(), HasAndroidInjector {
+abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var navHolder: NavigatorHolder
+
+    protected abstract val navigator: SupportAppNavigator?
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 
@@ -42,5 +49,21 @@ open class BaseActivity : AppCompatActivity(), HasAndroidInjector {
             ContextCompat.getColor(this, R.color.colorAccent)
         )
         toast.show()
+    }
+
+    protected fun showMessage(stringId: Int) {
+        showMessage(getString(stringId))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        navHolder.removeNavigator()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        navigator?.let {
+            navHolder.setNavigator(it)
+        }
     }
 }

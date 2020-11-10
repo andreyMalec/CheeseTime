@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.malec.cheesetime.model.Recipe
 import com.malec.cheesetime.repo.UserRepo
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class SettingsViewModel @Inject constructor(
     private val context: Context,
-    private val userRepo: UserRepo
+    private val userRepo: UserRepo,
+    private val router: Router
 ) : ViewModel() {
     val recipes = MutableLiveData<List<Recipe>>()
 
@@ -28,7 +28,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun saveSettings() {
-
+        router.exit()
     }
 
     fun onRemoveRecipe(recipe: Recipe) {

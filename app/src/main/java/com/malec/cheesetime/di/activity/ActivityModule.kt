@@ -8,9 +8,7 @@ import com.malec.cheesetime.ui.main.task.taskManage.TaskManageActivity
 import com.malec.cheesetime.ui.settings.SettingsActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 @Module(includes = [NetworkModule::class])
 abstract class ActivityModule {
     @ContributesAndroidInjector(modules = [FragmentBuildersModule::class])

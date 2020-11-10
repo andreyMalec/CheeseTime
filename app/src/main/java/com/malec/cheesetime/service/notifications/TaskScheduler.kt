@@ -7,10 +7,8 @@ import android.content.Intent
 import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.util.DateFormatter
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.*
 
-@ExperimentalCoroutinesApi
 class TaskScheduler(private val context: Context) {
     fun schedule(task: Task) {
         if (task.date - Date().time <= 0)

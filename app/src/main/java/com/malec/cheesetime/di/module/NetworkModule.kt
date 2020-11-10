@@ -7,10 +7,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.malec.cheesetime.service.network.*
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Singleton
 
-@ExperimentalCoroutinesApi
 @Module
 class NetworkModule {
     @Provides

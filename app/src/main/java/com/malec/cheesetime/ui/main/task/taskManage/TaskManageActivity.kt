@@ -8,18 +8,15 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.Observer
 import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.Screens
-import com.malec.cheesetime.ui.main.AlertDialogBuilder
+import com.malec.cheesetime.ui.allertDialogBuilder.TaskDeleteDialog
 import com.malec.cheesetime.util.DateFormatter
 import com.malec.cheesetime.util.DateTimePicker
 import kotlinx.android.synthetic.main.activity_task_manage.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 class TaskManageActivity : BaseActivity() {
     private val viewModel: TaskManageViewModel by viewModels {
         viewModelFactory
@@ -38,14 +35,16 @@ class TaskManageActivity : BaseActivity() {
         when (item.itemId) {
             R.id.saveButton -> viewModel.checkAndManageTask()
             R.id.deleteButton ->
-                AlertDialogBuilder(this).setOnOkButtonClickListener {
+                TaskDeleteDialog(this).setOnOkButtonClickListener {
                     viewModel.deleteTask()
-                }.showTaskDialog()
+                }.show()
             android.R.id.home -> onBackPressed()
         }
 
         return super.onOptionsItemSelected(item)
     }
+
+    override val navigator = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +63,7 @@ class TaskManageActivity : BaseActivity() {
     }
 
     private fun initViewModelListeners() {
-        viewModel.cheeseList.observe(this, Observer { list ->
+        viewModel.cheeseList.observe(this, { list ->
             val cheeseNames = list.map {
                 it.name + " id: " + it.id
             }
@@ -73,12 +72,12 @@ class TaskManageActivity : BaseActivity() {
             adapter.addAll(cheeseSet + cheeseNames.toSet())
         })
 
-        viewModel.task.observe(this, Observer {
+        viewModel.task.observe(this, {
             if (it != null)
                 showTaskData(it)
         })
 
-        viewModel.isFieldsEmptyError.observe(this, Observer { isError ->
+        viewModel.isFieldsEmptyError.observe(this, { isError ->
             if (isError) {
                 showError(getString(R.string.empty_fields_error))
                 viewModel.isFieldsEmptyError.value = false
@@ -92,14 +91,14 @@ class TaskManageActivity : BaseActivity() {
             }
         })
 
-        viewModel.manageError.observe(this, Observer { message ->
+        viewModel.manageError.observe(this, { message ->
             if (!message.isNullOrBlank()) {
                 showError(message)
                 viewModel.manageError.value = null
             }
         })
 
-        viewModel.manageResult.observe(this, Observer { message ->
+        viewModel.manageResult.observe(this, { message ->
             if (!message.isNullOrBlank()) {
                 showMessage(message)
                 viewModel.manageResult.value = null

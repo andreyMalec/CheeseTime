@@ -6,9 +6,7 @@ import com.malec.cheesetime.model.Photo
 import com.malec.cheesetime.service.network.CheeseApi
 import com.malec.cheesetime.service.network.StorageApi
 import com.malec.cheesetime.util.CheeseSharer
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 class CheeseRepo(
     private val api: CheeseApi,
     private val storageApi: StorageApi,
@@ -58,16 +56,18 @@ class CheeseRepo(
     fun getSelectedIds() = selected.toList()
 
     suspend fun archiveSelected() {
-        for (id in selected)
+        selected.forEach { id ->
             getById(id)?.toggleArchive()?.let {
                 update(it)
             }
+        }
         selected.clear()
     }
 
     suspend fun deleteSelected() {
-        for (id in selected)
-            deleteById(id)
+        selected.forEach {
+            deleteById(it)
+        }
         selected.clear()
     }
 
@@ -102,7 +102,7 @@ class CheeseRepo(
         }
     }
 
-    fun getPhotoUriById(formattedId: String) =
+    fun getPhotosById(formattedId: String) =
         formattedId.split("♂").filter { it.isNotBlank() }.map {
             Photo(
                 it,

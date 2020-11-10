@@ -15,9 +15,7 @@ import com.malec.cheesetime.ui.settings.SettingsViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 @Module(includes = [NetworkModule::class, ContextModule::class])
 abstract class ViewModelModule {
     @Binds

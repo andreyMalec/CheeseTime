@@ -10,9 +10,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.malec.cheesetime.R
 import com.malec.cheesetime.ui.login.LoginActivity
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 class NotificationReceiver : BroadcastReceiver() {
     private lateinit var channelId: String
 

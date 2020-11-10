@@ -30,21 +30,16 @@ import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.Photo
 import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.Screens
-import com.malec.cheesetime.ui.main.AlertDialogBuilder
+import com.malec.cheesetime.ui.allertDialogBuilder.CheeseDeleteDialog
+import com.malec.cheesetime.ui.allertDialogBuilder.PhotoDeleteDialog
 import com.malec.cheesetime.ui.main.ResultNavigator
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageViewModel.Companion.CAMERA
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageViewModel.Companion.STORAGE
 import com.malec.cheesetime.util.DateFormatter
 import com.malec.cheesetime.util.DateTimePicker
 import kotlinx.android.synthetic.main.activity_cheese_manage.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import ru.terrakok.cicerone.NavigatorHolder
-import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
-    @Inject
-    lateinit var navHolder: NavigatorHolder
 
     private val viewModel: CheeseManageViewModel by viewModels {
         viewModelFactory
@@ -57,7 +52,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
 
     private val recipes = mutableListOf<String>()
 
-    private val navigator = ResultNavigator(
+    override val navigator = ResultNavigator(
         this,
         supportFragmentManager,
         R.id.navHostFragment
@@ -94,9 +89,9 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         when (item.itemId) {
             R.id.saveButton -> saveCheese()
             R.id.deleteButton ->
-                AlertDialogBuilder(this).setOnOkButtonClickListener {
+                CheeseDeleteDialog(this).setOnOkButtonClickListener {
                     viewModel.deleteCheese()
-                }.showCheeseDialog()
+                }.show()
             android.R.id.home -> onBackPressed()
         }
 
@@ -244,7 +239,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
             }
         })
 
-        viewModel.manageResult.observe(this, Observer { message ->
+        viewModel.manageResult.observe(this, { message ->
             if (!message.isNullOrBlank()) {
                 showMessage(message)
                 viewModel.manageResult.value = null
@@ -254,7 +249,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
             }
         })
 
-        viewModel.photoManageResult.observe(this, Observer { message ->
+        viewModel.photoManageResult.observe(this, { message ->
             if (!message.isNullOrBlank()) {
                 showMessage(message)
                 viewModel.photoManageResult.value = null
@@ -290,9 +285,9 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
     }
 
     private fun deletePhotoDialog(photo: Photo) {
-        AlertDialogBuilder(this).setOnOkButtonClickListener {
+        PhotoDeleteDialog(this).setOnOkButtonClickListener {
             viewModel.onPhotoDeleteClick(photo)
-        }.showPhotoDeleteDialog()
+        }.show()
     }
 
     private fun addStage(text: String? = null) {
@@ -462,15 +457,5 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
                 }
             }
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        navHolder.removeNavigator()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        navHolder.setNavigator(navigator)
     }
 }

@@ -5,17 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.zxing.integration.android.IntentIntegrator
+import com.malec.cheesetime.R
 import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.ui.Screens
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.Screen
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class MainViewModel @Inject constructor(
     private val router: Router,
     private val repo: CheeseRepo,
@@ -55,7 +54,7 @@ class MainViewModel @Inject constructor(
     fun onScanClick(activity: MainActivity) {
         IntentIntegrator(activity).apply {
             setOrientationLocked(false)
-            setPrompt("Scan a barcode")
+            setPrompt(activity.getString(R.string.scan_code))
         }.initiateScan()
     }
 
@@ -98,13 +97,17 @@ class MainViewModel @Inject constructor(
     fun onBackPressed() {
         if (pressAgain) {
             pressAgain = false
-            viewModelScope.launch {
-                delay(pressAgainAwait)
+
+            _showPressAgain.value = true
+            delay(pressAgainAwait) {
                 pressAgain = true
             }
-            _showPressAgain.value = true
-            return
-        }
-        router.exit()
+        } else
+            router.exit()
+    }
+
+    private fun delay(timeInMillis: Long, block: () -> Unit) = viewModelScope.launch {
+        delay(timeInMillis)
+        block()
     }
 }

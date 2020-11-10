@@ -5,12 +5,10 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import com.malec.cheesetime.ui.Screens
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.cicerone.commands.Forward
 
-@ExperimentalCoroutinesApi
 class ResultNavigator(
     activity: FragmentActivity,
     fragmentManager: FragmentManager,

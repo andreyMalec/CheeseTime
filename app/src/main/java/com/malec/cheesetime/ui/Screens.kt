@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
+import com.google.gson.Gson
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.repo.UserRepo.Companion.googleSignInClient
@@ -16,11 +17,11 @@ import com.malec.cheesetime.ui.main.task.taskList.TaskListFragment
 import com.malec.cheesetime.ui.main.task.taskManage.TaskManageActivity
 import com.malec.cheesetime.ui.settings.SettingsActivity
 import com.malec.cheesetime.util.CameraIntentCreator
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
-@ExperimentalCoroutinesApi
 object Screens {
+    private val gson = Gson()
+
     object CheeseListScreen : SupportAppScreen() {
         override fun getFragment(): Fragment? {
             return CheeseListFragment()
@@ -89,24 +90,10 @@ object Screens {
 
         companion object {
             fun createExtraIntent(context: Context, task: Task) =
-                Intent(context, TaskManageActivity::class.java).apply {
-                    putExtra("id", task.id)
-                    putExtra("cheeseId", task.cheeseId)
-                    putExtra("cheeseName", task.cheeseName)
-                    putExtra("todo", task.todo)
-                    putExtra("date", task.date)
-                    putExtra("comment", task.comment)
-                }
+                Intent(context, TaskManageActivity::class.java).putExtra("data", gson.toJson(task))
 
-            fun parseExtraIntent(intent: Intent) =
-                Task(
-                    intent.getLongExtra("id", 0),
-                    intent.getLongExtra("cheeseId", 0),
-                    intent.getStringExtra("cheeseName") ?: "",
-                    intent.getStringExtra("todo") ?: "",
-                    intent.getLongExtra("date", 0),
-                    intent.getStringExtra("comment") ?: ""
-                )
+            fun parseExtraIntent(intent: Intent): Task? =
+                gson.fromJson(intent.getStringExtra("data"), Task::class.java)
         }
     }
 
@@ -118,37 +105,13 @@ object Screens {
 
         companion object {
             fun createExtraIntent(context: Context, cheese: Cheese) =
-                Intent(context, CheeseManageActivity::class.java).apply {
-                    putExtra("id", cheese.id)
-                    putExtra("name", cheese.name)
-                    putExtra("dateStart", cheese.dateStart)
-                    putExtra("date", cheese.date)
-                    putExtra("recipe", cheese.recipe)
-                    putExtra("comment", cheese.comment)
-                    putExtra("milk", cheese.milk)
-                    putExtra("composition", cheese.composition)
-                    putExtra("stages", cheese.stages)
-                    putExtra("badgeColor", cheese.badgeColor)
-                    putExtra("isArchived", cheese.isArchived)
-                    putExtra("photo", cheese.photo)
-                }
-
-            fun parseExtraIntent(intent: Intent) =
-                Cheese(
-                    intent.getLongExtra("id", 0),
-                    intent.getStringExtra("name") ?: "",
-                    intent.getLongExtra("dateStart", 0),
-                    intent.getLongExtra("date", 0),
-                    intent.getStringExtra("recipe") ?: "",
-                    intent.getStringExtra("comment") ?: "",
-                    intent.getStringExtra("milk") ?: "",
-                    intent.getStringExtra("composition") ?: "",
-                    intent.getStringExtra("stages") ?: "",
-                    intent.getIntExtra("badgeColor", 0),
-                    false,
-                    intent.getBooleanExtra("isArchived", false),
-                    intent.getStringExtra("photo") ?: ""
+                Intent(context, CheeseManageActivity::class.java).putExtra(
+                    "data",
+                    gson.toJson(cheese)
                 )
+
+            fun parseExtraIntent(intent: Intent): Cheese? =
+                gson.fromJson(intent.getStringExtra("data"), Cheese::class.java)
         }
     }
 }

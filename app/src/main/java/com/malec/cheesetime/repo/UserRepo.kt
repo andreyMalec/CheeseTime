@@ -8,21 +8,25 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Recipe
 import com.malec.cheesetime.service.network.UserApi
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.tasks.await
 
-@ExperimentalCoroutinesApi
 class UserRepo(
     private val api: UserApi,
     private val context: Context
 ) {
     companion object {
+        private var client: GoogleSignInClient? = null
+
         fun googleSignInClient(context: Context): GoogleSignInClient? {
+            if (client != null)
+                return client
+
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(context.getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
-            return GoogleSignIn.getClient(context, gso)
+            client = GoogleSignIn.getClient(context, gso)
+            return client
         }
     }
 

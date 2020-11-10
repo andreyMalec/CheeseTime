@@ -5,10 +5,8 @@ import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.service.network.CheeseApi
 import com.malec.cheesetime.service.network.TaskApi
 import com.malec.cheesetime.service.notifications.TaskScheduler
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 
-@ExperimentalCoroutinesApi
 class TaskRepo(
     private val api: TaskApi,
     private val cheeseApi: CheeseApi,

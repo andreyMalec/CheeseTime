@@ -16,10 +16,8 @@ import com.malec.cheesetime.util.PhotoDownloader
 import com.malec.cheesetime.util.PhotoSharer
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Singleton
 
-@ExperimentalCoroutinesApi
 @Module(includes = [ActivityModule::class, ViewModelModule::class, Navigation::class])
 class AppModule {
     @Provides
