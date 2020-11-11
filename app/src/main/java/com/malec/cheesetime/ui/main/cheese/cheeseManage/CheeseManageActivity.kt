@@ -3,16 +3,15 @@ package com.malec.cheesetime.ui.main.cheese.cheeseManage
 import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
@@ -21,16 +20,18 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.Observer
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.malec.cheesetime.R
+import com.malec.cheesetime.databinding.ActivityCheeseManageBinding
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.Photo
+import com.malec.cheesetime.model.StringValue
 import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.Screens
-import com.malec.cheesetime.ui.allertDialogBuilder.CheeseDeleteDialog
 import com.malec.cheesetime.ui.allertDialogBuilder.PhotoDeleteDialog
 import com.malec.cheesetime.ui.main.ResultNavigator
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageViewModel.Companion.CAMERA
@@ -40,15 +41,11 @@ import com.malec.cheesetime.util.DateTimePicker
 import kotlinx.android.synthetic.main.activity_cheese_manage.*
 
 class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
-
     private val viewModel: CheeseManageViewModel by viewModels {
         viewModelFactory
     }
+
     private var oldToolbarColor = 0
-
-    private var tmpPhoto: Photo? = null
-
-    private val stages = mutableSetOf<String>()
 
     private val recipes = mutableListOf<String>()
 
@@ -60,6 +57,11 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
 
     private lateinit var adapter: PhotoAdapter
     private lateinit var recipeAdapter: ArrayAdapter<String>
+
+    private var saveButton: MenuItem? = null
+    private var isAlreadyCreated = false
+
+    private lateinit var stagesAdapter: StringAdapter
 
     private val dropDownButtonClick = object : View.OnClickListener {
         override fun onClick(v: View?) {
@@ -82,16 +84,16 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_manage, menu)
 
+        saveButton = menu?.findItem(R.id.saveButton)
+        menu?.findItem(R.id.deleteButton)?.isVisible = isAlreadyCreated
+
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.saveButton -> saveCheese()
-            R.id.deleteButton ->
-                CheeseDeleteDialog(this).setOnOkButtonClickListener {
-                    viewModel.deleteCheese()
-                }.show()
+            R.id.deleteButton -> viewModel.deleteCheese()
             android.R.id.home -> onBackPressed()
         }
 
@@ -101,13 +103,6 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
     private fun saveCheese() {
         progressLayout.visibility = View.VISIBLE
 
-        stages.clear()
-        for (c in stagesParamsLayout.children)
-            stages.add(
-                c.findViewById<EditText>(R.id.editText).text?.toString()?.trim() ?: ""
-            )
-
-        viewModel.stages.value = stages.toList()
         viewModel.checkAndManageCheese()
     }
 
@@ -142,10 +137,9 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
             viewModel.onAttachFromCamera()
 
         if (requestCode == STORAGE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            tmpPhoto?.let {
+            viewModel.tmpPhoto.value?.let {
                 viewModel.onPhotoDownloadClick(it)
             }
-            tmpPhoto = null
         }
     }
 
@@ -157,7 +151,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_cheese_manage)
+        val binding: ActivityCheeseManageBinding = DataBindingUtil.setContentView(this, R.layout.activity_cheese_manage)
 
         val cheese = Screens.CheeseManageScreen.parseExtraIntent(intent)
         viewModel.setCheese(cheese)
@@ -170,7 +164,8 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         initRecycler()
 
         stageAddButton.setOnClickListener {
-            addStage()
+//            Log.e("test", "testMessage: "+stages)
+            viewModel.addNewStage()
         }
 
         photoAddButton.setOnClickListener {
@@ -180,24 +175,27 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         recipeAdapter =
             ArrayAdapter(this, android.R.layout.simple_list_item_1, android.R.id.text1, recipes)
         recipeSpinner.adapter = recipeAdapter
+
+        viewModel.stages.value?.let {
+            stagesAdapter = StringAdapter(it, viewModel)
+            stagesRecycler.adapter = stagesAdapter
+            stagesRecycler.layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        }
     }
 
     private fun initViewModelListeners() {
-        viewModel.cheese.observe(this, Observer { cheese ->
-            if (cheese != null)
+        viewModel.cheese.observe(this, { cheese ->
+            isAlreadyCreated = cheese != null
+            if (isAlreadyCreated)
                 showCheeseData(cheese)
         })
 
-        viewModel.stages.observe(this, Observer { stages ->
-            if (stages != null && stages.isNotEmpty()) {
-                stagesParamsLayout.removeAllViews()
-
-                for (stage in stages)
-                    addStage(stage)
-            }
+        viewModel.stages.observe(this, { stages ->
+            stagesAdapter.submitList(stages)
         })
 
-        viewModel.recipes.observe(this, Observer {
+        viewModel.recipes.observe(this, {
             recipeAdapter.clear()
             it?.let { recipes ->
                 recipeAdapter.addAll(recipes)
@@ -206,17 +204,17 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
             recipeAdapter.notifyDataSetChanged()
         })
 
-        viewModel.badgeColor.observe(this, Observer { color ->
+        viewModel.badgeColor.observe(this, { color ->
             Handler().postDelayed({
                 animateToolbarColorChange(color)
             }, 200)
         })
 
-        viewModel.photos.observe(this, Observer {
+        viewModel.photos.observe(this, {
             adapter.submitList(it)
         })
 
-        viewModel.isFieldsEmptyError.observe(this, Observer { isError ->
+        viewModel.isFieldsEmptyError.observe(this, { isError ->
             if (isError) {
                 showError(getString(R.string.empty_fields_error))
                 viewModel.isFieldsEmptyError.value = false
@@ -230,7 +228,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
             }
         })
 
-        viewModel.manageError.observe(this, Observer { message ->
+        viewModel.manageError.observe(this, { message ->
             if (!message.isNullOrBlank()) {
                 showError(message)
                 viewModel.manageError.value = null
@@ -279,7 +277,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         )
             viewModel.onPhotoDownloadClick(photo)
         else {
-            tmpPhoto = photo
+            viewModel.setTmpPhoto(photo)
             requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), STORAGE)
         }
     }
@@ -290,18 +288,6 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         }.show()
     }
 
-    private fun addStage(text: String? = null) {
-        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val newStageLayout = inflater.inflate(R.layout.item_removable_edittext, null)
-        stagesParamsLayout.addView(newStageLayout, stagesParamsLayout.childCount)
-        val editText = newStageLayout.findViewById<EditText>(R.id.editText)
-        newStageLayout.findViewById<View>(R.id.removeButton).setOnClickListener {
-            stagesParamsLayout.removeView(it.parent as View)
-        }
-        text?.let {
-            editText.setText(text)
-        }
-    }
 
     private fun showCheeseData(cheese: Cheese) {
         nameEditText.setText(cheese.name)
@@ -320,9 +306,9 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
 
         compositionEditText.setText(cheese.composition)
 
-        val stages = cheese.stages.split("♂")
-        for (stage in stages)
-            addStage(stage)
+//        val stages = cheese.stages.split("♂")
+//        for (stage in stages)
+//            addStage(stage)
 
         val barcodeBitmap =
             BarcodeEncoder().encodeBitmap(cheese.id.toString(), BarcodeFormat.CODE_128, 550, 100)
@@ -347,6 +333,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
 
             override fun onItemSelected(adapter: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 val recipe = adapter?.getItemAtPosition(p2)?.toString()
+//                saveStages()
                 viewModel.selectRecipe(recipe)
             }
         }

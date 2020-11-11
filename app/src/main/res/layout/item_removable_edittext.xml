@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data >
+        <variable
+            name="value"
+            type="com.malec.cheesetime.model.StringValue" />
+    </data>
+<LinearLayout
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:tag="input">
+    android:orientation="horizontal">
 
     <EditText
         android:id="@+id/editText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:text="@={value.data}"
         android:layout_weight="1" />
 
     <View
@@ -20,3 +29,5 @@
         android:background="@drawable/icon_remove" />
 
 </LinearLayout>
+
+</layout>

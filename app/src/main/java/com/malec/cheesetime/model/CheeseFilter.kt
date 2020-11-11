@@ -27,15 +27,16 @@ fun List<Cheese>.filteredBy(filter: CheeseFilter): List<Cheese> {
         }
     if (filter.archived != null)
         filteredList = filteredList.filter { it.isArchived == filter.archived }
-    if (filter.sortBy != null) {
-        filteredList = when (filter.sortBy) {
-            CheeseSort.DATE_START -> filteredList.sortedBy { it.date }
-            CheeseSort.DATE_END -> filteredList.sortedBy { it.date }
-            CheeseSort.TYPE -> filteredList.sortedBy { it.recipe }
-            else -> filteredList.sortedBy { it.id }
-        }
-        if (filter.sortBy == CheeseSort.DATE_END)
-            filteredList = filteredList.reversed()
+
+    filteredList = when (filter.sortBy) {
+        CheeseSort.DATE_START -> filteredList.sortedBy { it.date }
+        CheeseSort.DATE_END -> filteredList.sortedBy { it.date }
+        CheeseSort.TYPE -> filteredList.sortedBy { it.recipe }
+        else ->
+            filteredList.sortedBy { it.id }
     }
+    if (filter.sortBy == null || filter.sortBy == CheeseSort.DATE_END)
+        filteredList = filteredList.reversed()
+
     return filteredList
 }

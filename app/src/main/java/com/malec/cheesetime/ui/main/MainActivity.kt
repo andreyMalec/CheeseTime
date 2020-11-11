@@ -30,13 +30,13 @@ class MainActivity : BaseActivity(), HasAndroidInjector {
         R.id.navHostFragment
     )
 
-    private var searchView: SearchView? = null
+//    private var searchView: SearchView? = null
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-
-        searchView = menu?.findItem(R.id.appBarSearch)?.actionView as SearchView?
-        initSearchView()
+//        menuInflater.inflate(R.menu.menu_main, menu)
+//
+//        searchView = menu?.findItem(R.id.appBarSearch)?.actionView as SearchView?
+//        initSearchView()
 
         return true
     }
@@ -78,23 +78,23 @@ class MainActivity : BaseActivity(), HasAndroidInjector {
     }
 
     private fun initSearchView() {
-        searchView?.findViewById<View>(androidx.appcompat.R.id.search_plate)
-            ?.setBackgroundResource(android.R.color.transparent)
-        searchView?.queryHint = getString(R.string.search_hint)
-
-        initSearchViewListener()
+//        searchView?.findViewById<View>(androidx.appcompat.R.id.search_plate)
+//            ?.setBackgroundResource(android.R.color.transparent)
+//        searchView?.queryHint = getString(R.string.search_hint)
+//
+//        initSearchViewListener()
     }
 
     private fun initSearchViewListener() {
-        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?) = false
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-//                viewModel.searchQuery.value = newText
-
-                return false
-            }
-        })
+//        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?) = false
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+////                viewModel.searchQuery.value = newText
+//
+//                return false
+//            }
+//        })
     }
 
     private fun initViewModelListeners() {

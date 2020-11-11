@@ -11,14 +11,15 @@ import com.malec.cheesetime.model.CheeseSort
 import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.ui.Screens
+import com.malec.cheesetime.ui.allertDialogBuilder.CheeseDeleteDialog
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 class CheeseListViewModel @Inject constructor(
     private val repo: CheeseRepo,
-    private val router: Router,
     private val userRepo: UserRepo,
+    private val router: Router,
     private val context: Context
 ) : ViewModel(), CheeseAdapter.CheeseAction {
     val cheeseList = MutableLiveData<List<Cheese>>(null)
@@ -27,7 +28,7 @@ class CheeseListViewModel @Inject constructor(
     val dateFilterStart = MutableLiveData<String>(null)
     val dateFilterEnd = MutableLiveData<String>(null)
     val cheeseTypeFilter = MutableLiveData<String>(null)
-    val archivedFilter = MutableLiveData<Boolean>(false)
+    val archivedFilter = MutableLiveData(false)
     val sortBy = MutableLiveData<CheeseSort>(null)
 
     val cheeseTypes = MutableLiveData<List<String>>()
@@ -82,6 +83,12 @@ class CheeseListViewModel @Inject constructor(
     }
 
     fun deleteSelected() {
+        CheeseDeleteDialog(context).setOnOkButtonClickListener {
+            realDeleteSelected()
+        }.show(selectedCount.value)
+    }
+
+    private fun realDeleteSelected() {
         viewModelScope.launch {
             repo.deleteSelected()
             update()

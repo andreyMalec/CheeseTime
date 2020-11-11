@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "832899933224",
+    "firebase_url": "https://cheesetime.firebaseio.com",
+    "project_id": "cheesetime",
+    "storage_bucket": "cheesetime.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:832899933224:android:3c8769acbf0643afe0011d",
+        "android_client_info": {
+          "package_name": "com.malec.cheesetime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "832899933224-7thfa4o83h05c1s9qkubsu6vb08982mk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOvx0Mb2psQT9NBOj8leHsND9NWumZg28"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "832899933224-7thfa4o83h05c1s9qkubsu6vb08982mk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

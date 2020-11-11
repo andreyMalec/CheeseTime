@@ -50,13 +50,7 @@ object CheeseCreator {
         )
     }
 
-    private fun makeString(vararg values: Any?): String {
-        var s = ""
-        for (value in values)
-            s += if (value == null) "♂"
-            else "$value♂"
-        return s.dropLast(1)
-    }
+    private fun makeString(vararg values: Any?) = values.joinToString("♂")
 
     private fun List<Any>?.makeString() = this?.joinToString("♂") ?: ""
 }

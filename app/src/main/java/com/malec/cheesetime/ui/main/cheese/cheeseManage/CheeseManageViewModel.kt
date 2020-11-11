@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.os.Build
 import android.provider.MediaStore
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,9 +16,11 @@ import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.Photo
 import com.malec.cheesetime.model.Recipe
+import com.malec.cheesetime.model.StringValue
 import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.ui.Screens
+import com.malec.cheesetime.ui.allertDialogBuilder.CheeseDeleteDialog
 import com.malec.cheesetime.util.CameraIntentCreator
 import com.malec.cheesetime.util.CheeseCreator
 import com.malec.cheesetime.util.PhotoDownloader
@@ -34,12 +37,16 @@ class CheeseManageViewModel @Inject constructor(
     private val userRepo: UserRepo,
     private val photoDownloader: PhotoDownloader,
     private val photoSharer: PhotoSharer
-) : ViewModel() {
+) : ViewModel(), StringAdapter.RemovableEdittextAction {
 
     val isFieldsEmptyError = MutableLiveData(false)
     val manageError = MutableLiveData<String>(null)
     val manageResult = MutableLiveData<String>(null)
     val photoManageResult = MutableLiveData<String>(null)
+
+    private val _tmpPhoto = MutableLiveData<Photo>(null)
+    val tmpPhoto: LiveData<Photo>
+        get() = _tmpPhoto
 
     val name = MutableLiveData("")
     val date = MutableLiveData("")
@@ -49,7 +56,7 @@ class CheeseManageViewModel @Inject constructor(
     val milkVolume = MutableLiveData("")
     val milkAge = MutableLiveData("")
     val composition = MutableLiveData("")
-    val stages = MutableLiveData<List<String>>(listOf())
+    val stages = MutableLiveData<MutableList<StringValue>>(mutableListOf())
     val badgeColor = MutableLiveData<Int>()
     val photos = MutableLiveData<List<Photo>>(listOf())
     val cheese = MutableLiveData<Cheese>(null)
@@ -86,6 +93,7 @@ class CheeseManageViewModel @Inject constructor(
     fun setCheese(newCheese: Cheese?) {
         if (newCheese != null && cheese.value == null && newCheese.id != 0L) {
             cheese.value = newCheese
+            stages.value = newCheese.stages.getStages()?.map { StringValue(it) }?.toMutableList()
             photos.value = repo.getPhotosById(newCheese.photo)
             badgeColor.value = newCheese.badgeColor
         }
@@ -97,18 +105,31 @@ class CheeseManageViewModel @Inject constructor(
         }
     }
 
+    private fun String?.getStages() = this?.split("♂")
+
     fun selectRecipe(recipeName: String?) {
         recipe.value = recipeName
+
         if (isStagesFirstLoad) {
             isStagesFirstLoad = false
             return
         }
-        mRecipes.find { it.name == recipeName }?.stages?.split("♂")?.let {
-            stages.value = it
-        }
+
+        if (stages.value.isNullOrEmpty() ||
+            stages.value?.first()?.data.isNullOrBlank()
+        )
+            mRecipes.find { it.name == recipeName }?.stages?.split("♂")?.let { st ->
+                stages.value = st.map { StringValue(it) }.toMutableList()
+            }
     }
 
     fun deleteCheese() {
+        CheeseDeleteDialog(context).setOnOkButtonClickListener {
+            realDeleteCheese()
+        }.show()
+    }
+
+    private fun realDeleteCheese() {
         cheese.value?.let {
             viewModelScope.launch {
                 try {
@@ -128,6 +149,21 @@ class CheeseManageViewModel @Inject constructor(
 
     fun onAttachFromCamera() {
         router.navigateTo(Screens.CameraPickScreen)
+    }
+
+    override fun onRemoveClick(value: StringValue?) {
+        val rm = stages.value?.find { it.data == value?.data }
+        stages.value?.remove(rm)
+        stages.value = stages.value
+    }
+
+    fun addNewStage() {
+        stages.value?.add(StringValue(""))
+        stages.value = stages.value
+    }
+
+    fun setTmpPhoto(photo: Photo) {
+        _tmpPhoto.value = photo
     }
 
     fun getImageFromResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -187,7 +223,7 @@ class CheeseManageViewModel @Inject constructor(
             mMilkVolume,
             mMilkAge,
             mComposition,
-            mStages,
+            mStages?.map { it.data },
             mColor,
             mCheese?.isArchived,
             mPhotos,
@@ -232,6 +268,7 @@ class CheeseManageViewModel @Inject constructor(
             try {
                 photoDownloader.download(photo)
                 photoManageResult.value = context.getString(R.string.photo_downloaded_successful)
+                _tmpPhoto.value = null
             } catch (e: Exception) {
                 e.printStackTrace()
             }

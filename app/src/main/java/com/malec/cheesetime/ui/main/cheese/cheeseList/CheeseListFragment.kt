@@ -11,7 +11,6 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +18,6 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.malec.cheesetime.R
 import com.malec.cheesetime.di.Injectable
 import com.malec.cheesetime.model.CheeseSort
-import com.malec.cheesetime.ui.allertDialogBuilder.CheeseDeleteDialog
 import com.malec.cheesetime.util.DateTimePicker
 import kotlinx.android.synthetic.main.fragment_cheese_list.*
 import javax.inject.Inject
@@ -47,21 +45,15 @@ class CheeseListFragment : Fragment(), Injectable {
     private var dateSortEnd: MenuItem? = null
     private var cheeseTypeSort: MenuItem? = null
 
-    private var searchButton: MenuItem? = null
-    private var filterButton: MenuItem? = null
-    private var scanButton: MenuItem? = null
-    private var archiveButton: MenuItem? = null
-    private var printButton: MenuItem? = null
-    private var deleteButton: MenuItem? = null
+    private var isMainMenu = true
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        if (isMainMenu)
+            inflater.inflate(R.menu.menu_main, menu)
+        else
+            inflater.inflate(R.menu.menu_main_selected, menu)
+
         super.onCreateOptionsMenu(menu, inflater)
-        searchButton = menu.findItem(R.id.appBarSearch)
-        filterButton = menu.findItem(R.id.filterButton)
-        scanButton = menu.findItem(R.id.scanButton)
-        archiveButton = menu.findItem(R.id.archiveButton)
-        printButton = menu.findItem(R.id.printButton)
-        deleteButton = menu.findItem(R.id.deleteButton)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -82,10 +74,7 @@ class CheeseListFragment : Fragment(), Injectable {
                 true
             }
             R.id.deleteButton -> {
-                CheeseDeleteDialog(requireContext()).setOnOkButtonClickListener {
-                    viewModel.deleteSelected()
-                }.show(viewModel.selectedCount.value)
-
+                viewModel.deleteSelected()
                 true
             }
             android.R.id.home -> {
@@ -120,20 +109,18 @@ class CheeseListFragment : Fragment(), Injectable {
     }
 
     private fun initViewModelListeners() {
-        viewModel.selectedCount.observe(viewLifecycleOwner, Observer { count ->
+        viewModel.selectedCount.observe(viewLifecycleOwner, { count ->
             val toolbar = (requireActivity() as AppCompatActivity).supportActionBar
-            toolbar?.title = if (count == 0) {
-                showMainMenu(true)
-                toolbar?.setDisplayHomeAsUpEnabled(false)
+            isMainMenu = count == 0
+            updateMenu()
+            toolbar?.setDisplayHomeAsUpEnabled(!isMainMenu)
+            toolbar?.title = if (isMainMenu)
                 getString(R.string.app_name)
-            } else {
-                showMainMenu(false)
-                toolbar?.setDisplayHomeAsUpEnabled(true)
+            else
                 getString(R.string.toolbar_n_selected, count)
-            }
         })
 
-        viewModel.cheeseTypes.observe(viewLifecycleOwner, Observer {
+        viewModel.cheeseTypes.observe(viewLifecycleOwner, {
             cheeseTypeAdapter.clear()
             it?.let { cheeseTypes ->
                 cheeseTypeAdapter.addAll(cheeseTypes)
@@ -141,19 +128,14 @@ class CheeseListFragment : Fragment(), Injectable {
             cheeseTypeAdapter.notifyDataSetChanged()
         })
 
-        viewModel.cheeseList.observe(viewLifecycleOwner, Observer {
+        viewModel.cheeseList.observe(viewLifecycleOwner, {
             adapter.submitList(it)
             swipeRefresh.isRefreshing = false
         })
     }
 
-    private fun showMainMenu(show: Boolean) {
-        searchButton?.isVisible = show
-        filterButton?.isVisible = show
-        scanButton?.isVisible = show
-        archiveButton?.isVisible = !show
-        printButton?.isVisible = !show
-        deleteButton?.isVisible = !show
+    private fun updateMenu() {
+        requireActivity().invalidateOptionsMenu()
     }
 
     private fun initNavigationListeners() {
@@ -209,12 +191,13 @@ class CheeseListFragment : Fragment(), Injectable {
                 override fun onItemSelected(
                     adapter: AdapterView<*>?,
                     p1: View?,
-                    p2: Int,
+                    position: Int,
                     p3: Long
                 ) {
-                    val type = adapter?.getItemAtPosition(p2)?.toString()
-                    viewModel.cheeseTypeFilter.value = if (p2 == 0) null
-                    else type
+                    val type = adapter?.getItemAtPosition(position)?.toString()
+                    viewModel.cheeseTypeFilter.value =
+                        if (position == 0) null
+                        else type
                 }
             }
     }
@@ -224,14 +207,15 @@ class CheeseListFragment : Fragment(), Injectable {
         viewModel.dateFilterEnd.value = null
         viewModel.cheeseTypeFilter.value = null
         viewModel.sortBy.value = null
-        dateSortStart?.isChecked = false
-        dateSortEnd?.isChecked = false
-        cheeseTypeSort?.isChecked = false
+
         dateFilterStart?.title = getString(R.string.filter_date_start)
         dateFilterEnd?.title = getString(R.string.filter_date_end)
         cheeseTypeFilter?.title = getString(R.string.filter_cheese_type)
         cheeseTypeSpinner.setSelection(0)
         archivedSwitch.isChecked = false
+        dateSortStart?.isChecked = false
+        dateSortEnd?.isChecked = false
+        cheeseTypeSort?.isChecked = false
     }
 
     private fun prepareFilterDialog(itemId: Int) {
