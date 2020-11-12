@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="cheese"
+            type="com.malec.cheesetime.model.Cheese" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -68,7 +71,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/nameEditText"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="@={cheese.name}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
@@ -94,7 +98,6 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text=""
                             android:textAlignment="center"
                             android:textColor="@color/colorPrimary"
                             android:textSize="18sp" />
@@ -149,7 +152,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/commentEditText"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="@={cheese.comment}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
@@ -191,21 +195,24 @@
                                 android:layout_height="wrap_content"
                                 android:ems="10"
                                 android:foregroundTint="@color/colorError"
-                                android:hint="@string/milk_type" />
+                                android:hint="@string/milk_type"
+                                android:text="@={cheese.milkType}" />
 
                             <EditText
                                 android:id="@+id/milkVolumeEditText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:ems="10"
-                                android:hint="@string/milk_volume" />
+                                android:hint="@string/milk_volume"
+                                android:text="@={cheese.milkVolume}" />
 
                             <EditText
                                 android:id="@+id/milkAgeEditText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:ems="10"
-                                android:hint="@string/milk_age" />
+                                android:hint="@string/milk_age"
+                                android:text="@={cheese.milkAge}" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -248,7 +255,8 @@
                                 android:id="@+id/compositionEditText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:ems="10" />
+                                android:ems="10"
+                                android:text="@={cheese.composition}" />
                         </LinearLayout>
 
                     </LinearLayout>

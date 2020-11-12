@@ -1,10 +1,8 @@
 package com.malec.cheesetime.ui
 
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import androidx.databinding.InverseBindingAdapter
 import com.google.firebase.storage.StorageReference
 import com.malec.cheesetime.di.module.GlideApp
 import com.malec.cheesetime.util.DateFormatter

@@ -24,7 +24,9 @@ class CheeseAdapter(private val vm: CheeseAction) :
                         oldItem.date == newItem.date &&
                         oldItem.recipe == newItem.recipe &&
                         oldItem.comment == newItem.comment &&
-                        oldItem.milk == newItem.milk &&
+                        oldItem.milkType == newItem.milkType &&
+                        oldItem.milkVolume == newItem.milkVolume &&
+                        oldItem.milkAge == newItem.milkAge &&
                         oldItem.composition == newItem.composition &&
                         oldItem.stages == newItem.stages &&
                         oldItem.badgeColor == newItem.badgeColor &&

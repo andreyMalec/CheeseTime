@@ -3,12 +3,15 @@ package com.malec.cheesetime.ui.main.cheese.cheeseManage
 import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewAnimationUtils
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -22,16 +25,15 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.malec.cheesetime.R
 import com.malec.cheesetime.databinding.ActivityCheeseManageBinding
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.Photo
-import com.malec.cheesetime.model.StringValue
 import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.Screens
+import com.malec.cheesetime.ui.allertDialogBuilder.CheeseDeleteDialog
 import com.malec.cheesetime.ui.allertDialogBuilder.PhotoDeleteDialog
 import com.malec.cheesetime.ui.main.ResultNavigator
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageViewModel.Companion.CAMERA
@@ -60,6 +62,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
 
     private var saveButton: MenuItem? = null
     private var isAlreadyCreated = false
+    private var isDoneActive = false
 
     private lateinit var stagesAdapter: StringAdapter
 
@@ -86,6 +89,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
 
         saveButton = menu?.findItem(R.id.saveButton)
         menu?.findItem(R.id.deleteButton)?.isVisible = isAlreadyCreated
+        saveButton?.isVisible = isDoneActive
 
         return true
     }
@@ -93,7 +97,10 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.saveButton -> saveCheese()
-            R.id.deleteButton -> viewModel.deleteCheese()
+            R.id.deleteButton ->
+                CheeseDeleteDialog(this).setOnOkButtonClickListener {
+                    viewModel.deleteCheese()
+                }.show()
             android.R.id.home -> onBackPressed()
         }
 
@@ -144,17 +151,22 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        viewModel.getImageFromResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && data != null && data.data != null && requestCode == CheeseManageViewModel.GALLERY)
+            viewModel.getImageFromUri(data.data)
+        else if (resultCode == Activity.RESULT_OK && requestCode == CAMERA)
+            viewModel.getImageFromCamera()
 
         super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding: ActivityCheeseManageBinding = DataBindingUtil.setContentView(this, R.layout.activity_cheese_manage)
+        val binding: ActivityCheeseManageBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_cheese_manage)
 
         val cheese = Screens.CheeseManageScreen.parseExtraIntent(intent)
         viewModel.setCheese(cheese)
+        binding.cheese = viewModel.cheese.value
 
         initViewModelListeners()
         initColorClickListener()
@@ -164,7 +176,6 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         initRecycler()
 
         stageAddButton.setOnClickListener {
-//            Log.e("test", "testMessage: "+stages)
             viewModel.addNewStage()
         }
 
@@ -186,13 +197,16 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
 
     private fun initViewModelListeners() {
         viewModel.cheese.observe(this, { cheese ->
-            isAlreadyCreated = cheese != null
-            if (isAlreadyCreated)
-                showCheeseData(cheese)
+            showCheeseData(cheese)
         })
 
         viewModel.stages.observe(this, { stages ->
             stagesAdapter.submitList(stages)
+        })
+
+        viewModel.isDoneActive.observe(this, { active ->
+            saveButton?.isVisible = active
+            isDoneActive = active
         })
 
         viewModel.recipes.observe(this, {
@@ -288,40 +302,25 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         }.show()
     }
 
-
     private fun showCheeseData(cheese: Cheese) {
-        nameEditText.setText(cheese.name)
-
         dateText.text = DateFormatter.simpleFormat(cheese.date)
 
-        val recipes = viewModel.recipes.value
-        recipeSpinner.setSelection(recipes?.indexOf(cheese.recipe) ?: 0)
-
-        commentEditText.setText(cheese.comment)
-
-        val milk = cheese.milk.split("♂")
-        milkTypeEditText.setText(milk[0])
-        milkVolumeEditText.setText(milk[1])
-        milkAgeEditText.setText(milk[2])
-
-        compositionEditText.setText(cheese.composition)
-
-//        val stages = cheese.stages.split("♂")
-//        for (stage in stages)
-//            addStage(stage)
-
-        val barcodeBitmap =
-            BarcodeEncoder().encodeBitmap(cheese.id.toString(), BarcodeFormat.CODE_128, 550, 100)
-        barcodeImage.setImageBitmap(barcodeBitmap)
-        barcodeImage.isVisible = true
+        if (cheese.id != 0L) {
+            val barcodeBitmap =
+                BarcodeEncoder().encodeBitmap(
+                    cheese.id.toString(),
+                    BarcodeFormat.CODE_128,
+                    550,
+                    100
+                )
+            barcodeImage.setImageBitmap(barcodeBitmap)
+            barcodeImage.isVisible = true
+        }
     }
 
     private fun initInputListeners() {
         nameEditText.doAfterTextChanged {
-            viewModel.name.value = it?.toString()?.trim()
-        }
-        dateText.doAfterTextChanged {
-            viewModel.date.value = it?.toString()
+                viewModel.checkCanSave()
         }
         dateButton.setOnClickListener {
             DateTimePicker(this).pickDate {
@@ -337,24 +336,11 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
                 viewModel.selectRecipe(recipe)
             }
         }
-        commentEditText.doAfterTextChanged {
-            viewModel.comment.value = it?.toString()?.trim()
-        }
         milkTypeEditText.doAfterTextChanged {
-            if (milkTypeEditText.error != null)
-                milkTypeEditText.error = null
-            viewModel.milkType.value = it?.toString()?.trim()
+                viewModel.checkCanSave()
         }
         milkVolumeEditText.doAfterTextChanged {
-            if (milkVolumeEditText.error != null)
-                milkVolumeEditText.error = null
-            viewModel.milkVolume.value = it?.toString()?.trim()
-        }
-        milkAgeEditText.doAfterTextChanged {
-            viewModel.milkAge.value = it?.toString()?.trim()
-        }
-        compositionEditText.doAfterTextChanged {
-            viewModel.composition.value = it?.toString()?.trim()
+                viewModel.checkCanSave()
         }
 
         barcodeImage.setOnClickListener {
@@ -388,7 +374,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         adapter = PhotoAdapter(this)
         photoRecycler.adapter = adapter
         photoRecycler.layoutManager =
-            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL)
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
     }
 
     private fun animateToolbarColorChange(newColor: Int) {
@@ -396,10 +382,10 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
 
         val animator = ViewAnimationUtils.createCircularReveal(
             reveal,
-            toolbar.width / 2,
-            toolbar.height / 2,
+            toolbar.width,
+            0,
             0F,
-            toolbar.width / 2F
+            toolbar.width.toFloat()
         )
 
         animator.addListener(object : AnimatorListenerAdapter() {
@@ -414,7 +400,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
             }
         })
 
-        animator.duration = 200
+        animator.duration = 300
         animator.start()
     }
 

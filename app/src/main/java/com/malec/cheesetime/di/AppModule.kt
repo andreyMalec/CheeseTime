@@ -6,11 +6,13 @@ import com.malec.cheesetime.di.viewModule.ViewModelModule
 import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.repo.TaskRepo
 import com.malec.cheesetime.repo.UserRepo
+import com.malec.cheesetime.service.Resources
 import com.malec.cheesetime.service.network.CheeseApi
 import com.malec.cheesetime.service.network.StorageApi
 import com.malec.cheesetime.service.network.TaskApi
 import com.malec.cheesetime.service.network.UserApi
 import com.malec.cheesetime.service.notifications.TaskScheduler
+import com.malec.cheesetime.util.BitmapDecoder
 import com.malec.cheesetime.util.CheeseSharer
 import com.malec.cheesetime.util.PhotoDownloader
 import com.malec.cheesetime.util.PhotoSharer
@@ -49,4 +51,12 @@ class AppModule {
     @Provides
     @Singleton
     fun taskScheduler(context: Context): TaskScheduler = TaskScheduler(context)
+
+    @Provides
+    @Singleton
+    fun resources(context: Context): Resources = Resources(context)
+
+    @Provides
+    @Singleton
+    fun bitampDecoder(context: Context): BitmapDecoder = BitmapDecoder(context)
 }

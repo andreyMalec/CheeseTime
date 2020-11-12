@@ -4,10 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.updatePadding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout

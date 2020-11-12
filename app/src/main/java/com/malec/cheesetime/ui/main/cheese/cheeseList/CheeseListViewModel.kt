@@ -11,7 +11,6 @@ import com.malec.cheesetime.model.CheeseSort
 import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.ui.Screens
-import com.malec.cheesetime.ui.allertDialogBuilder.CheeseDeleteDialog
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
@@ -83,12 +82,6 @@ class CheeseListViewModel @Inject constructor(
     }
 
     fun deleteSelected() {
-        CheeseDeleteDialog(context).setOnOkButtonClickListener {
-            realDeleteSelected()
-        }.show(selectedCount.value)
-    }
-
-    private fun realDeleteSelected() {
         viewModelScope.launch {
             repo.deleteSelected()
             update()

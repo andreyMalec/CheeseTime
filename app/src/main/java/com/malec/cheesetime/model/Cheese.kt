@@ -1,19 +1,21 @@
 package com.malec.cheesetime.model
 
 data class Cheese(
-    val id: Long,
-    val name: String,
-    val dateStart: Long,
-    val date: Long,
-    val recipe: String,
-    val comment: String,
-    val milk: String,
-    val composition: String,
-    val stages: String,
-    val badgeColor: Int,
-    val isSelected: Boolean,
-    val isArchived: Boolean,
-    val photo: String
+    var id: Long,
+    var name: String,
+    var dateStart: Long,
+    var date: Long,
+    var recipe: String,
+    var comment: String,
+    var milkType: String,
+    var milkVolume: String,
+    var milkAge: String,
+    var composition: String,
+    var stages: String,
+    var badgeColor: Int,
+    var isSelected: Boolean,
+    var isArchived: Boolean,
+    var photo: String
 ) {
     fun toMap() = mapOf(
         "id" to id,
@@ -22,7 +24,7 @@ data class Cheese(
         "date" to date,
         "recipe" to recipe,
         "comment" to comment,
-        "milk" to milk,
+        "milk" to "$milkType♂$milkVolume♂$milkAge",
         "composition" to composition,
         "stages" to stages,
         "badgeColor" to badgeColor,
@@ -37,7 +39,9 @@ data class Cheese(
         date,
         recipe,
         comment,
-        milk,
+        milkType,
+        milkVolume,
+        milkAge,
         composition,
         stages,
         badgeColor,
@@ -53,7 +57,9 @@ data class Cheese(
         date,
         recipe,
         comment,
-        milk,
+        milkType,
+        milkVolume,
+        milkAge,
         composition,
         stages,
         badgeColor,
@@ -80,7 +86,8 @@ class CheeseF {
     fun convert() =
         if (id == null)
             null
-        else
+        else {
+            val milkParams = milk.split("♂")
             Cheese(
                 id,
                 name,
@@ -88,7 +95,9 @@ class CheeseF {
                 date,
                 recipe,
                 comment,
-                milk,
+                milkParams[0],
+                milkParams[1],
+                milkParams[2],
                 composition,
                 stages,
                 badgeColor,
@@ -96,4 +105,5 @@ class CheeseF {
                 archived,
                 photo
             )
+        }
 }

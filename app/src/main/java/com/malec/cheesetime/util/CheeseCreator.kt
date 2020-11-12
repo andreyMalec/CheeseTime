@@ -7,7 +7,7 @@ import java.util.*
 object CheeseCreator {
     fun create(
         name: String?,
-        date: String?,
+        date: Long?,
         recipe: String?,
         comment: String?,
         milkType: String,
@@ -23,22 +23,20 @@ object CheeseCreator {
     ): Cheese {
         val now = Date().time
 
-        val dateM = DateFormatter.dateFromString(date)
-
         val stagesFiltered = stages?.filter {
             !it.isBlank()
         }
-
-        val milk = makeString(milkType, milkVolume, milkAge)
 
         return Cheese(
             id,
             name.takeIf { !it.isNullOrBlank() } ?: recipe ?: "",
             dateStart ?: now,
-            dateM,
+            date ?: now,
             recipe ?: "",
             comment ?: "",
-            milk,
+            milkType,
+            milkVolume,
+            milkAge.toString(),
             composition ?: "",
             stagesFiltered.makeString(),
             badgeColor ?: 0,
@@ -47,6 +45,27 @@ object CheeseCreator {
             photo?.map {
                 it.name
             }.makeString()
+        )
+    }
+
+    fun empty(): Cheese {
+        val now = Date().time
+        return Cheese(
+            0,
+            "",
+            now,
+            now,
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            0,
+            false,
+            false,
+            ""
         )
     }
 

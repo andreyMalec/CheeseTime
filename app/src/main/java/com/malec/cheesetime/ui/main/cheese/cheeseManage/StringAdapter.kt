@@ -1,18 +1,15 @@
 package com.malec.cheesetime.ui.main.cheese.cheeseManage
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.doOnTextChanged
-import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.malec.cheesetime.databinding.ItemRemovableEdittextBinding
-import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.StringValue
 
-class StringAdapter(private var data: MutableList<StringValue>, private val vm: RemovableEdittextAction) :
+class StringAdapter(
+    private var data: MutableList<StringValue>,
+    private val vm: RemovableEdittextAction
+) :
     RecyclerView.Adapter<StringAdapter.StringItemViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -36,8 +33,9 @@ class StringAdapter(private var data: MutableList<StringValue>, private val vm: 
         return data.size
     }
 
-    inner class StringItemViewHolder(private val binding: ItemRemovableEdittextBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(value : StringValue){
+    inner class StringItemViewHolder(private val binding: ItemRemovableEdittextBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(value: StringValue) {
             binding.value = value
         }
 
