@@ -25,6 +25,7 @@ class TaskF {
     val todo: String = ""
     val date: Long = 0
     val comment: String = ""
+    val init: Void? = null
 
     fun convert() =
         if (id == null)

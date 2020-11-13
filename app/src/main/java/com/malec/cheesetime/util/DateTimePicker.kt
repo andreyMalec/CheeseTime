@@ -8,7 +8,7 @@ import com.malec.cheesetime.R
 import java.util.*
 
 class DateTimePicker(private val activity: FragmentActivity) {
-    fun pickDate(onDatePicked: (date: String) -> Unit) {
+    fun pickDate(onDatePicked: (String) -> Unit) {
         getDatePicker().also {
             it.addOnPositiveButtonClickListener { date ->
                 onDatePicked(DateFormatter.simpleFormat(date))
@@ -28,7 +28,7 @@ class DateTimePicker(private val activity: FragmentActivity) {
         return TimePickerDialog(
             activity,
             R.style.AppTheme_TimePicker,
-            TimePickerDialog.OnTimeSetListener { v, _, _ ->
+            { v, _, _ ->
                 onTimePicked(v.hour.toString() + ":" + v.minute)
             }, hour, minute, DateFormat.is24HourFormat(activity)
         )

@@ -16,6 +16,7 @@ class RecipeF {
     val id: Long? = null
     val name: String = ""
     val stages: String = ""
+    val init: Void? = null
 
     fun convert() =
         if (id == null)

@@ -8,6 +8,8 @@
         <variable
             name="cheese"
             type="com.malec.cheesetime.model.Cheese" />
+
+        <import type="com.malec.cheesetime.ui.BindingAdapter" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -56,7 +58,7 @@
                 android:orientation="vertical"
                 android:paddingLeft="24dp"
                 android:paddingRight="24dp"
-                android:paddingBottom="48dp">
+                android:paddingBottom="24dp">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/nameLayout"
@@ -100,7 +102,8 @@
                             android:layout_weight="1"
                             android:textAlignment="center"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            app:dateSimpleFormat="@{cheese.date}" />
 
                         <Button
                             android:id="@+id/dateButton"
@@ -156,171 +159,77 @@
                         android:text="@={cheese.comment}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <LinearLayout
-                    android:id="@+id/milkLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:id="@+id/milkButton"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:background="@drawable/icon_arrow_up" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingStart="8dp">
-
-                        <TextView
-                            android:id="@+id/milkText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/cheese_milk"
-                            android:textSize="18sp" />
-
-                        <LinearLayout
-                            android:id="@+id/milkParamsLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-
-                            <EditText
-                                android:id="@+id/milkTypeEditText"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:ems="10"
-                                android:foregroundTint="@color/colorError"
-                                android:hint="@string/milk_type"
-                                android:text="@={cheese.milkType}" />
-
-                            <EditText
-                                android:id="@+id/milkVolumeEditText"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:ems="10"
-                                android:hint="@string/milk_volume"
-                                android:text="@={cheese.milkVolume}" />
-
-                            <EditText
-                                android:id="@+id/milkAgeEditText"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:ems="10"
-                                android:hint="@string/milk_age"
-                                android:text="@={cheese.milkAge}" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/compositionLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:id="@+id/compositionButton"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:background="@drawable/icon_arrow_up" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingStart="8dp">
-
-                        <TextView
-                            android:id="@+id/compositionText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/cheese_composition"
-                            android:textSize="18sp" />
-
-                        <LinearLayout
-                            android:id="@+id/compositionParamsLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-
-                            <EditText
-                                android:id="@+id/compositionEditText"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:ems="10"
-                                android:text="@={cheese.composition}" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/stagesLayout"
+                <com.malec.cheesetime.ui.customView.DropDownLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
+                    app:titleMarginStart="8dp"
+                    app:titleText="@string/cheese_milk">
 
-                    <View
-                        android:id="@+id/stagesButton"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:background="@drawable/icon_arrow_up" />
-
-                    <LinearLayout
+                    <EditText
+                        android:id="@+id/milkTypeEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingStart="8dp">
+                        android:ems="10"
+                        android:foregroundTint="@color/colorError"
+                        android:hint="@string/milk_type"
+                        android:text="@={cheese.milkType}" />
 
-                        <TextView
-                            android:id="@+id/stagesText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/cheese_stages"
-                            android:textSize="18sp" />
+                    <EditText
+                        android:id="@+id/milkVolumeEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/milk_volume"
+                        android:text="@={cheese.milkVolume}" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:orientation="vertical"
-                            android:visibility="gone">
+                    <EditText
+                        android:id="@+id/milkAgeEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/milk_age"
+                        android:text="@={cheese.milkAge}" />
+                </com.malec.cheesetime.ui.customView.DropDownLayout>
 
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/stagesRecycler"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                <com.malec.cheesetime.ui.customView.DropDownLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:titleMarginStart="8dp"
+                    app:titleText="@string/cheese_composition">
 
-                            <androidx.cardview.widget.CardView
-                                android:id="@+id/stageAddButton"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_margin="8dp"
-                                android:foreground="?android:attr/selectableItemBackground"
-                                app:cardBackgroundColor="@color/colorPrimaryDark"
-                                app:cardCornerRadius="20dp"
-                                app:cardElevation="2dp">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:text="@={cheese.composition}" />
+                </com.malec.cheesetime.ui.customView.DropDownLayout>
 
-                                <View
-                                    android:layout_width="25dp"
-                                    android:layout_height="25dp"
-                                    android:layout_gravity="center"
-                                    android:background="@drawable/icon_add" />
+                <com.malec.cheesetime.ui.customView.DropDownLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:contentGravity="end"
+                    app:titleMarginStart="8dp"
+                    app:titleText="@string/cheese_stages">
 
-                            </androidx.cardview.widget.CardView>
-                        </LinearLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/stagesRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
-                    </LinearLayout>
-                </LinearLayout>
+                    <com.malec.cheesetime.ui.customView.ActionButton
+                        android:id="@+id/stageAddButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_margin="8dp"
+                        app:ab_backgroundColor="@color/colorPrimaryDark"
+                        app:ab_elevation="2dp"
+                        app:ab_image="@drawable/icon_add"
+                        app:ab_size="small" />
+                </com.malec.cheesetime.ui.customView.DropDownLayout>
 
                 <TextView
                     android:id="@+id/colorText"
@@ -474,37 +383,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <androidx.cardview.widget.CardView
+                <com.malec.cheesetime.ui.customView.ActionButton
                     android:id="@+id/photoAddButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="32dp"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="@color/colorPrimaryDark"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="2dp">
-
-                    <View
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/icon_add" />
-
-                </androidx.cardview.widget.CardView>
+                    android:layout_margin="8dp"
+                    app:ab_backgroundColor="@color/colorPrimaryDark"
+                    app:ab_elevation="2dp"
+                    app:ab_image="@drawable/icon_add"
+                    app:ab_size="small" />
 
                 <ImageView
                     android:id="@+id/barcodeImage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
                     android:layout_marginBottom="24dp"
                     android:background="@color/colorWhite"
                     android:padding="12dp"
                     android:scaleType="fitCenter"
-                    android:visibility="gone" />
-
+                    android:visibility="gone"
+                    app:barcode="@{cheese.id}" />
             </LinearLayout>
         </ScrollView>
 

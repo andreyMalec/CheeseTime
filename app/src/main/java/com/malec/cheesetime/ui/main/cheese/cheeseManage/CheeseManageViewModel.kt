@@ -33,7 +33,6 @@ class CheeseManageViewModel @Inject constructor(
     private val photoSharer: PhotoSharer
 ) : ViewModel(), StringAdapter.RemovableEdittextAction {
 
-    val isFieldsEmptyError = MutableLiveData(false)
     val manageError = MutableLiveData<String>(null)
     val manageResult = MutableLiveData<String>(null)
     val photoManageResult = MutableLiveData<String>(null)
@@ -45,6 +44,10 @@ class CheeseManageViewModel @Inject constructor(
     private val _isDoneActive = MutableLiveData(false)
     val isDoneActive: LiveData<Boolean>
         get() = _isDoneActive
+
+    private val _isDeleteActive = MutableLiveData(false)
+    val isDeleteActive: LiveData<Boolean>
+        get() = _isDeleteActive
 
     val cheese = MutableLiveData<Cheese>(null)
     val stages = MutableLiveData<MutableList<StringValue>>(mutableListOf())
@@ -70,7 +73,7 @@ class CheeseManageViewModel @Inject constructor(
                 (userRepo.getRecipes().map { it.name }
                     .takeIf { it.isNotEmpty() } ?: res.recipes()).let {
                     cheese.value?.recipe?.let { currentRecipe ->
-                        if (!it.contains(currentRecipe))
+                        if (!it.contains(currentRecipe) && currentRecipe.isNotBlank())
                             listOf(currentRecipe) + it
                         else
                             it
@@ -86,13 +89,17 @@ class CheeseManageViewModel @Inject constructor(
     }
 
     fun setCheese(newCheese: Cheese?) {
-        if (newCheese != null) {
-            cheese.value = newCheese
-            stages.value = newCheese.stages.getStages()?.map { StringValue(it) }?.toMutableList()
-            photos.value = repo.getPhotosById(newCheese.photo)
-            badgeColor.value = newCheese.badgeColor
-        } else
-            cheese.value = CheeseCreator.empty()
+        if (cheese.value == null) {
+            cheese.value = if (newCheese != null) {
+                _isDeleteActive.value = true
+                stages.value =
+                    newCheese.stages.getStages()
+                photos.value = repo.getPhotosById(newCheese.photo)
+                badgeColor.value = newCheese.badgeColor
+                newCheese
+            } else
+                CheeseCreator.empty()
+        }
         checkCanSave()
     }
 
@@ -102,10 +109,9 @@ class CheeseManageViewModel @Inject constructor(
         }
     }
 
-    private fun String?.getStages() = this?.split("♂")
+    private fun String?.getStages() = this?.split("♂")?.map { StringValue(it) }?.toMutableList()
 
     fun selectRecipe(recipeName: String?) {
-
         if (isStagesFirstLoad) {
             isStagesFirstLoad = false
             return
@@ -152,7 +158,7 @@ class CheeseManageViewModel @Inject constructor(
         stages.value = stages.value
     }
 
-    fun setTmpPhoto(photo: Photo) {
+    fun setDownloadedPhoto(photo: Photo) {
         _tmpPhoto.value = photo
     }
 
@@ -187,13 +193,8 @@ class CheeseManageViewModel @Inject constructor(
         var mColor = badgeColor.value
         val mPhotos = photos.value
 
-        if (mMilkType.isNullOrBlank() || mMilkVolume.isNullOrBlank()) {
-            isFieldsEmptyError.value = true
-            return@launch
-        }
-
         if (mColor == null || mColor == 0)
-            mColor = mCheese.badgeColor
+            mColor = mCheese?.badgeColor
 
         val cheese = CheeseCreator.create(
             mName,
@@ -206,14 +207,14 @@ class CheeseManageViewModel @Inject constructor(
             mComposition,
             mStages?.map { it.data },
             mColor,
-            mCheese.isArchived,
+            mCheese?.isArchived,
             mPhotos,
-            mCheese.id.takeIf { it != 0L } ?: getNextId(),
-            mCheese.dateStart
+            mCheese?.id.takeIf { it != 0L } ?: repo.getNextId(),
+            mCheese?.dateStart
         )
         try {
-            repo.updatePhotos(mCheese.photo, mPhotos)
-            manageResult.value = if (mCheese.id == 0L) {
+            repo.updatePhotos(mCheese?.photo, mPhotos)
+            manageResult.value = if (mCheese?.id == 0L) {
                 repo.create(cheese)
                 res.stringCheeseCreated()
             } else {
@@ -223,13 +224,6 @@ class CheeseManageViewModel @Inject constructor(
         } catch (e: Exception) {
             setError(e)
         }
-    }
-
-    private suspend fun getNextId() = try {
-        repo.getNextId()
-    } catch (e: Exception) {
-        e.printStackTrace()
-        1L
     }
 
     private fun setError(t: Throwable?) {
@@ -244,12 +238,14 @@ class CheeseManageViewModel @Inject constructor(
         }
     }
 
-    fun onPhotoDownloadClick(photo: Photo) {
+    fun onPhotoDownloadClick() {
         viewModelScope.launch {
             try {
-                photoDownloader.download(photo)
-                photoManageResult.value = res.stringPhotoDownloadedSuccessful()
-                _tmpPhoto.value = null
+                _tmpPhoto.value?.let {
+                    photoDownloader.download(it)
+                    photoManageResult.value = res.stringPhotoDownloadedSuccessful()
+                    _tmpPhoto.value = null
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }

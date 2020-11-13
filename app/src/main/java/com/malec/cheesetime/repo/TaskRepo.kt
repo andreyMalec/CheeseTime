@@ -13,7 +13,9 @@ class TaskRepo(
     private val scheduler: TaskScheduler
 ) {
 
-    suspend fun getAll() = api.getAll().also { tasks ->
+    suspend fun getAll() = api.getAll().sortedByDescending { it.date }
+
+    suspend fun scheduleAll(tasks: List<Task>) {
         tasks.forEach {
             scheduler.schedule(it)
             delay(200)

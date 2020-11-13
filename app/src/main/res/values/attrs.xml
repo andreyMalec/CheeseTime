@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DropDownLayout">
+        <attr name="titleText" format="string" localization="suggested" />
+        <attr name="titleMarginStart" format="dimension" />
+        <attr name="droppedDown" format="boolean" />
+        <attr name="contentOrientation" format="enum">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+        <attr name="contentGravity" format="flags">
+            <flag name="top" value="0x30" />
+            <flag name="bottom" value="0x50" />
+            <flag name="left" value="0x03" />
+            <flag name="right" value="0x05" />
+            <flag name="center_vertical" value="0x10" />
+            <flag name="fill_vertical" value="0x70" />
+            <flag name="center_horizontal" value="0x01" />
+            <flag name="fill_horizontal" value="0x07" />
+            <flag name="center" value="0x11" />
+            <flag name="fill" value="0x77" />
+            <flag name="clip_vertical" value="0x80" />
+            <flag name="clip_horizontal" value="0x08" />
+            <flag name="start" value="0x00800003" />
+            <flag name="end" value="0x00800005" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="ActionButton">
+        <attr name="ab_checkedImage" format="reference" />
+        <attr name="ab_image" format="reference" />
+        <attr name="ab_shape" format="enum">
+            <enum name="circular" value="0" />
+            <enum name="rounded" value="1" />
+        </attr>
+        <attr name="ab_size" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="small" value="1" />
+        </attr>
+        <attr name="ab_backgroundColor" format="color" />
+        <attr name="ab_checkable" format="boolean" />
+        <attr name="ab_elevation" format="dimension" />
+    </declare-styleable>
+</resources>

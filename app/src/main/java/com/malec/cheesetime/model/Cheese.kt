@@ -82,6 +82,7 @@ class CheeseF {
     val badgeColor: Int = 0
     val archived: Boolean = false
     val photo: String = ""
+    val init: Void? = null
 
     fun convert() =
         if (id == null)

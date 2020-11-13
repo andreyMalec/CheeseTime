@@ -1,9 +1,6 @@
 package com.malec.cheesetime.ui
 
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -40,15 +37,7 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
     }
 
     protected fun showMessage(message: String) {
-        val toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
-        toast.view.background.colorFilter = PorterDuffColorFilter(
-            ContextCompat.getColor(this, R.color.backgroundLight),
-            PorterDuff.Mode.SRC_IN
-        )
-        toast.view.findViewById<TextView>(android.R.id.message).setTextColor(
-            ContextCompat.getColor(this, R.color.colorAccent)
-        )
-        toast.show()
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     protected fun showMessage(stringId: Int) {

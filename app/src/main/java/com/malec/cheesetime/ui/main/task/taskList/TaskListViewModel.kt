@@ -26,7 +26,9 @@ class TaskListViewModel @Inject constructor(
     fun update() {
         viewModelScope.launch {
             try {
-                taskList.value = repo.getAll()
+                val tasks = repo.getAll()
+                taskList.value = tasks
+                repo.scheduleAll(tasks)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

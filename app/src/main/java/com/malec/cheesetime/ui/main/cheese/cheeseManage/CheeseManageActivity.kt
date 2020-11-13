@@ -8,36 +8,29 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewAnimationUtils
-import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
-import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.zxing.BarcodeFormat
-import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.malec.cheesetime.R
 import com.malec.cheesetime.databinding.ActivityCheeseManageBinding
-import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.Photo
 import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.ui.allertDialogBuilder.CheeseDeleteDialog
 import com.malec.cheesetime.ui.allertDialogBuilder.PhotoDeleteDialog
 import com.malec.cheesetime.ui.main.ResultNavigator
-import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageViewModel.Companion.CAMERA
-import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageViewModel.Companion.STORAGE
 import com.malec.cheesetime.util.DateFormatter
 import com.malec.cheesetime.util.DateTimePicker
 import kotlinx.android.synthetic.main.activity_cheese_manage.*
@@ -61,35 +54,20 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
     private lateinit var recipeAdapter: ArrayAdapter<String>
 
     private var saveButton: MenuItem? = null
-    private var isAlreadyCreated = false
+    private var deleteButton: MenuItem? = null
+    private var isDeleteActive = false
     private var isDoneActive = false
 
     private lateinit var stagesAdapter: StringAdapter
-
-    private val dropDownButtonClick = object : View.OnClickListener {
-        override fun onClick(v: View?) {
-            if (v == null) return
-
-            val paramsLayout =
-                ((v.parent as LinearLayout).getChildAt(1) as LinearLayout).getChildAt(1)
-
-            v.startAnimation(AnimationUtils.loadAnimation(v.context, R.anim.rotate180))
-            if (paramsLayout.visibility == View.VISIBLE) {
-                v.setBackgroundResource(R.drawable.icon_arrow_up)
-                paramsLayout.visibility = View.GONE
-            } else {
-                v.setBackgroundResource(R.drawable.icon_arrow_down)
-                paramsLayout.visibility = View.VISIBLE
-            }
-        }
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_manage, menu)
 
         saveButton = menu?.findItem(R.id.saveButton)
-        menu?.findItem(R.id.deleteButton)?.isVisible = isAlreadyCreated
         saveButton?.isVisible = isDoneActive
+
+        deleteButton = menu?.findItem(R.id.deleteButton)
+        deleteButton?.isVisible = isDeleteActive
 
         return true
     }
@@ -107,32 +85,6 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun saveCheese() {
-        progressLayout.visibility = View.VISIBLE
-
-        viewModel.checkAndManageCheese()
-    }
-
-    private fun showImageDialog() {
-        AttachSourceDialog { result ->
-            when (result) {
-                AttachSourceDialog.DialogResult.GALLERY -> {
-                    viewModel.onAttachFromGallery()
-                }
-                AttachSourceDialog.DialogResult.CAMERA -> {
-                    if (ContextCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.CAMERA
-                        ) == PackageManager.PERMISSION_GRANTED
-                    )
-                        viewModel.onAttachFromCamera()
-                    else
-                        requestPermissions(arrayOf(Manifest.permission.CAMERA), CAMERA)
-                }
-            }
-        }.show(supportFragmentManager, "SelectAttachSource")
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -140,20 +92,18 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode == CAMERA && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        if (requestCode == CAMERA_PERMISSION.code && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             viewModel.onAttachFromCamera()
 
-        if (requestCode == STORAGE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            viewModel.tmpPhoto.value?.let {
-                viewModel.onPhotoDownloadClick(it)
-            }
+        if (requestCode == STORAGE_PERMISSION.code && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            viewModel.onPhotoDownloadClick()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && data != null && data.data != null && requestCode == CheeseManageViewModel.GALLERY)
             viewModel.getImageFromUri(data.data)
-        else if (resultCode == Activity.RESULT_OK && requestCode == CAMERA)
+        else if (resultCode == Activity.RESULT_OK && requestCode == CAMERA_PERMISSION.code)
             viewModel.getImageFromCamera()
 
         super.onActivityResult(requestCode, resultCode, data)
@@ -170,10 +120,9 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
 
         initViewModelListeners()
         initColorClickListener()
-        initParamsClickListeners()
         initToolbar()
         initInputListeners()
-        initRecycler()
+        initPhotoRecycler()
 
         stageAddButton.setOnClickListener {
             viewModel.addNewStage()
@@ -195,11 +144,26 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         }
     }
 
-    private fun initViewModelListeners() {
-        viewModel.cheese.observe(this, { cheese ->
-            showCheeseData(cheese)
-        })
+    private fun saveCheese() {
+        progressLayout.visibility = View.VISIBLE
 
+        viewModel.checkAndManageCheese()
+    }
+
+    private fun showImageDialog() {
+        AttachSourceDialog { result ->
+            when (result) {
+                AttachSourceDialog.DialogResult.GALLERY -> {
+                    viewModel.onAttachFromGallery()
+                }
+                AttachSourceDialog.DialogResult.CAMERA -> checkPermission(CAMERA_PERMISSION) {
+                    viewModel.onAttachFromCamera()
+                }
+            }
+        }.show(supportFragmentManager, "SelectAttachSource")
+    }
+
+    private fun initViewModelListeners() {
         viewModel.stages.observe(this, { stages ->
             stagesAdapter.submitList(stages)
         })
@@ -207,6 +171,11 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         viewModel.isDoneActive.observe(this, { active ->
             saveButton?.isVisible = active
             isDoneActive = active
+        })
+
+        viewModel.isDeleteActive.observe(this, { active ->
+            deleteButton?.isVisible = active
+            isDeleteActive = active
         })
 
         viewModel.recipes.observe(this, {
@@ -219,27 +188,13 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         })
 
         viewModel.badgeColor.observe(this, { color ->
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 animateToolbarColorChange(color)
             }, 200)
         })
 
         viewModel.photos.observe(this, {
             adapter.submitList(it)
-        })
-
-        viewModel.isFieldsEmptyError.observe(this, { isError ->
-            if (isError) {
-                showError(getString(R.string.empty_fields_error))
-                viewModel.isFieldsEmptyError.value = false
-
-                if (milkTypeEditText.text.isNullOrBlank())
-                    milkTypeEditText.error = getString(R.string.required_field_error)
-                if (milkVolumeEditText.text.isNullOrBlank())
-                    milkVolumeEditText.error = getString(R.string.required_field_error)
-
-                progressLayout.visibility = View.GONE
-            }
         })
 
         viewModel.manageError.observe(this, { message ->
@@ -269,7 +224,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         })
     }
 
-    override fun onLongClick(photo: Photo) {
+    override fun onPhotoLongClick(photo: Photo) {
         PhotoMenuBuilder()
             .setOnDownloadClickListener {
                 downloadPhoto(photo)
@@ -284,16 +239,22 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
     }
 
     private fun downloadPhoto(photo: Photo) {
+        viewModel.setDownloadedPhoto(photo)
+
+        checkPermission(STORAGE_PERMISSION) {
+            viewModel.onPhotoDownloadClick()
+        }
+    }
+
+    private fun checkPermission(permission: Permission, onGranted: () -> Unit) {
         if (ContextCompat.checkSelfPermission(
                 this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                permission.name
             ) == PackageManager.PERMISSION_GRANTED
         )
-            viewModel.onPhotoDownloadClick(photo)
-        else {
-            viewModel.setTmpPhoto(photo)
-            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), STORAGE)
-        }
+            onGranted()
+        else
+            requestPermissions(arrayOf(permission.name), permission.code)
     }
 
     private fun deletePhotoDialog(photo: Photo) {
@@ -302,28 +263,13 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         }.show()
     }
 
-    private fun showCheeseData(cheese: Cheese) {
-        dateText.text = DateFormatter.simpleFormat(cheese.date)
-
-        if (cheese.id != 0L) {
-            val barcodeBitmap =
-                BarcodeEncoder().encodeBitmap(
-                    cheese.id.toString(),
-                    BarcodeFormat.CODE_128,
-                    550,
-                    100
-                )
-            barcodeImage.setImageBitmap(barcodeBitmap)
-            barcodeImage.isVisible = true
-        }
-    }
-
     private fun initInputListeners() {
         nameEditText.doAfterTextChanged {
-                viewModel.checkCanSave()
+            viewModel.checkCanSave()
         }
         dateButton.setOnClickListener {
             DateTimePicker(this).pickDate {
+                viewModel.cheese.value?.date = DateFormatter.dateFromString(it)
                 dateText.text = it
             }
         }
@@ -332,15 +278,14 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
 
             override fun onItemSelected(adapter: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 val recipe = adapter?.getItemAtPosition(p2)?.toString()
-//                saveStages()
                 viewModel.selectRecipe(recipe)
             }
         }
         milkTypeEditText.doAfterTextChanged {
-                viewModel.checkCanSave()
+            viewModel.checkCanSave()
         }
         milkVolumeEditText.doAfterTextChanged {
-                viewModel.checkCanSave()
+            viewModel.checkCanSave()
         }
 
         barcodeImage.setOnClickListener {
@@ -370,7 +315,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         }
     }
 
-    private fun initRecycler() {
+    private fun initPhotoRecycler() {
         adapter = PhotoAdapter(this)
         photoRecycler.adapter = adapter
         photoRecycler.layoutManager =
@@ -404,23 +349,6 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         animator.start()
     }
 
-    private fun initParamsClickListeners() {
-        milkButton.setOnClickListener(dropDownButtonClick)
-        milkText.setOnClickListener {
-            milkButton.performClick()
-        }
-
-        compositionButton.setOnClickListener(dropDownButtonClick)
-        compositionText.setOnClickListener {
-            compositionButton.performClick()
-        }
-
-        stagesButton.setOnClickListener(dropDownButtonClick)
-        stagesText.setOnClickListener {
-            stagesButton.performClick()
-        }
-    }
-
     private fun initColorClickListener() {
         for (child in colorLayout1.children + colorLayout2.children) {
             child.setOnClickListener {
@@ -431,4 +359,16 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
             }
         }
     }
+
+    companion object {
+        private val CAMERA_PERMISSION =
+            Permission(Manifest.permission.CAMERA, CheeseManageViewModel.CAMERA)
+        private val STORAGE_PERMISSION =
+            Permission(Manifest.permission.WRITE_EXTERNAL_STORAGE, CheeseManageViewModel.STORAGE)
+    }
+
+    data class Permission(
+        val name: String,
+        val code: Int
+    )
 }

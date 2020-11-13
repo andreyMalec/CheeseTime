@@ -14,7 +14,12 @@ class CheeseRepo(
 ) {
     private val selected = mutableListOf<Long>()
 
-    suspend fun getNextId() = api.getNextId()
+    suspend fun getNextId() = try {
+        api.getNextId()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        1L
+    }
 
     suspend fun getAll() = api.getAll()
 

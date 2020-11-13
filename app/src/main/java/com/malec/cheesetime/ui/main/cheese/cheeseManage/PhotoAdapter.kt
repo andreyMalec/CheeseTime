@@ -50,7 +50,7 @@ class PhotoAdapter(private val vm: PhotoAction) :
         init {
             binding?.root?.setOnLongClickListener {
                 binding.photo?.let {
-                    vm.onLongClick(it)
+                    vm.onPhotoLongClick(it)
                 }
                 true
             }
@@ -58,6 +58,6 @@ class PhotoAdapter(private val vm: PhotoAction) :
     }
 
     interface PhotoAction {
-        fun onLongClick(photo: Photo)
+        fun onPhotoLongClick(photo: Photo)
     }
 }

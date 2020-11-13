@@ -2,6 +2,7 @@ package com.malec.cheesetime.ui.main.cheese.cheeseManage
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,19 +49,19 @@ class PhotoMenuBuilder {
 
             v.findViewById<LinearLayout>(R.id.downloadButton).setOnClickListener {
                 onDownloadClick?.invoke()
-                Handler().postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                     dialog?.dismiss()
                 }, 200)
             }
             v.findViewById<LinearLayout>(R.id.shareButton).setOnClickListener {
                 onShareClick?.invoke()
-                Handler().postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                     dialog?.dismiss()
                 }, 200)
             }
             v.findViewById<LinearLayout>(R.id.deleteButton).setOnClickListener {
                 onDeleteClick?.invoke()
-                Handler().postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                     dialog?.dismiss()
                 }, 200)
             }
