@@ -2,8 +2,8 @@ package com.malec.cheesetime.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowInsets
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.view.updatePadding
@@ -27,17 +27,6 @@ class MainActivity : BaseActivity(), HasAndroidInjector {
         supportFragmentManager,
         R.id.navHostFragment
     )
-
-//    private var searchView: SearchView? = null
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.menu_main, menu)
-//
-//        searchView = menu?.findItem(R.id.appBarSearch)?.actionView as SearchView?
-//        initSearchView()
-
-        return true
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -75,26 +64,6 @@ class MainActivity : BaseActivity(), HasAndroidInjector {
         }
     }
 
-    private fun initSearchView() {
-//        searchView?.findViewById<View>(androidx.appcompat.R.id.search_plate)
-//            ?.setBackgroundResource(android.R.color.transparent)
-//        searchView?.queryHint = getString(R.string.search_hint)
-//
-//        initSearchViewListener()
-    }
-
-    private fun initSearchViewListener() {
-//        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?) = false
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-////                viewModel.searchQuery.value = newText
-//
-//                return false
-//            }
-//        })
-    }
-
     private fun initViewModelListeners() {
         viewModel.showPressAgain.observe(this, { show ->
             if (show)
@@ -128,7 +97,11 @@ class MainActivity : BaseActivity(), HasAndroidInjector {
         toolbar.setTitle(R.string.app_name)
         setSupportActionBar(toolbar)
         root.setOnApplyWindowInsetsListener { _, insets ->
-            val statusBarHeight = insets.systemWindowInsetTop
+            val statusBarHeight =
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
+                    insets.getInsets(WindowInsets.Type.systemBars()).top
+                else
+                    insets.systemWindowInsetTop
 
             val h = (resources.getDimension(R.dimen.toolbar_height) + statusBarHeight).toInt()
             val lp = toolbar.layoutParams as AppBarLayout.LayoutParams

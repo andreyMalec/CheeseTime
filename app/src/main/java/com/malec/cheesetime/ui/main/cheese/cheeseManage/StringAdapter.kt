@@ -8,7 +8,7 @@ import com.malec.cheesetime.model.StringValue
 
 class StringAdapter(
     private var data: MutableList<StringValue>,
-    private val vm: RemovableEdittextAction
+    private val vm: RemovableEditTextAction
 ) :
     RecyclerView.Adapter<StringAdapter.StringItemViewHolder>() {
 
@@ -47,7 +47,7 @@ class StringAdapter(
         }
     }
 
-    interface RemovableEdittextAction {
+    interface RemovableEditTextAction {
         fun onRemoveClick(value: StringValue?)
     }
 }

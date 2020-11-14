@@ -1,15 +1,14 @@
 package com.malec.cheesetime.ui.main.cheese.cheeseList
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.CheeseFilter
 import com.malec.cheesetime.model.CheeseSort
 import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.repo.UserRepo
+import com.malec.cheesetime.service.Resources
+import com.malec.cheesetime.ui.BaseViewModel
 import com.malec.cheesetime.ui.Screens
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
@@ -19,8 +18,8 @@ class CheeseListViewModel @Inject constructor(
     private val repo: CheeseRepo,
     private val userRepo: UserRepo,
     private val router: Router,
-    private val context: Context
-) : ViewModel(), CheeseAdapter.CheeseAction {
+    private val res: Resources
+) : BaseViewModel(), CheeseAdapter.CheeseAction {
     val cheeseList = MutableLiveData<List<Cheese>>(null)
     val selectedCount = MutableLiveData(0)
 
@@ -36,12 +35,10 @@ class CheeseListViewModel @Inject constructor(
         update()
 
         viewModelScope.launch {
-            cheeseTypes.value =
-                (userRepo.getRecipes().map { it.name }
-                    .takeIf { it.isNotEmpty() }
-                    ?: context.resources.getStringArray(R.array.recipes).toList()).let {
-                    listOf(context.getString(R.string.filter_cheese_type_any)) + it
-                }
+            cheeseTypes.value = (
+                    userRepo.getRecipes().map { it.name }.takeIf { it.isNotEmpty() }
+                        ?: res.recipes()
+                    ).let { listOf(res.stringCheeseTypeAny()) + it }
         }
     }
 
@@ -59,12 +56,8 @@ class CheeseListViewModel @Inject constructor(
             archivedFilter.value,
             sort
         )
-        viewModelScope.launch {
-            try {
-                cheeseList.value = repo.getAllFiltered(filter)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+        safeRun {
+            cheeseList.value = repo.getAllFiltered(filter)
         }
     }
 
@@ -106,4 +99,6 @@ class CheeseListViewModel @Inject constructor(
         repo.toggleSelect(cheese)
         update()
     }
+
+    override fun setError(t: Throwable?) {}
 }

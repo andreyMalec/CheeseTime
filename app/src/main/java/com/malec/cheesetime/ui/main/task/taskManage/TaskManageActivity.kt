@@ -8,14 +8,15 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.core.widget.doAfterTextChanged
+import androidx.databinding.DataBindingUtil
 import com.malec.cheesetime.R
-import com.malec.cheesetime.model.Task
+import com.malec.cheesetime.databinding.ActivityTaskManageBinding
 import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.ui.allertDialogBuilder.TaskDeleteDialog
-import com.malec.cheesetime.util.DateFormatter
 import com.malec.cheesetime.util.DateTimePicker
 import kotlinx.android.synthetic.main.activity_task_manage.*
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 class TaskManageActivity : BaseActivity() {
     private val viewModel: TaskManageViewModel by viewModels {
@@ -25,8 +26,19 @@ class TaskManageActivity : BaseActivity() {
     private val cheeseList = mutableListOf<String>()
     private lateinit var adapter: ArrayAdapter<String>
 
+    private var saveButton: MenuItem? = null
+    private var deleteButton: MenuItem? = null
+    private var isDeleteActive = false
+    private var isSaveActive = false
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_manage, menu)
+
+        saveButton = menu?.findItem(R.id.saveButton)
+        saveButton?.isVisible = isSaveActive
+
+        deleteButton = menu?.findItem(R.id.deleteButton)
+        deleteButton?.isVisible = isDeleteActive
 
         return true
     }
@@ -44,14 +56,16 @@ class TaskManageActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override val navigator = null;
+    override val navigator: SupportAppNavigator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_task_manage)
+        val binding: ActivityTaskManageBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_task_manage)
 
         val task = Screens.TaskManageScreen.parseExtraIntent(intent)
         viewModel.setTask(task)
+        binding.task = viewModel.task.value
 
         initViewModelListeners()
         initInputListeners()
@@ -63,32 +77,31 @@ class TaskManageActivity : BaseActivity() {
     }
 
     private fun initViewModelListeners() {
-        viewModel.cheeseList.observe(this, { list ->
-            val cheeseNames = list.map {
-                it.name + " id: " + it.id
-            }
-            val cheeseSet = cheeseList.toSet()
+        viewModel.cheeseList.observe(this, {
             adapter.clear()
-            adapter.addAll(cheeseSet + cheeseNames.toSet())
+            adapter.addAll(it)
         })
 
-        viewModel.task.observe(this, {
-            if (it != null)
-                showTaskData(it)
+        viewModel.cheesePosition.observe(this, {
+            cheeseSpinner.setSelection(it)
         })
 
-        viewModel.isFieldsEmptyError.observe(this, { isError ->
-            if (isError) {
-                showError(getString(R.string.empty_fields_error))
-                viewModel.isFieldsEmptyError.value = false
+        viewModel.date.observe(this, {
+            dateText.text = it
+        })
 
-                if (todoEditText.text.isNullOrBlank())
-                    todoLayout.error = getString(R.string.required_field_error)
-                if (dateText.text.isNullOrBlank())
-                    dateButton.error = getString(R.string.required_field_error)
-                if (timeText.text.isNullOrBlank())
-                    timeButton.error = getString(R.string.required_field_error)
-            }
+        viewModel.time.observe(this, {
+            timeText.text = it
+        })
+
+        viewModel.isSaveActive.observe(this, { active ->
+            saveButton?.isVisible = active
+            isSaveActive = active
+        })
+
+        viewModel.isDeleteActive.observe(this, { active ->
+            deleteButton?.isVisible = active
+            isDeleteActive = active
         })
 
         viewModel.manageError.observe(this, { message ->
@@ -107,54 +120,28 @@ class TaskManageActivity : BaseActivity() {
         })
     }
 
-    private fun showTaskData(task: Task) {
-        val name = task.cheeseName + " id: " + task.cheeseId
-        val index = cheeseList.indexOf(name)
-        if (index == -1)
-            adapter.add(name)
-        adapter.notifyDataSetChanged()
-        cheeseSpinner.setSelection(
-            if (index == -1) cheeseList.size - 1
-            else index
-        )
-
-        todoEditText.setText(task.todo)
-        dateText.text = DateFormatter.simpleFormat(task.date)
-        timeText.text = DateFormatter.simpleFormatTime(task.date)
-        commentEditText.setText(task.comment)
-    }
-
     private fun initInputListeners() {
         cheeseSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {}
 
-            override fun onItemSelected(adapter: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                viewModel.cheese.value = adapter?.getItemAtPosition(p2)?.toString()
+            override fun onItemSelected(a: AdapterView<*>?, v: View?, p: Int, p2: Long) {
+                viewModel.selectCheeseAt(p)
             }
         }
         todoEditText.doAfterTextChanged {
-            viewModel.todo.value = it?.toString()?.trim()
-        }
-        dateText.doAfterTextChanged {
-            viewModel.date.value = it?.toString()?.trim()
+            viewModel.checkCanSave()
         }
         dateButton.setOnClickListener {
-            dateButton.error = null
             DateTimePicker(this).pickDate {
-                dateText.text = it
+                viewModel.date.value = it
+                viewModel.checkCanSave()
             }
-        }
-        timeText.doAfterTextChanged {
-            viewModel.time.value = it?.toString()?.trim()
         }
         timeButton.setOnClickListener {
-            timeButton.error = null
             DateTimePicker(this).pickTime {
-                timeText.text = it
+                viewModel.time.value = it
+                viewModel.checkCanSave()
             }
-        }
-        commentEditText.doAfterTextChanged {
-            viewModel.comment.value = it?.toString()?.trim()
         }
     }
 

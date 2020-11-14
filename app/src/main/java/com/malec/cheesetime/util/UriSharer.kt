@@ -28,7 +28,7 @@ abstract class UriSharer(private val context: Context) {
     protected fun makeUri(fileName: String, content: Any): Uri =
         FileProvider.getUriForFile(context, context.packageName, writeToFile(fileName, content))
 
-    protected fun writeToFile(fileName: String, content: Any): File {
+    private fun writeToFile(fileName: String, content: Any): File {
         val file = makeFile(fileName)
         FileOutputStream(file).also {
             writeToStream(content, it)
@@ -38,7 +38,7 @@ abstract class UriSharer(private val context: Context) {
         return file
     }
 
-    protected fun makeFile(fileName: String): File {
+    private fun makeFile(fileName: String): File {
         val cachePath = File(context.cacheDir, "docs")
         cachePath.mkdirs()
 

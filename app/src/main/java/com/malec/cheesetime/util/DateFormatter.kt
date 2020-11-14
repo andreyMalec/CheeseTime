@@ -60,15 +60,17 @@ class DateFormatter(private val context: Context) {
         private const val millisecondsInMinute: Long = 1000 * 60
         const val millisecondsIn30Min: Long = millisecondsInMinute * 30
         const val millisecondsInHour: Long = millisecondsIn30Min * 2
-        private const val millisecondsInDay: Long = millisecondsInHour * 24
+        const val millisecondsInDay: Long = millisecondsInHour * 24
 
-        fun dateTimeFromString(dateString: String, timeString: String): Long {
+        fun dateTimeFromString(dateString: String?, timeString: String?): Long {
             val time = timeFromString(timeString)
             val timeInMillis = time.first * millisecondsInHour + time.second * millisecondsInMinute
             return dateFromString(dateString) + timeInMillis
         }
 
-        fun timeFromString(time: String): Pair<Int, Int> {
+        fun timeFromString(time: String?): Pair<Int, Int> {
+            if (time.isNullOrBlank()) return Pair(0, 0)
+
             val h = time.split(":")[0].toInt()
             val m = time.split(":")[1].toInt()
             return Pair(h, m)

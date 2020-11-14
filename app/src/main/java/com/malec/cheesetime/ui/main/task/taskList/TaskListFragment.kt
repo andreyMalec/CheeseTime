@@ -1,6 +1,8 @@
 package com.malec.cheesetime.ui.main.task.taskList
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,7 +67,9 @@ class TaskListFragment : Fragment(), Injectable {
         TaskDeleteDialog(requireContext()).setOnOkButtonClickListener {
             viewModel.onSwipe(adapter.currentList[position])
         }.setOnCancelButtonClickListener {
-            adapter.notifyItemChanged(position)
+            Handler(Looper.getMainLooper()).postDelayed({
+                adapter.notifyItemChanged(position)
+            }, 400)
         }.show()
     }
 

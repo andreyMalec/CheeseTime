@@ -45,28 +45,26 @@ class PhotoMenuBuilder {
             container: ViewGroup?,
             savedInstanceState: Bundle?
         ): View? {
-            val v = inflater.inflate(R.layout.layout_photo_menu, container, false)
+            return inflater.inflate(R.layout.layout_photo_menu, container, false).apply {
+                findViewById<LinearLayout>(R.id.downloadButton).setOnClickListener {
+                    onDownloadClick?.invoke()
+                    delayedDismiss()
+                }
+                findViewById<LinearLayout>(R.id.shareButton).setOnClickListener {
+                    onShareClick?.invoke()
+                    delayedDismiss()
+                }
+                findViewById<LinearLayout>(R.id.deleteButton).setOnClickListener {
+                    onDeleteClick?.invoke()
+                    delayedDismiss()
+                }
+            }
+        }
 
-            v.findViewById<LinearLayout>(R.id.downloadButton).setOnClickListener {
-                onDownloadClick?.invoke()
-                Handler(Looper.getMainLooper()).postDelayed({
-                    dialog?.dismiss()
-                }, 200)
-            }
-            v.findViewById<LinearLayout>(R.id.shareButton).setOnClickListener {
-                onShareClick?.invoke()
-                Handler(Looper.getMainLooper()).postDelayed({
-                    dialog?.dismiss()
-                }, 200)
-            }
-            v.findViewById<LinearLayout>(R.id.deleteButton).setOnClickListener {
-                onDeleteClick?.invoke()
-                Handler(Looper.getMainLooper()).postDelayed({
-                    dialog?.dismiss()
-                }, 200)
-            }
-
-            return v
+        private fun delayedDismiss() {
+            Handler(Looper.getMainLooper()).postDelayed({
+                dialog?.dismiss()
+            }, 200)
         }
     }
 }

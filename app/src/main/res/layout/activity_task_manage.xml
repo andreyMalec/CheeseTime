@@ -1,162 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/backgroundLight"
-    android:fitsSystemWindows="true"
-    tools:context=".ui.main.task.taskManage.TaskManageActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
 
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        <variable
+            name="task"
+            type="com.malec.cheesetime.model.Task" />
+    </data>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundLight"
+        android:fitsSystemWindows="true"
+        tools:context=".ui.main.task.taskManage.TaskManageActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp">
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <LinearLayout
-                android:id="@+id/cheeseLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp">
-
-                <TextView
-                    android:id="@+id/cheeseText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/task_cheese"
-                    android:textSize="18sp" />
-
-                <Spinner
-                    android:id="@+id/cheeseSpinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp" />
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/todoLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="6dp"
-                android:hint="@string/task_todo"
-                app:boxBackgroundColor="@color/backgroundLight"
-                app:errorIconTint="@color/colorError"
-                app:errorTextColor="@color/colorError">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/todoEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <LinearLayout
-                android:id="@+id/dateLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp">
-
-                <TextView
-                    android:id="@+id/dateTimeText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/task_date"
-                    android:textSize="18sp" />
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp">
 
                 <LinearLayout
+                    android:id="@+id/cheeseLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp">
 
-                    <Button
-                        android:id="@+id/dateButton"
+                    <TextView
+                        android:id="@+id/cheeseText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/colorPrimaryDark"
-                        android:drawableLeft="@drawable/icon_date_range"
-                        android:text="@string/date_pick"
-                        android:textColor="@color/colorPrimary"
-                        app:errorIconTint="@color/colorError" />
+                        android:text="@string/task_cheese"
+                        android:textSize="18sp" />
 
-                    <Button
-                        android:id="@+id/timeButton"
-                        android:layout_width="wrap_content"
+                    <Spinner
+                        android:id="@+id/cheeseSpinner"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="32dp"
-                        android:backgroundTint="@color/colorPrimaryDark"
-                        android:drawableLeft="@drawable/icon_time"
-                        android:text="@string/date_pick"
-                        android:textColor="@color/colorPrimary"
-                        app:errorIconTint="@color/colorError" />
+                        android:layout_marginTop="4dp" />
                 </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/todoLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="6dp"
+                    android:hint="@string/task_todo"
+                    app:boxBackgroundColor="@color/backgroundLight"
+                    app:errorIconTint="@color/colorError"
+                    app:errorTextColor="@color/colorError">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/todoEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@={task.todo}" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
+                    android:id="@+id/dateLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp">
 
                     <TextView
-                        android:id="@+id/dateText"
+                        android:id="@+id/dateTimeText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimary"
+                        android:text="@string/task_date"
                         android:textSize="18sp" />
 
-                    <TextView
-                        android:id="@+id/timeText"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="32dp"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="18sp" />
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/dateButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/colorPrimaryDark"
+                            android:drawableLeft="@drawable/icon_date_range"
+                            android:text="@string/date_pick"
+                            android:textColor="@color/colorPrimary"
+                            app:errorIconTint="@color/colorError" />
+
+                        <Button
+                            android:id="@+id/timeButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="32dp"
+                            android:backgroundTint="@color/colorPrimaryDark"
+                            android:drawableLeft="@drawable/icon_time"
+                            android:text="@string/date_pick"
+                            android:textColor="@color/colorPrimary"
+                            app:errorIconTint="@color/colorError" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/dateText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/timeText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="32dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="18sp" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/commentLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="6dp"
-                android:hint="@string/task_comment"
-                app:boxBackgroundColor="@color/backgroundLight">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/commentEditText"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/commentLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-    </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="6dp"
+                    android:hint="@string/task_comment"
+                    app:boxBackgroundColor="@color/backgroundLight">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/commentEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@={task.comment}" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

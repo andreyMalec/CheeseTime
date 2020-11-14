@@ -1,111 +1,112 @@
 package com.malec.cheesetime.ui.main.task.taskManage
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.repo.TaskRepo
+import com.malec.cheesetime.service.Resources
+import com.malec.cheesetime.ui.main.ManageViewModel
+import com.malec.cheesetime.util.CheeseCreator
 import com.malec.cheesetime.util.DateFormatter
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class TaskManageViewModel @Inject constructor(
     private val repo: TaskRepo,
-    private val context: Context
-) : ViewModel() {
-    val cheeseList = MutableLiveData<List<Cheese>>()
-
-    val isFieldsEmptyError = MutableLiveData(false)
-    val manageError = MutableLiveData<String>(null)
-    val manageResult = MutableLiveData<String>(null)
-
-    val cheese = MutableLiveData<String>("")
-    val todo = MutableLiveData<String>("")
-    val date = MutableLiveData<String>("")
-    val time = MutableLiveData<String>("")
-    val comment = MutableLiveData<String>("")
+    private val res: Resources
+) : ManageViewModel() {
     val task = MutableLiveData<Task>(null)
+    val date = MutableLiveData("")
+    val time = MutableLiveData("")
+
+    val cheeseList = MutableLiveData<MutableList<String>>()
+    val cheesePosition = MutableLiveData(-1)
+
+    private val mCheeseList = mutableListOf<Cheese>()
 
     init {
-        viewModelScope.launch {
-            try {
-                cheeseList.value = repo.getCheeseList()
-            } catch (e: Exception) {
-                e.printStackTrace()
+        safeRun {
+            mCheeseList.addAll(repo.getCheeseList())
+            val index = mCheeseList.indexOfFirst { it.id == task.value?.cheeseId }
+            if (index == -1) {
+                val id = task.value?.cheeseId
+                val name = task.value?.cheeseName
+                if (id != null && id != 0L && !name.isNullOrBlank())
+                    mCheeseList.add(CheeseCreator.empty().apply {
+                        this.id = task.value?.cheeseId ?: 0
+                        this.name = task.value?.cheeseName ?: ""
+                    })
             }
+
+            cheeseList.value = mCheeseList.map { it.name + " id: " + it.id }.toMutableList()
+
+            cheesePosition.value = mCheeseList.indexOfFirst { it.id == task.value?.cheeseId }
+            selectCheeseAt(cheesePosition.value ?: -1)
         }
     }
 
+    override fun checkCanSave() {
+        _isSaveActive.value =
+            !(task.value?.todo.isNullOrBlank() || date.value.isNullOrBlank() || time.value.isNullOrBlank())
+    }
+
     fun setTask(newTask: Task?) {
-        if (newTask != null && newTask.id != 0L)
-            task.value = newTask
+        if (task.value == null) {
+            task.value = if (newTask != null) {
+                _isDeleteActive.value = true
+                date.value = DateFormatter.simpleFormat(newTask.date)
+                time.value =
+                    DateFormatter.simpleFormatTime(newTask.date % DateFormatter.millisecondsInDay)
+                newTask
+            } else
+                Task.empty()
+        }
+        checkCanSave()
+    }
+
+    fun selectCheeseAt(position: Int) {
+        if (position < 0 || position >= mCheeseList.size)
+            return
+
+        cheesePosition.value = position
+
+        val cheese = mCheeseList[position]
+        task.value?.cheeseName = cheese.name
+        task.value?.cheeseId = cheese.id
     }
 
     fun deleteTask() {
         task.value?.let {
-            viewModelScope.launch {
-                try {
-                    repo.deleteById(it.id)
-                    manageResult.value = context.getString(R.string.task_deleted)
-                } catch (e: Exception) {
-                    setError(e)
-                }
+            safeRun {
+                repo.deleteById(it.id)
+                manageResult.value = res.stringTaskDeleted()
             }
         }
     }
 
-    fun checkAndManageTask() = viewModelScope.launch {
+    fun checkAndManageTask() {
         val mTask = task.value
-        val mCheese = cheese.value
-        val mCheeseId = mCheese?.split(" id: ")?.get(1)
-        val mCheeseName = mCheese?.split(" id: ")?.get(0)
-        val mTodo = todo.value
         val mDate = date.value
         val mTime = time.value
-        val mComment = comment.value
-
-        if (mTodo.isNullOrBlank() || mDate.isNullOrBlank() || mTime.isNullOrBlank()) {
-            isFieldsEmptyError.value = true
-            return@launch
-        }
 
         val date = DateFormatter.dateTimeFromString(mDate, mTime)
 
-        val task = Task(
-            mTask?.id ?: getNextId(),
-            mCheeseId?.toLong() ?: 0,
-            mCheeseName ?: "",
-            mTodo,
-            date,
-            mComment ?: ""
-        )
+        safeRun {
+            val task = Task(
+                mTask?.id.takeIf { it != 0L } ?: repo.getNextId(),
+                mTask?.cheeseId ?: 0,
+                mTask?.cheeseName ?: "",
+                mTask?.todo ?: "",
+                date,
+                mTask?.comment ?: ""
+            )
 
-        try {
-            manageResult.value = if (mTask == null) {
+            manageResult.value = if (mTask?.id == 0L) {
                 repo.create(task)
-                context.getString(R.string.task_created)
+                res.stringTaskCreated()
             } else {
                 repo.update(task)
-                context.getString(R.string.task_updated)
+                res.stringTaskUpdated()
             }
-        } catch (e: Exception) {
-            setError(e)
         }
-    }
-
-    private suspend fun getNextId() = try {
-        repo.getNextId()
-    } catch (e: Exception) {
-        e.printStackTrace()
-        1L
-    }
-
-    private fun setError(t: Throwable?) {
-        val msg = t?.toString() ?: ""
-        val i = msg.indexOf(": ")
-        manageError.value = msg.drop(i + 2)
     }
 }

@@ -9,10 +9,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewAnimationUtils
+import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
@@ -56,7 +53,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
     private var saveButton: MenuItem? = null
     private var deleteButton: MenuItem? = null
     private var isDeleteActive = false
-    private var isDoneActive = false
+    private var isSaveActive = false
 
     private lateinit var stagesAdapter: StringAdapter
 
@@ -64,7 +61,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         menuInflater.inflate(R.menu.menu_manage, menu)
 
         saveButton = menu?.findItem(R.id.saveButton)
-        saveButton?.isVisible = isDoneActive
+        saveButton?.isVisible = isSaveActive
 
         deleteButton = menu?.findItem(R.id.deleteButton)
         deleteButton?.isVisible = isDeleteActive
@@ -156,7 +153,7 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
                 AttachSourceDialog.DialogResult.GALLERY -> {
                     viewModel.onAttachFromGallery()
                 }
-                AttachSourceDialog.DialogResult.CAMERA -> checkPermission(CAMERA_PERMISSION) {
+                AttachSourceDialog.DialogResult.CAMERA -> checkOrRequestPermission(CAMERA_PERMISSION) {
                     viewModel.onAttachFromCamera()
                 }
             }
@@ -168,9 +165,9 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
             stagesAdapter.submitList(stages)
         })
 
-        viewModel.isDoneActive.observe(this, { active ->
+        viewModel.isSaveActive.observe(this, { active ->
             saveButton?.isVisible = active
-            isDoneActive = active
+            isSaveActive = active
         })
 
         viewModel.isDeleteActive.observe(this, { active ->
@@ -241,12 +238,12 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
     private fun downloadPhoto(photo: Photo) {
         viewModel.setDownloadedPhoto(photo)
 
-        checkPermission(STORAGE_PERMISSION) {
+        checkOrRequestPermission(STORAGE_PERMISSION) {
             viewModel.onPhotoDownloadClick()
         }
     }
 
-    private fun checkPermission(permission: Permission, onGranted: () -> Unit) {
+    private fun checkOrRequestPermission(permission: Permission, onGranted: () -> Unit) {
         if (ContextCompat.checkSelfPermission(
                 this,
                 permission.name
@@ -299,7 +296,11 @@ class CheeseManageActivity : BaseActivity(), PhotoAdapter.PhotoAction {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         toolbar.setOnApplyWindowInsetsListener { _, insets ->
-            val statusBarHeight = insets.systemWindowInsetTop
+            val statusBarHeight =
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
+                    insets.getInsets(WindowInsets.Type.systemBars()).top
+                else
+                    insets.systemWindowInsetTop
 
             val h = (resources.getDimension(R.dimen.toolbar_height) + statusBarHeight).toInt()
             var lp = toolbar.layoutParams as CoordinatorLayout.LayoutParams

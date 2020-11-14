@@ -5,7 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
 import com.malec.cheesetime.R
+import com.malec.cheesetime.databinding.ActivityLoginBinding
 import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.main.ResultNavigator
 import kotlinx.android.synthetic.main.activity_login.*
@@ -23,7 +25,9 @@ class LoginActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        val binding: ActivityLoginBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_login)
+        binding.user = viewModel.user.value
 
         initViewModelListeners()
         initClickListeners()
@@ -47,22 +51,17 @@ class LoginActivity : BaseActivity() {
         }
 
         loginButton.setOnClickListener {
-            val input = getInput()
-            viewModel.login(input.first, input.second)
+            viewModel.login()
         }
 
         registerButton.setOnClickListener {
-            val input = getInput()
-            viewModel.register(input.first, input.second)
+            viewModel.register()
         }
 
         googleLoginButton.setOnClickListener {
             viewModel.googleLogin()
         }
     }
-
-    private fun getInput() =
-        Pair(emailEditText.text?.toString(), passEditText.text?.toString())
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK)

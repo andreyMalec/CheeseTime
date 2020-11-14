@@ -2,6 +2,7 @@ package com.malec.cheesetime.ui.settings
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.WindowInsets
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updatePadding
@@ -62,7 +63,11 @@ class SettingsActivity : BaseActivity(), RecipeAdapter.RecipeAction {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setOnApplyWindowInsetsListener { _, insets ->
-            val statusBarHeight = insets.systemWindowInsetTop
+            val statusBarHeight =
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
+                    insets.getInsets(WindowInsets.Type.systemBars()).top
+                else
+                    insets.systemWindowInsetTop
 
             val h = (resources.getDimension(R.dimen.toolbar_height) + statusBarHeight).toInt()
             val lp = toolbar.layoutParams as ConstraintLayout.LayoutParams

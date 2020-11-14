@@ -69,7 +69,5 @@ object CheeseCreator {
         )
     }
 
-    private fun makeString(vararg values: Any?) = values.joinToString("♂")
-
     private fun List<Any>?.makeString() = this?.joinToString("♂") ?: ""
 }

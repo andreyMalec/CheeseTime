@@ -13,14 +13,16 @@ import java.io.FileOutputStream
 import java.lang.Integer.max
 
 class CheeseSharer(context: Context) : UriSharer(context) {
-    private val PAGE_WIDTH = 630
-    private val PAGE_HEIGHT = 891
-    private val MARGIN_TOP = 15F
-    private val CODE_WIDTH = 156
-    private val CODE_HEIGHT = 27
-    private val TEXT_SIZE = 12F
+    companion object {
+        private const val PAGE_WIDTH = 630
+        private const val PAGE_HEIGHT = 891
+        private const val MARGIN_TOP = 15F
+        private const val CODE_WIDTH = 156
+        private const val CODE_HEIGHT = 27
+        private const val TEXT_SIZE = 12F
 
-    private val MAX_ROWS = 17
+        private const val MAX_ROWS = 17
+    }
 
     private val paintForText = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textSize = TEXT_SIZE

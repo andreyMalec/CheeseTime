@@ -2,10 +2,7 @@ package com.malec.cheesetime.ui.main.cheese.cheeseManage
 
 import android.graphics.Bitmap
 import android.net.Uri
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.Photo
 import com.malec.cheesetime.model.Recipe
@@ -14,11 +11,11 @@ import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.service.Resources
 import com.malec.cheesetime.ui.Screens
+import com.malec.cheesetime.ui.main.ManageViewModel
 import com.malec.cheesetime.util.BitmapDecoder
 import com.malec.cheesetime.util.CheeseCreator
 import com.malec.cheesetime.util.PhotoDownloader
 import com.malec.cheesetime.util.PhotoSharer
-import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import java.util.*
 import javax.inject.Inject
@@ -31,23 +28,10 @@ class CheeseManageViewModel @Inject constructor(
     private val bitmapDecoder: BitmapDecoder,
     private val photoDownloader: PhotoDownloader,
     private val photoSharer: PhotoSharer
-) : ViewModel(), StringAdapter.RemovableEdittextAction {
-
-    val manageError = MutableLiveData<String>(null)
-    val manageResult = MutableLiveData<String>(null)
+) : ManageViewModel(), StringAdapter.RemovableEditTextAction {
     val photoManageResult = MutableLiveData<String>(null)
 
-    private val _tmpPhoto = MutableLiveData<Photo>(null)
-    val tmpPhoto: LiveData<Photo>
-        get() = _tmpPhoto
-
-    private val _isDoneActive = MutableLiveData(false)
-    val isDoneActive: LiveData<Boolean>
-        get() = _isDoneActive
-
-    private val _isDeleteActive = MutableLiveData(false)
-    val isDeleteActive: LiveData<Boolean>
-        get() = _isDeleteActive
+    private val downloadedPhoto = MutableLiveData<Photo>(null)
 
     val cheese = MutableLiveData<Cheese>(null)
     val stages = MutableLiveData<MutableList<StringValue>>(mutableListOf())
@@ -67,11 +51,10 @@ class CheeseManageViewModel @Inject constructor(
     }
 
     init {
-        viewModelScope.launch {
+        safeRun {
             mRecipes.addAll(userRepo.getRecipes())
             recipes.value =
-                (userRepo.getRecipes().map { it.name }
-                    .takeIf { it.isNotEmpty() } ?: res.recipes()).let {
+                (mRecipes.map { it.name }.takeIf { it.isNotEmpty() } ?: res.recipes()).let {
                     cheese.value?.recipe?.let { currentRecipe ->
                         if (!it.contains(currentRecipe) && currentRecipe.isNotBlank())
                             listOf(currentRecipe) + it
@@ -82,9 +65,9 @@ class CheeseManageViewModel @Inject constructor(
         }
     }
 
-    fun checkCanSave() {
+    override fun checkCanSave() {
         val c = cheese.value
-        _isDoneActive.value =
+        _isSaveActive.value =
             !(c?.name.isNullOrBlank() || c?.milkType.isNullOrBlank() || c?.milkVolume.isNullOrBlank())
     }
 
@@ -127,14 +110,10 @@ class CheeseManageViewModel @Inject constructor(
 
     fun deleteCheese() {
         cheese.value?.let {
-            viewModelScope.launch {
-                try {
-                    repo.deleteById(it.id)
-                    repo.deletePhotos(photos.value)
-                    manageResult.value = res.stringCheeseDeleted()
-                } catch (e: Exception) {
-                    setError(e)
-                }
+            safeRun {
+                repo.deleteById(it.id)
+                repo.deletePhotos(photos.value)
+                manageResult.value = res.stringCheeseDeleted()
             }
         }
     }
@@ -159,7 +138,7 @@ class CheeseManageViewModel @Inject constructor(
     }
 
     fun setDownloadedPhoto(photo: Photo) {
-        _tmpPhoto.value = photo
+        downloadedPhoto.value = photo
     }
 
     fun getImageFromUri(uri: Uri?) {
@@ -179,16 +158,8 @@ class CheeseManageViewModel @Inject constructor(
         }
     }
 
-    fun checkAndManageCheese() = viewModelScope.launch {
+    fun checkAndManageCheese() {
         val mCheese = cheese.value
-        val mName = mCheese?.name
-        val mDate = mCheese?.date
-        val mRecipe = mCheese?.recipe
-        val mComment = mCheese?.comment
-        val mMilkType = mCheese?.milkType
-        val mMilkVolume = mCheese?.milkVolume
-        val mMilkAge = mCheese?.milkAge
-        val mComposition = mCheese?.composition
         val mStages = stages.value
         var mColor = badgeColor.value
         val mPhotos = photos.value
@@ -196,23 +167,24 @@ class CheeseManageViewModel @Inject constructor(
         if (mColor == null || mColor == 0)
             mColor = mCheese?.badgeColor
 
-        val cheese = CheeseCreator.create(
-            mName,
-            mDate,
-            mRecipe,
-            mComment,
-            mMilkType,
-            mMilkVolume,
-            mMilkAge,
-            mComposition,
-            mStages?.map { it.data },
-            mColor,
-            mCheese?.isArchived,
-            mPhotos,
-            mCheese?.id.takeIf { it != 0L } ?: repo.getNextId(),
-            mCheese?.dateStart
-        )
-        try {
+        safeRun {
+            val cheese = CheeseCreator.create(
+                mCheese?.name,
+                mCheese?.date,
+                mCheese?.recipe,
+                mCheese?.comment,
+                mCheese?.milkType,
+                mCheese?.milkVolume,
+                mCheese?.milkAge,
+                mCheese?.composition,
+                mStages?.map { it.data },
+                mColor,
+                mCheese?.isArchived,
+                mPhotos,
+                mCheese?.id.takeIf { it != 0L } ?: repo.getNextId(),
+                mCheese?.dateStart
+            )
+
             repo.updatePhotos(mCheese?.photo, mPhotos)
             manageResult.value = if (mCheese?.id == 0L) {
                 repo.create(cheese)
@@ -221,15 +193,7 @@ class CheeseManageViewModel @Inject constructor(
                 repo.update(cheese)
                 res.stringCheeseUpdated()
             }
-        } catch (e: Exception) {
-            setError(e)
         }
-    }
-
-    private fun setError(t: Throwable?) {
-        val msg = t?.toString() ?: ""
-        val i = msg.indexOf(": ")
-        manageError.value = msg.drop(i + 2)
     }
 
     fun onPhotoDeleteClick(photo: Photo) {
@@ -239,26 +203,18 @@ class CheeseManageViewModel @Inject constructor(
     }
 
     fun onPhotoDownloadClick() {
-        viewModelScope.launch {
-            try {
-                _tmpPhoto.value?.let {
-                    photoDownloader.download(it)
-                    photoManageResult.value = res.stringPhotoDownloadedSuccessful()
-                    _tmpPhoto.value = null
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
+        safeRun {
+            downloadedPhoto.value?.let {
+                photoDownloader.download(it)
+                downloadedPhoto.value = null
+                photoManageResult.value = res.stringPhotoDownloadedSuccessful()
             }
         }
     }
 
     fun onPhotoShareClick(photo: Photo) {
-        viewModelScope.launch {
-            try {
-                photoSharer.send(photo)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+        safeRun {
+            photoSharer.send(photo)
         }
     }
 }

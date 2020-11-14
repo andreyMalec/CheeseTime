@@ -25,7 +25,12 @@ class TaskRepo(
     suspend fun getCheeseList() =
         cheeseApi.getAllFiltered(CheeseFilter())
 
-    suspend fun getNextId() = api.getNextId()
+    suspend fun getNextId() = try {
+        api.getNextId()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        1L
+    }
 
     suspend fun getById(id: Long) = api.getById(id)
 
