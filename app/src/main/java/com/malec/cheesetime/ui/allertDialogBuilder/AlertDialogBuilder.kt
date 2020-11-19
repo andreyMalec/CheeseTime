@@ -7,19 +7,19 @@ import androidx.core.content.ContextCompat
 import com.malec.cheesetime.R
 
 open class AlertDialogBuilder(protected val context: Context) {
-    private var onOkClick: (() -> Unit)? = null
-    private var onCancelClick: (() -> Unit)? = null
+    private var onOkClick: OnClickListener? = null
+    private var onCancelClick: OnClickListener? = null
 
     private lateinit var dialog: AlertDialog
 
-    open fun setOnOkButtonClickListener(function: () -> Unit): AlertDialogBuilder {
-        onOkClick = function
+    open fun setOnOkButtonClickListener(onClick: OnClickListener): AlertDialogBuilder {
+        onOkClick = onClick
 
         return this
     }
 
-    open fun setOnCancelButtonClickListener(function: () -> Unit): AlertDialogBuilder {
-        onCancelClick = function
+    open fun setOnCancelButtonClickListener(onClick: OnClickListener): AlertDialogBuilder {
+        onCancelClick = onClick
 
         return this
     }
@@ -28,13 +28,13 @@ open class AlertDialogBuilder(protected val context: Context) {
         dialog = AlertDialog.Builder(context).apply {
             setTitle(message)
             setPositiveButton(okTextResource) { _, _ ->
-                onOkClick?.invoke()
+                onOkClick?.onClick()
             }
             setNegativeButton(R.string.dialog_cancel) { _, _ ->
                 dialog.dismiss()
             }
             setOnDismissListener {
-                onCancelClick?.invoke()
+                onCancelClick?.onClick()
             }
         }.show()
         changeButtonColor(dialog)
@@ -46,5 +46,9 @@ open class AlertDialogBuilder(protected val context: Context) {
         val color = ContextCompat.getColor(context, R.color.colorPrimaryDark)
         pButton.setTextColor(color)
         nButton.setTextColor(color)
+    }
+
+    fun interface OnClickListener {
+        fun onClick()
     }
 }

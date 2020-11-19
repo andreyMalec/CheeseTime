@@ -8,14 +8,14 @@ class LogoutDialog(context: Context) : AlertDialogBuilder(context) {
         show(context.getString(R.string.logout_dialog_message), R.string.logout_dialog_ok)
     }
 
-    override fun setOnOkButtonClickListener(function: () -> Unit): LogoutDialog {
-        super.setOnOkButtonClickListener(function)
+    override fun setOnOkButtonClickListener(onClick: OnClickListener): LogoutDialog {
+        super.setOnOkButtonClickListener(onClick)
 
         return this
     }
 
-    override fun setOnCancelButtonClickListener(function: () -> Unit): LogoutDialog {
-        super.setOnCancelButtonClickListener(function)
+    override fun setOnCancelButtonClickListener(onClick: OnClickListener): LogoutDialog {
+        super.setOnCancelButtonClickListener(onClick)
 
         return this
     }

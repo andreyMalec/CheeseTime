@@ -13,14 +13,14 @@ class CheeseDeleteDialog(context: Context) : AlertDialogBuilder(context) {
         show(message, R.string.delete_dialog_ok)
     }
 
-    override fun setOnOkButtonClickListener(function: () -> Unit): CheeseDeleteDialog {
-        super.setOnOkButtonClickListener(function)
+    override fun setOnOkButtonClickListener(onClick: OnClickListener): CheeseDeleteDialog {
+        super.setOnOkButtonClickListener(onClick)
 
         return this
     }
 
-    override fun setOnCancelButtonClickListener(function: () -> Unit): CheeseDeleteDialog {
-        super.setOnCancelButtonClickListener(function)
+    override fun setOnCancelButtonClickListener(onClick: OnClickListener): CheeseDeleteDialog {
+        super.setOnCancelButtonClickListener(onClick)
 
         return this
     }

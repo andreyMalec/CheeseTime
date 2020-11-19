@@ -13,14 +13,14 @@ class TaskDeleteDialog(context: Context) : AlertDialogBuilder(context) {
         show(message, R.string.delete_dialog_ok)
     }
 
-    override fun setOnOkButtonClickListener(function: () -> Unit): TaskDeleteDialog {
-        super.setOnOkButtonClickListener(function)
+    override fun setOnOkButtonClickListener(onClick: OnClickListener): TaskDeleteDialog {
+        super.setOnOkButtonClickListener(onClick)
 
         return this
     }
 
-    override fun setOnCancelButtonClickListener(function: () -> Unit): TaskDeleteDialog {
-        super.setOnCancelButtonClickListener(function)
+    override fun setOnCancelButtonClickListener(onClick: OnClickListener): TaskDeleteDialog {
+        super.setOnCancelButtonClickListener(onClick)
 
         return this
     }

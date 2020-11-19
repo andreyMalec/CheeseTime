@@ -14,9 +14,9 @@ class TaskApi(private val ref: ReferenceAllocator) {
 
     suspend fun getNextId(): Long {
         val data = ref.nextTask().get().await()
-        val id = data.getLong("id")
+        val id = data.getLong(ReferenceAllocator.ID)
         return id?.also {
-            ref.nextTask().update("id", id + 1)
+            ref.nextTask().update(ReferenceAllocator.ID, id + 1)
         } ?: 0
     }
 
@@ -40,5 +40,5 @@ class TaskApi(private val ref: ReferenceAllocator) {
     }
 
     private suspend fun getQueryById(id: Long) =
-        ref.tasks().whereEqualTo("id", id).get().await()
+        ref.tasks().whereEqualTo(ReferenceAllocator.ID, id).get().await()
 }

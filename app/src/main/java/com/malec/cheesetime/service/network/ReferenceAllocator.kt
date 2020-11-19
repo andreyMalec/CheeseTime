@@ -2,6 +2,7 @@ package com.malec.cheesetime.service.network
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 
@@ -9,42 +10,61 @@ class ReferenceAllocator(
     auth: FirebaseAuth,
     private val db: FirebaseFirestore
 ) {
+    private var userId = auth.currentUser?.uid
+
+    private var root: CollectionReference = rootCollection()
+
     init {
-        val settings = firestoreSettings {
+        db.firestoreSettings = firestoreSettings {
             isPersistenceEnabled = true
         }
-        db.firestoreSettings = settings
     }
-
-    private var userId = auth.currentUser?.uid
 
     fun updateUser(user: FirebaseUser?) {
         user?.let {
             userId = it.uid
         }
+        root = rootCollection()
     }
 
-    fun tasks() = db.collection("$userId").document("data").collection("tasks")
+    private fun rootCollection() = db.collection("$userId")
 
-    fun tasksInit() = db.collection("$userId").document("data").collection("tasks").document("init")
+    fun tasks() = root.document(DATA).collection(TASKS)
 
-    fun cheeses() = db.collection("$userId").document("data").collection("cheeses")
+    fun tasksInit() = root.document(DATA).collection(TASKS).document(INIT)
+
+    fun cheeses() = root.document(DATA).collection(CHEESES)
 
     fun cheesesInit() =
-        db.collection("$userId").document("data").collection("cheeses").document("init")
+        root.document(DATA).collection(CHEESES).document(INIT)
 
     fun recipes() =
-        db.collection("$userId").document("prefs").collection("recipes")
+        root.document(PREFS).collection(RECIPES)
 
     fun recipesInit() =
-        db.collection("$userId").document("prefs").collection("recipes").document("init")
+        root.document(PREFS).collection(RECIPES).document(INIT)
 
     fun nextCheese() =
-        db.collection("$userId").document("data").collection("ids").document("nextCheese")
+        root.document(DATA).collection(IDS).document(NEXT_CHEESE)
 
     fun nextTask() =
-        db.collection("$userId").document("data").collection("ids").document("nextTask")
+        root.document(DATA).collection(IDS).document(NEXT_TASK)
 
     fun nextRecipe() =
-        db.collection("$userId").document("data").collection("ids").document("nextRecipe")
+        root.document(DATA).collection(IDS).document(NEXT_RECIPE)
+
+    companion object {
+        private const val DATA = "data"
+        private const val TASKS = "tasks"
+        private const val CHEESES = "cheeses"
+        private const val PREFS = "prefs"
+        private const val RECIPES = "recipes"
+        private const val IDS = "ids"
+        private const val NEXT_CHEESE = "nextCheese"
+        private const val NEXT_TASK = "nextTask"
+        private const val NEXT_RECIPE = "nextRecipe"
+
+        const val INIT = "init"
+        const val ID = "id"
+    }
 }

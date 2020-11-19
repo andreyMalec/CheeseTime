@@ -1,7 +1,5 @@
 package com.malec.cheesetime.model
 
-import java.util.*
-
 data class Task(
     var id: Long,
     var cheeseId: Long,
@@ -20,18 +18,14 @@ data class Task(
     )
 
     companion object {
-        fun empty(): Task {
-            val now = Date().time
-
-            return Task(
-                0,
-                0,
-                "",
-                "",
-                now,
-                ""
-            )
-        }
+        fun empty() = Task(
+            0,
+            0,
+            "",
+            "",
+            System.currentTimeMillis(),
+            ""
+        )
     }
 }
 

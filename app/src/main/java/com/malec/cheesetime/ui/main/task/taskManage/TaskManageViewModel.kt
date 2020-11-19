@@ -6,7 +6,6 @@ import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.repo.TaskRepo
 import com.malec.cheesetime.service.Resources
 import com.malec.cheesetime.ui.main.ManageViewModel
-import com.malec.cheesetime.util.CheeseCreator
 import com.malec.cheesetime.util.DateFormatter
 import javax.inject.Inject
 
@@ -31,7 +30,7 @@ class TaskManageViewModel @Inject constructor(
                 val id = task.value?.cheeseId
                 val name = task.value?.cheeseName
                 if (id != null && id != 0L && !name.isNullOrBlank())
-                    mCheeseList.add(CheeseCreator.empty().apply {
+                    mCheeseList.add(Cheese.empty().apply {
                         this.id = task.value?.cheeseId ?: 0
                         this.name = task.value?.cheeseName ?: ""
                     })

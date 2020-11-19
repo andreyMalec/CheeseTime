@@ -7,11 +7,10 @@ import android.content.Intent
 import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.util.DateFormatter
-import java.util.*
 
 class TaskScheduler(private val context: Context) {
     fun schedule(task: Task) {
-        if (task.date - Date().time <= 0)
+        if (task.date - System.currentTimeMillis() <= 0)
             return
 
         val title = "${task.todo} (${task.cheeseName} id: ${task.cheeseId})"
@@ -50,7 +49,7 @@ class TaskScheduler(private val context: Context) {
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, task.date, pendingIntent)
 
-        if (date30Min - Date().time > 0)
+        if (date30Min - System.currentTimeMillis() > 0)
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 date30Min,

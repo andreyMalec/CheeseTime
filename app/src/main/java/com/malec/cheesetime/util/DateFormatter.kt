@@ -7,7 +7,7 @@ import java.util.*
 
 class DateFormatter(private val context: Context) {
     fun format(date: Long): String {
-        val now = Date().time
+        val now = System.currentTimeMillis()
         val diff = date - now
         val diffDays = diff / millisecondsInDay
 
@@ -77,7 +77,7 @@ class DateFormatter(private val context: Context) {
         }
 
         fun dateFromString(date: String?): Long {
-            if (date.isNullOrBlank()) return Date().time
+            if (date.isNullOrBlank()) return System.currentTimeMillis()
 
             val mDate = SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).parse(date) ?: Date()
             return mDate.time

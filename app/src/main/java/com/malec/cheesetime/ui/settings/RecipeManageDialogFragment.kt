@@ -69,7 +69,7 @@ class RecipeManageDialogFragment(
         }
         val text = nameEditText.text.toString().trim()
         val name = text[0].toUpperCase() + text.drop(1)
-        return Recipe(recipe?.id ?: 0, name, stages.joinToString("♂"))
+        return Recipe(recipe?.id ?: 0, name, stages.toList())
     }
 
     private fun addStage(text: String? = null) {
@@ -100,7 +100,7 @@ class RecipeManageDialogFragment(
 
         if (recipe != null) {
             nameEditText.setText(recipe.name)
-            for (stage in recipe.stages.split("♂"))
+            for (stage in recipe.stages)
                 addStage(stage)
         }
     }

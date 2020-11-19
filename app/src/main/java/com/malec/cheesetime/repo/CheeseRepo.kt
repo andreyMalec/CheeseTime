@@ -23,16 +23,16 @@ class CheeseRepo(
 
     suspend fun getAll() = api.getAll()
 
-    suspend fun getAllSelected() = api.getAll().filter {
+    suspend fun getAllSelected() = getAll().filter {
         selected.contains(it.id)
     }
 
     suspend fun getAllFiltered(filter: CheeseFilter) =
-        api.getAllFiltered(filter).map {
-            if (selected.contains(it.id))
-                it.toggleSelect()
-            else
-                it
+        api.getAllFiltered(filter).also {
+            it.forEach { cheese ->
+                if (selected.contains(cheese.id))
+                    cheese.toggleSelect()
+            }
         }
 
     suspend fun getById(id: Long) = api.getById(id)
@@ -62,8 +62,9 @@ class CheeseRepo(
 
     suspend fun archiveSelected() {
         selected.forEach { id ->
-            getById(id)?.toggleArchive()?.let {
-                update(it)
+            getById(id)?.apply {
+                toggleArchive()
+                update(this)
             }
         }
         selected.clear()
@@ -82,14 +83,13 @@ class CheeseRepo(
         }
     }
 
-    suspend fun updatePhotos(old: String?, new: List<Photo>?) {
-        val oldPhotos = old?.split("♂")
+    suspend fun updatePhotos(oldPhotos: List<String>?, new: List<Photo>?) {
         val newPhotos = new?.map { it.name }
 
         if (oldPhotos != null && oldPhotos.isNotEmpty() && oldPhotos[0].isNotBlank()) {
             if (newPhotos != null && newPhotos.isNotEmpty() && newPhotos[0].isNotBlank()) {
-                val diff1 = oldPhotos.toSet() - newPhotos.toSet()
-                val diff2 = newPhotos.toSet() - oldPhotos.toSet()
+                val diff1 = (oldPhotos - newPhotos).toSet()
+                val diff2 = (newPhotos - oldPhotos).toSet()
 
                 for (oldPhoto in diff1)
                     storageApi.deleteById(oldPhoto)
@@ -107,12 +107,12 @@ class CheeseRepo(
         }
     }
 
-    fun getPhotosById(formattedId: String) =
-        formattedId.split("♂").filter { it.isNotBlank() }.map {
+    fun getPhotosById(photosNames: List<String>) =
+        photosNames.filter { it.isNotBlank() }.map {
             Photo(
                 it,
                 null,
-                storageApi.getUriById(it)
+                storageApi.getRefById(it)
             )
         }
 }

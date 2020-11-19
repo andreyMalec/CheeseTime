@@ -68,9 +68,9 @@ class UserApi(
 
     suspend fun getNextRecipeId(): Long {
         val data = ref.nextRecipe().get().await()
-        val id = data.getLong("id")
+        val id = data.getLong(ReferenceAllocator.ID)
         return id?.also {
-            ref.nextRecipe().update("id", id + 1)
+            ref.nextRecipe().update(ReferenceAllocator.ID, id + 1)
         } ?: 0
     }
 
@@ -87,11 +87,11 @@ class UserApi(
     }
 
     private fun createNewCollection() {
-        ref.cheesesInit().set(mapOf("init" to null))
-        ref.tasksInit().set(mapOf("init" to null))
-        ref.recipesInit().set(mapOf("init" to null))
-        ref.nextCheese().set(mapOf("id" to 1))
-        ref.nextTask().set(mapOf("id" to 1))
-        ref.nextRecipe().set(mapOf("id" to 1))
+        ref.cheesesInit().set(mapOf(ReferenceAllocator.INIT to null))
+        ref.tasksInit().set(mapOf(ReferenceAllocator.INIT to null))
+        ref.recipesInit().set(mapOf(ReferenceAllocator.INIT to null))
+        ref.nextCheese().set(mapOf(ReferenceAllocator.ID to 1))
+        ref.nextTask().set(mapOf(ReferenceAllocator.ID to 1))
+        ref.nextRecipe().set(mapOf(ReferenceAllocator.ID to 1))
     }
 }

@@ -10,9 +10,9 @@ import kotlinx.coroutines.tasks.await
 class CheeseApi(private val ref: ReferenceAllocator) {
     suspend fun getNextId(): Long {
         val data = ref.nextCheese().get().await()
-        val id = data.getLong("id")
+        val id = data.getLong(ReferenceAllocator.ID)
         return id?.also {
-            ref.nextCheese().update("id", id + 1)
+            ref.nextCheese().update(ReferenceAllocator.ID, id + 1)
         } ?: 0
     }
 
@@ -46,5 +46,5 @@ class CheeseApi(private val ref: ReferenceAllocator) {
     }
 
     private suspend fun getQueryById(id: Long) =
-        ref.cheeses().whereEqualTo("id", id).get().await()
+        ref.cheeses().whereEqualTo(ReferenceAllocator.ID, id).get().await()
 }

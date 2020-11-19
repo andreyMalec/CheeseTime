@@ -13,7 +13,6 @@ import com.malec.cheesetime.service.Resources
 import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.ui.main.ManageViewModel
 import com.malec.cheesetime.util.BitmapDecoder
-import com.malec.cheesetime.util.CheeseCreator
 import com.malec.cheesetime.util.PhotoDownloader
 import com.malec.cheesetime.util.PhotoSharer
 import ru.terrakok.cicerone.Router
@@ -76,12 +75,12 @@ class CheeseManageViewModel @Inject constructor(
             cheese.value = if (newCheese != null) {
                 _isDeleteActive.value = true
                 stages.value =
-                    newCheese.stages.getStages()
-                photos.value = repo.getPhotosById(newCheese.photo)
+                    newCheese.stages.map { StringValue(it) }.toMutableList()
+                photos.value = repo.getPhotosById(newCheese.photos)
                 badgeColor.value = newCheese.badgeColor
                 newCheese
             } else
-                CheeseCreator.empty()
+                Cheese.empty()
         }
         checkCanSave()
     }
@@ -92,8 +91,6 @@ class CheeseManageViewModel @Inject constructor(
         }
     }
 
-    private fun String?.getStages() = this?.split("♂")?.map { StringValue(it) }?.toMutableList()
-
     fun selectRecipe(recipeName: String?) {
         if (isStagesFirstLoad) {
             isStagesFirstLoad = false
@@ -103,8 +100,8 @@ class CheeseManageViewModel @Inject constructor(
         if (stages.value.isNullOrEmpty() ||
             stages.value?.first()?.data.isNullOrBlank()
         )
-            mRecipes.find { it.name == recipeName }?.stages?.split("♂")?.let { st ->
-                stages.value = st.map { StringValue(it) }.toMutableList()
+            mRecipes.find { it.name == recipeName }?.stages?.let { stage ->
+                stages.value = stage.map { StringValue(it) }.toMutableList()
             }
     }
 
@@ -161,16 +158,15 @@ class CheeseManageViewModel @Inject constructor(
     fun checkAndManageCheese() {
         val mCheese = cheese.value
         val mStages = stages.value
-        var mColor = badgeColor.value
+        val mColor = badgeColor.value
         val mPhotos = photos.value
 
-        if (mColor == null || mColor == 0)
-            mColor = mCheese?.badgeColor
-
         safeRun {
-            val cheese = CheeseCreator.create(
+            val cheese = Cheese(
+                mCheese?.id.takeIf { it != 0L } ?: repo.getNextId(),
                 mCheese?.name,
                 mCheese?.date,
+                mCheese?.dateStart,
                 mCheese?.recipe,
                 mCheese?.comment,
                 mCheese?.milkType,
@@ -180,13 +176,11 @@ class CheeseManageViewModel @Inject constructor(
                 mStages?.map { it.data },
                 mColor,
                 mCheese?.isArchived,
-                mPhotos,
-                mCheese?.id.takeIf { it != 0L } ?: repo.getNextId(),
-                mCheese?.dateStart
+                mPhotos?.map { it.name }
             )
 
-            repo.updatePhotos(mCheese?.photo, mPhotos)
-            manageResult.value = if (mCheese?.id == 0L) {
+            repo.updatePhotos(mCheese?.photos, mPhotos)
+            manageResult.value = if (cheese.id == 0L) {
                 repo.create(cheese)
                 res.stringCheeseCreated()
             } else {

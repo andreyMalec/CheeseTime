@@ -7,7 +7,7 @@ import kotlinx.coroutines.launch
 abstract class BaseViewModel : ViewModel() {
     abstract fun setError(t: Throwable?)
 
-    protected fun safeRun(block: suspend () -> Unit) {
+    protected inline fun safeRun(crossinline block: suspend () -> Unit) {
         viewModelScope.launch {
             try {
                 block()

@@ -44,5 +44,5 @@ class NetworkModule {
     @Provides
     @Singleton
     fun storageApi(storage: FirebaseStorage, context: Context): StorageApi =
-        StorageApi(storage, context)
+        StorageApi(storage, context.cacheDir)
 }

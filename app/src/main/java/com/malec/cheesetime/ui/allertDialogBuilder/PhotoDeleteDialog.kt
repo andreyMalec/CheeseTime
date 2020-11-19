@@ -8,14 +8,14 @@ class PhotoDeleteDialog(context: Context) : AlertDialogBuilder(context) {
         show(context.getString(R.string.delete_photo_dialog_message), R.string.delete_dialog_ok)
     }
 
-    override fun setOnOkButtonClickListener(function: () -> Unit): PhotoDeleteDialog {
-        super.setOnOkButtonClickListener(function)
+    override fun setOnOkButtonClickListener(onClick: OnClickListener): PhotoDeleteDialog {
+        super.setOnOkButtonClickListener(onClick)
 
         return this
     }
 
-    override fun setOnCancelButtonClickListener(function: () -> Unit): PhotoDeleteDialog {
-        super.setOnCancelButtonClickListener(function)
+    override fun setOnCancelButtonClickListener(onClick: OnClickListener): PhotoDeleteDialog {
+        super.setOnCancelButtonClickListener(onClick)
 
         return this
     }
