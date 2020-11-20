@@ -8,7 +8,7 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.malec.cheesetime.R
 import com.malec.cheesetime.databinding.ActivityLoginBinding
-import com.malec.cheesetime.ui.BaseActivity
+import com.malec.cheesetime.ui.base.BaseActivity
 import com.malec.cheesetime.ui.main.ResultNavigator
 import kotlinx.android.synthetic.main.activity_login.*
 

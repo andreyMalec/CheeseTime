@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.malec.cheesetime.model.User
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.service.Resources
-import com.malec.cheesetime.ui.BaseViewModel
 import com.malec.cheesetime.ui.Screens
+import com.malec.cheesetime.ui.base.BaseViewModel
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 

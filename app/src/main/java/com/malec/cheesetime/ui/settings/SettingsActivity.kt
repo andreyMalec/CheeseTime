@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.malec.cheesetime.R
 import com.malec.cheesetime.model.Recipe
-import com.malec.cheesetime.ui.BaseActivity
+import com.malec.cheesetime.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_settings.*
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 

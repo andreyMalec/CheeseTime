@@ -11,8 +11,8 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.zxing.integration.android.IntentIntegrator
 import com.malec.cheesetime.R
-import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.allertDialogBuilder.LogoutDialog
+import com.malec.cheesetime.ui.base.BaseActivity
 import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.terrakok.cicerone.android.support.SupportAppNavigator

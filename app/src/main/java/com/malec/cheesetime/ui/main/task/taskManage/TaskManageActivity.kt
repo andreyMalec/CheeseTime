@@ -11,9 +11,9 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import com.malec.cheesetime.R
 import com.malec.cheesetime.databinding.ActivityTaskManageBinding
-import com.malec.cheesetime.ui.BaseActivity
 import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.ui.allertDialogBuilder.TaskDeleteDialog
+import com.malec.cheesetime.ui.base.BaseActivity
 import com.malec.cheesetime.util.DateTimePicker
 import kotlinx.android.synthetic.main.activity_task_manage.*
 import ru.terrakok.cicerone.android.support.SupportAppNavigator

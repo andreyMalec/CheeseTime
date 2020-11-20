@@ -1,5 +1,6 @@
 package com.malec.cheesetime.ui
 
+import android.graphics.Bitmap
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -40,6 +41,13 @@ object BindingAdapter {
     fun storageRef(imageView: ImageView, storageRef: StorageReference?) {
         if (storageRef != null)
             GlideApp.with(imageView.context).load(storageRef).into(imageView)
+    }
+
+    @JvmStatic
+    @BindingAdapter("bitmap")
+    fun bitmap(imageView: ImageView, bitmap: Bitmap?) {
+        if (bitmap != null)
+            imageView.setImageBitmap(bitmap)
     }
 
     @JvmStatic

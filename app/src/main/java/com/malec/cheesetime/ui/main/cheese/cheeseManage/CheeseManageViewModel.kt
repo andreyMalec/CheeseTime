@@ -1,53 +1,46 @@
 package com.malec.cheesetime.ui.main.cheese.cheeseManage
 
-import android.graphics.Bitmap
-import android.net.Uri
+import android.view.View
+import androidx.core.util.Pair
 import androidx.lifecycle.MutableLiveData
-import com.malec.cheesetime.model.Cheese
-import com.malec.cheesetime.model.Photo
-import com.malec.cheesetime.model.Recipe
-import com.malec.cheesetime.model.StringValue
+import com.malec.cheesetime.model.*
 import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.service.Resources
 import com.malec.cheesetime.ui.Screens
-import com.malec.cheesetime.ui.main.ManageViewModel
+import com.malec.cheesetime.ui.base.BasePhotoViewModel
+import com.malec.cheesetime.ui.base.ManageViewModel
 import com.malec.cheesetime.util.BitmapDecoder
 import com.malec.cheesetime.util.PhotoDownloader
 import com.malec.cheesetime.util.PhotoSharer
 import ru.terrakok.cicerone.Router
-import java.util.*
 import javax.inject.Inject
 
 class CheeseManageViewModel @Inject constructor(
     private val repo: CheeseRepo,
-    private val router: Router,
+    override val router: Router,
     private val userRepo: UserRepo,
-    private val res: Resources,
-    private val bitmapDecoder: BitmapDecoder,
-    private val photoDownloader: PhotoDownloader,
-    private val photoSharer: PhotoSharer
-) : ManageViewModel(), StringAdapter.RemovableEditTextAction {
-    val photoManageResult = MutableLiveData<String>(null)
+    override val res: Resources,
+    override val bitmapDecoder: BitmapDecoder,
+    override val photoDownloader: PhotoDownloader,
+    override val photoSharer: PhotoSharer
+) : BasePhotoViewModel(router, res, bitmapDecoder, photoDownloader, photoSharer), ManageViewModel,
+    StringAdapter.RemovableEditTextAction {
 
-    private val downloadedPhoto = MutableLiveData<Photo>(null)
+    override val manageError = MutableLiveData<String>(null)
+    override val manageResult = MutableLiveData<String>(null)
+    override val isSaveActive = MutableLiveData(false)
+    override val isDeleteActive = MutableLiveData(false)
 
     val cheese = MutableLiveData<Cheese>(null)
     val stages = MutableLiveData<MutableList<StringValue>>(mutableListOf())
     val badgeColor = MutableLiveData<Int>()
-    val photos = MutableLiveData<List<Photo>>(listOf())
 
     val recipes = MutableLiveData<List<String>>()
 
     private val mRecipes = mutableListOf<Recipe>()
 
     private var isStagesFirstLoad = true
-
-    companion object {
-        const val GALLERY = Screens.GalleryPickScreen.requestCode
-        const val CAMERA = Screens.CameraPickScreen.requestCode
-        const val STORAGE = 5
-    }
 
     init {
         safeRun {
@@ -66,14 +59,14 @@ class CheeseManageViewModel @Inject constructor(
 
     override fun checkCanSave() {
         val c = cheese.value
-        _isSaveActive.value =
+        isSaveActive.value =
             !(c?.name.isNullOrBlank() || c?.milkType.isNullOrBlank() || c?.milkVolume.isNullOrBlank())
     }
 
     fun setCheese(newCheese: Cheese?) {
         if (cheese.value == null) {
             cheese.value = if (newCheese != null) {
-                _isDeleteActive.value = true
+                isDeleteActive.value = true
                 stages.value =
                     newCheese.stages.map { StringValue(it) }.toMutableList()
                 photos.value = repo.getPhotosById(newCheese.photos)
@@ -115,6 +108,11 @@ class CheeseManageViewModel @Inject constructor(
         }
     }
 
+    fun onPhotoClick(photo: Photo, transitionOptions: Pair<View, String>) {
+        fullscreenPhoto.value = photo
+        router.navigateTo(Screens.FullscreenPhotoScreen(PhotoF.from(photo), transitionOptions))
+    }
+
     fun onAttachFromGallery() {
         router.navigateTo(Screens.GalleryPickScreen)
     }
@@ -132,27 +130,6 @@ class CheeseManageViewModel @Inject constructor(
     fun addNewStage() {
         stages.value?.add(StringValue(""))
         stages.value = stages.value
-    }
-
-    fun setDownloadedPhoto(photo: Photo) {
-        downloadedPhoto.value = photo
-    }
-
-    fun getImageFromUri(uri: Uri?) {
-        addPhoto(bitmapDecoder.fromUri(uri))
-    }
-
-    fun getImageFromCamera() {
-        addPhoto(bitmapDecoder.fromCamera())
-    }
-
-    private fun addPhoto(bitmap: Bitmap?) {
-        bitmap?.let {
-            photos.value = photos.value?.let {
-                val photo = Photo(Date().time.toString(), bitmap, null)
-                it + photo
-            }
-        }
     }
 
     fun checkAndManageCheese() {
@@ -190,25 +167,9 @@ class CheeseManageViewModel @Inject constructor(
         }
     }
 
-    fun onPhotoDeleteClick(photo: Photo) {
-        photos.value = photos.value?.toMutableList()?.apply {
-            remove(photo)
-        }
-    }
-
-    fun onPhotoDownloadClick() {
-        safeRun {
-            downloadedPhoto.value?.let {
-                photoDownloader.download(it)
-                downloadedPhoto.value = null
-                photoManageResult.value = res.stringPhotoDownloadedSuccessful()
-            }
-        }
-    }
-
-    fun onPhotoShareClick(photo: Photo) {
-        safeRun {
-            photoSharer.send(photo)
-        }
+    override fun setError(t: Throwable?) {
+        val msg = t?.toString() ?: ""
+        val i = msg.indexOf(": ")
+        manageError.value = msg.drop(i + 2)
     }
 }

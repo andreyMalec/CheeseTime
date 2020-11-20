@@ -3,6 +3,7 @@ package com.malec.cheesetime.ui.main.cheese.cheeseManage
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.util.Pair
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -54,10 +55,11 @@ class PhotoAdapter(private val vm: PhotoAction) :
                 }
                 true
             }
+            binding?.root?.setOnClickListener {
+                binding.photo?.let {
+                    vm.onPhotoClick(it, Pair(binding.photoImage, "photo"))
+                }
+            }
         }
-    }
-
-    interface PhotoAction {
-        fun onPhotoLongClick(photo: Photo)
     }
 }

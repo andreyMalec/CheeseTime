@@ -3,6 +3,7 @@ package com.malec.cheesetime.repo
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.CheeseFilter
 import com.malec.cheesetime.model.Photo
+import com.malec.cheesetime.model.PhotoF
 import com.malec.cheesetime.service.network.CheeseApi
 import com.malec.cheesetime.service.network.StorageApi
 import com.malec.cheesetime.util.CheeseSharer
@@ -115,4 +116,9 @@ class CheeseRepo(
                 storageApi.getRefById(it)
             )
         }
+
+    fun convertPhoto(photo: PhotoF): Photo {
+        val ref = photo.ref?.let { storageApi.getRefById(photo.name) }
+        return Photo(photo.name, photo.content, ref)
+    }
 }

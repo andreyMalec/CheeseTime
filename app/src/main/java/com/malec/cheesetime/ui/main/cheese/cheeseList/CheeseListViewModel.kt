@@ -8,8 +8,8 @@ import com.malec.cheesetime.model.CheeseSort
 import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.service.Resources
-import com.malec.cheesetime.ui.BaseViewModel
 import com.malec.cheesetime.ui.Screens
+import com.malec.cheesetime.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject

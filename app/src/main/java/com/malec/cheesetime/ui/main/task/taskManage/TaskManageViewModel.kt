@@ -5,14 +5,21 @@ import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.repo.TaskRepo
 import com.malec.cheesetime.service.Resources
-import com.malec.cheesetime.ui.main.ManageViewModel
+import com.malec.cheesetime.ui.base.BaseViewModel
+import com.malec.cheesetime.ui.base.ManageViewModel
 import com.malec.cheesetime.util.DateFormatter
 import javax.inject.Inject
 
 class TaskManageViewModel @Inject constructor(
     private val repo: TaskRepo,
     private val res: Resources
-) : ManageViewModel() {
+) : BaseViewModel(), ManageViewModel {
+
+    override val manageError = MutableLiveData<String>(null)
+    override val manageResult = MutableLiveData<String>(null)
+    override val isSaveActive = MutableLiveData(false)
+    override val isDeleteActive = MutableLiveData(false)
+
     val task = MutableLiveData<Task>(null)
     val date = MutableLiveData("")
     val time = MutableLiveData("")
@@ -44,14 +51,14 @@ class TaskManageViewModel @Inject constructor(
     }
 
     override fun checkCanSave() {
-        _isSaveActive.value =
+        isSaveActive.value =
             !(task.value?.todo.isNullOrBlank() || date.value.isNullOrBlank() || time.value.isNullOrBlank())
     }
 
     fun setTask(newTask: Task?) {
         if (task.value == null) {
             task.value = if (newTask != null) {
-                _isDeleteActive.value = true
+                isDeleteActive.value = true
                 date.value = DateFormatter.simpleFormat(newTask.date)
                 time.value =
                     DateFormatter.simpleFormatTime(newTask.date % DateFormatter.millisecondsInDay)
@@ -107,5 +114,11 @@ class TaskManageViewModel @Inject constructor(
                 res.stringTaskUpdated()
             }
         }
+    }
+
+    override fun setError(t: Throwable?) {
+        val msg = t?.toString() ?: ""
+        val i = msg.indexOf(": ")
+        manageError.value = msg.drop(i + 2)
     }
 }

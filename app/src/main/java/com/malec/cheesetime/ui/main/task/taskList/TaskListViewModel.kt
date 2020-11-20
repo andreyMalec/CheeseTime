@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.repo.TaskRepo
-import com.malec.cheesetime.ui.BaseViewModel
 import com.malec.cheesetime.ui.Screens
+import com.malec.cheesetime.ui.base.BaseViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router

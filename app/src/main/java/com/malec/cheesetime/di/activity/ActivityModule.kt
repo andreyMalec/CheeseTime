@@ -4,6 +4,7 @@ import com.malec.cheesetime.di.module.NetworkModule
 import com.malec.cheesetime.ui.login.LoginActivity
 import com.malec.cheesetime.ui.main.MainActivity
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageActivity
+import com.malec.cheesetime.ui.main.cheese.cheeseManage.fullscreenPhoto.FullscreenPhotoActivity
 import com.malec.cheesetime.ui.main.task.taskManage.TaskManageActivity
 import com.malec.cheesetime.ui.settings.SettingsActivity
 import dagger.Module
@@ -19,6 +20,9 @@ abstract class ActivityModule {
 
     @ContributesAndroidInjector
     abstract fun contributeCheeseManageActivity(): CheeseManageActivity
+
+    @ContributesAndroidInjector
+    abstract fun contributePhotoActivity(): FullscreenPhotoActivity
 
     @ContributesAndroidInjector
     abstract fun contributeTaskManageActivity(): TaskManageActivity
