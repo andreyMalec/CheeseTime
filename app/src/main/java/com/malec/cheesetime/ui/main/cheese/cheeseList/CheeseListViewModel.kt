@@ -1,7 +1,9 @@
 package com.malec.cheesetime.ui.main.cheese.cheeseList
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.github.terrakok.cicerone.Router
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.CheeseFilter
 import com.malec.cheesetime.model.CheeseSort
@@ -11,7 +13,6 @@ import com.malec.cheesetime.service.Resources
 import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
-import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 class CheeseListViewModel @Inject constructor(
@@ -48,16 +49,16 @@ class CheeseListViewModel @Inject constructor(
     }
 
     fun applyFilters() {
-        val sort = sortBy.value
-        val filter = CheeseFilter(
-            dateFilterStart.value,
-            dateFilterEnd.value,
-            cheeseTypeFilter.value,
-            archivedFilter.value,
-            sort
-        )
         safeRun {
-            cheeseList.value = repo.getAllFiltered(filter)
+            cheeseList.value = repo.getAllFiltered(
+                CheeseFilter(
+                    dateFilterStart.value,
+                    dateFilterEnd.value,
+                    cheeseTypeFilter.value,
+                    archivedFilter.value,
+                    sortBy.value
+                )
+            )
         }
     }
 
@@ -90,7 +91,7 @@ class CheeseListViewModel @Inject constructor(
 
     override fun onClick(cheese: Cheese) {
         if (repo.getSelectedIds().isEmpty())
-            router.navigateTo(Screens.CheeseManageScreen(cheese))
+            router.navigateTo(Screens.cheeseManage(cheese))
         else
             onLongClick(cheese)
     }
@@ -100,5 +101,7 @@ class CheeseListViewModel @Inject constructor(
         update()
     }
 
-    override fun setError(t: Throwable?) {}
+    override fun setError(t: Throwable?) {
+        Log.e("test", "testMessage: " + t)
+    }
 }

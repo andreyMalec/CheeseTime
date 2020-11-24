@@ -16,11 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.malec.cheesetime.R
+import com.malec.cheesetime.databinding.FragmentCheeseListBinding
 import com.malec.cheesetime.di.Injectable
 import com.malec.cheesetime.model.CheeseSort
 import com.malec.cheesetime.ui.allertDialogBuilder.CheeseDeleteDialog
 import com.malec.cheesetime.util.DateTimePicker
-import kotlinx.android.synthetic.main.fragment_cheese_list.*
 import javax.inject.Inject
 
 class CheeseListFragment : Fragment(), Injectable {
@@ -48,6 +48,9 @@ class CheeseListFragment : Fragment(), Injectable {
 
     private var isMainMenu = true
 
+    private var _binding: FragmentCheeseListBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if (isMainMenu)
             inflater.inflate(R.menu.menu_main, menu)
@@ -60,10 +63,10 @@ class CheeseListFragment : Fragment(), Injectable {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.filterButton -> {
-                if (cheeseListDrawer.isDrawerOpen(GravityCompat.END))
-                    cheeseListDrawer.closeDrawer(GravityCompat.END)
+                if (binding.cheeseListDrawer.isDrawerOpen(GravityCompat.END))
+                    binding.cheeseListDrawer.closeDrawer(GravityCompat.END)
                 else
-                    cheeseListDrawer.openDrawer(GravityCompat.END)
+                    binding.cheeseListDrawer.openDrawer(GravityCompat.END)
                 true
             }
             R.id.archiveButton -> {
@@ -102,13 +105,13 @@ class CheeseListFragment : Fragment(), Injectable {
     }
 
     private fun initFilterMenu() {
-        dateFilterStart = cheeseNavView.menu.findItem(R.id.filterDateStart)
-        dateFilterEnd = cheeseNavView.menu.findItem(R.id.filterDateEnd)
-        cheeseTypeFilter = cheeseNavView.menu.findItem(R.id.filterCheeseType)
-        archivedFilter = cheeseNavView.menu.findItem(R.id.filterArchived)
-        dateSortStart = cheeseNavView.menu.findItem(R.id.sortDateStart)
-        dateSortEnd = cheeseNavView.menu.findItem(R.id.sortDateEnd)
-        cheeseTypeSort = cheeseNavView.menu.findItem(R.id.sortCheeseType)
+        dateFilterStart = binding.cheeseNavView.menu.findItem(R.id.filterDateStart)
+        dateFilterEnd = binding.cheeseNavView.menu.findItem(R.id.filterDateEnd)
+        cheeseTypeFilter = binding.cheeseNavView.menu.findItem(R.id.filterCheeseType)
+        archivedFilter = binding.cheeseNavView.menu.findItem(R.id.filterArchived)
+        dateSortStart = binding.cheeseNavView.menu.findItem(R.id.sortDateStart)
+        dateSortEnd = binding.cheeseNavView.menu.findItem(R.id.sortDateEnd)
+        cheeseTypeSort = binding.cheeseNavView.menu.findItem(R.id.sortCheeseType)
     }
 
     private fun initViewModelListeners() {
@@ -133,7 +136,7 @@ class CheeseListFragment : Fragment(), Injectable {
 
         viewModel.cheeseList.observe(viewLifecycleOwner, {
             adapter.submitList(it)
-            swipeRefresh.isRefreshing = false
+            binding.swipeRefresh.isRefreshing = false
         })
     }
 
@@ -142,7 +145,7 @@ class CheeseListFragment : Fragment(), Injectable {
     }
 
     private fun initNavigationListeners() {
-        cheeseNavView.setNavigationItemSelectedListener { item ->
+        binding.cheeseNavView.setNavigationItemSelectedListener { item ->
             if (item.itemId == R.id.filterClear) {
                 clearFilter()
                 return@setNavigationItemSelectedListener true
@@ -161,7 +164,7 @@ class CheeseListFragment : Fragment(), Injectable {
             true
         }
 
-        cheeseListDrawer.addDrawerListener(object : DrawerLayout.DrawerListener {
+        binding.cheeseListDrawer.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerStateChanged(newState: Int) {}
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
             override fun onDrawerOpened(drawerView: View) {}
@@ -246,21 +249,21 @@ class CheeseListFragment : Fragment(), Injectable {
 
     private fun initRecycler() {
         adapter = CheeseAdapter(viewModel)
-        cheeseRecycler.adapter = adapter
-        cheeseRecycler.layoutManager =
+        binding.cheeseRecycler.adapter = adapter
+        binding.cheeseRecycler.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-                if (fromPosition == 0 || toPosition == 0) cheeseRecycler.scrollToPosition(0)
+                if (fromPosition == 0 || toPosition == 0) binding.cheeseRecycler.scrollToPosition(0)
             }
 
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart == 0) cheeseRecycler.scrollToPosition(0)
+                if (positionStart == 0) binding.cheeseRecycler.scrollToPosition(0)
             }
         })
 
-        swipeRefresh.setOnRefreshListener {
+        binding.swipeRefresh.setOnRefreshListener {
             viewModel.update()
         }
     }
@@ -274,6 +277,12 @@ class CheeseListFragment : Fragment(), Injectable {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_cheese_list, container, false)
+        _binding = FragmentCheeseListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

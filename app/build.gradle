@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 
 android {
@@ -16,8 +15,8 @@ android {
         applicationId "com.malec.cheesetime"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 57
-        versionName "0.7.20"
+        versionCode 58
+        versionName "0.7.21"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -42,10 +41,12 @@ android {
 dependencies {
     kapt 'androidx.databinding:databinding-compiler-common:4.1.1'
 
-    implementation "ru.terrakok.cicerone:cicerone:5.1.0"
+    implementation "com.github.terrakok:cicerone:6.5"
 
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'com.google.zxing:core:3.4.1'
+
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
     implementation 'com.google.firebase:firebase-auth:20.0.1'
     implementation 'com.google.firebase:firebase-storage:19.2.0'
@@ -65,7 +66,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
-    def dagger_version = '2.29.1'
+    def dagger_version = '2.30'
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"

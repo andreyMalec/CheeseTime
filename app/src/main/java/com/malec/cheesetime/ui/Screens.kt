@@ -1,149 +1,99 @@
 package com.malec.cheesetime.ui
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 import android.provider.MediaStore
-import android.view.View
-import androidx.core.util.Pair
-import androidx.fragment.app.Fragment
-import com.google.gson.Gson
+import com.github.terrakok.cicerone.androidx.ActivityScreen
+import com.github.terrakok.cicerone.androidx.FragmentScreen
+import com.google.zxing.integration.android.IntentIntegrator
 import com.malec.cheesetime.model.Cheese
-import com.malec.cheesetime.model.PhotoF
 import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.repo.UserRepo.Companion.googleSignInClient
 import com.malec.cheesetime.ui.login.LoginActivity
 import com.malec.cheesetime.ui.main.MainActivity
 import com.malec.cheesetime.ui.main.cheese.cheeseList.CheeseListFragment
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageActivity
-import com.malec.cheesetime.ui.main.cheese.cheeseManage.fullscreenPhoto.FullscreenPhotoActivity
+import com.malec.cheesetime.ui.main.cheese.cheeseManage.fragments.CheeseManageFragment
+import com.malec.cheesetime.ui.main.cheese.cheeseManage.fragments.FullscreenPhotoFragment
 import com.malec.cheesetime.ui.main.report.ReportsFragment
 import com.malec.cheesetime.ui.main.task.taskList.TaskListFragment
 import com.malec.cheesetime.ui.main.task.taskManage.TaskManageActivity
 import com.malec.cheesetime.ui.settings.SettingsActivity
 import com.malec.cheesetime.util.CameraIntentCreator
-import ru.terrakok.cicerone.android.support.SupportAppScreen
 
 object Screens {
-    private val gson = Gson()
+    const val CODE_GALLERY = 10
+    const val CODE_CAMERA = 11
+    const val CODE_GOOGLE_LOGIN = 12
+    const val CODE_STORAGE = 5
+    const val CODE_SCAN = 0x0000c0de
 
-    const val GALLERY = GalleryPickScreen.requestCode
-    const val CAMERA = CameraPickScreen.requestCode
-    const val STORAGE = 5
+    const val GALLERY = "Gallery"
+    const val CAMERA = "Camera"
+    const val GOOGLE_LOGIN = "GoogleLogin"
 
-    object CheeseListScreen : SupportAppScreen() {
-        override fun getFragment(): Fragment? {
-            return CheeseListFragment()
-        }
+    const val TASK_LIST = "TaskList"
+    const val CHEESE_LIST = "CheeseList"
+    const val REPORTS = "Reports"
+
+    const val SCAN = "Scan"
+
+    fun taskList() = FragmentScreen(TASK_LIST) {
+        TaskListFragment()
     }
 
-    object TaskListScreen : SupportAppScreen() {
-        override fun getFragment(): Fragment? {
-            return TaskListFragment()
-        }
+    fun cheeseList() = FragmentScreen(CHEESE_LIST) {
+        CheeseListFragment()
     }
 
-    object ReportsScreen : SupportAppScreen() {
-        override fun getFragment(): Fragment? {
-            return ReportsFragment()
-        }
+    fun reports() = FragmentScreen(REPORTS) {
+        ReportsFragment()
     }
 
-    object MainScreen : SupportAppScreen() {
-        override fun getActivityIntent(context: Context): Intent? {
-            return Intent(context, MainActivity::class.java)
-        }
+    fun main() = ActivityScreen {
+        it.createIntent<MainActivity>()
     }
 
-    object LoginScreen : SupportAppScreen() {
-        override fun getActivityIntent(context: Context): Intent? {
-            return Intent(context, LoginActivity::class.java)
-        }
+    fun login() = ActivityScreen {
+        it.createIntent<LoginActivity>()
     }
 
-    object GalleryPickScreen : SupportAppScreen() {
-        const val requestCode = 10
-
-        override fun getActivityIntent(context: Context): Intent? {
-            return Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        }
+    fun galleryPick() = ActivityScreen(GALLERY) {
+        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
     }
 
-    object CameraPickScreen : SupportAppScreen() {
-        const val requestCode = 11
-
-        override fun getActivityIntent(context: Context): Intent? {
-            return CameraIntentCreator(context).create()
-        }
+    fun cameraPick() = ActivityScreen(CAMERA) {
+        CameraIntentCreator(it).create()
     }
 
-    object SettingsScreen : SupportAppScreen() {
-        override fun getActivityIntent(context: Context): Intent? {
-            return Intent(context, SettingsActivity::class.java)
-        }
+    fun scan() = ActivityScreen(SCAN) {
+        IntentIntegrator(it as Activity).apply {
+            setOrientationLocked(false)
+            setDesiredBarcodeFormats(IntentIntegrator.CODE_128)
+        }.createScanIntent()
     }
 
-    object GoogleLoginScreen : SupportAppScreen() {
-        const val requestCode = 12
-
-        override fun getActivityIntent(context: Context): Intent? {
-            return googleSignInClient(context)?.signInIntent
-        }
+    fun settings() = ActivityScreen {
+        it.createIntent<SettingsActivity>()
     }
 
-    class TaskManageScreen(private var task: Task? = null) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context): Intent? {
-            return task?.let { createExtraIntent(context, it) }
-                ?: Intent(context, TaskManageActivity::class.java)
-        }
-
-        companion object {
-            fun createExtraIntent(context: Context, task: Task) =
-                Intent(context, TaskManageActivity::class.java).putExtra("data", gson.toJson(task))
-
-            fun parseExtraIntent(intent: Intent): Task? =
-                gson.fromJson(intent.getStringExtra("data"), Task::class.java)
-        }
+    fun googleLogin() = ActivityScreen(GOOGLE_LOGIN) {
+        googleSignInClient(it).signInIntent
     }
 
-    class CheeseManageScreen(private var cheese: Cheese? = null) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context): Intent? {
-            return cheese?.let { createExtraIntent(context, it) }
-                ?: Intent(context, CheeseManageActivity::class.java)
-        }
-
-        companion object {
-            fun createExtraIntent(context: Context, cheese: Cheese) =
-                Intent(context, CheeseManageActivity::class.java).putExtra(
-                    "data",
-                    gson.toJson(cheese)
-                )
-
-            fun parseExtraIntent(intent: Intent): Cheese? =
-                gson.fromJson(intent.getStringExtra("data"), Cheese::class.java)
-        }
+    fun taskManage(task: Task? = null) = ActivityScreen {
+        it.createIntent<TaskManageActivity>(task)
     }
 
-    class FullscreenPhotoScreen(
-        private val photo: PhotoF,
-        private val transitionOptions: Pair<View, String>
-    ) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context): Intent? {
-            return createExtraIntent(context, photo)
-        }
+    fun cheeseManage(cheese: Cheese? = null) = ActivityScreen {
+        it.createIntent<CheeseManageActivity>(cheese)
+    }
 
-        fun getOptions() = transitionOptions
+    fun cheeseManageFragment() = FragmentScreen {
+        CheeseManageFragment()
+    }
 
-        companion object {
-            const val requestCode = 15
-
-            fun createExtraIntent(context: Context, photo: PhotoF) =
-                Intent(context, FullscreenPhotoActivity::class.java).putExtra(
-                    "data",
-                    gson.toJson(photo)
-                )
-
-            fun parseExtraIntent(intent: Intent): PhotoF? =
-                gson.fromJson(intent.getStringExtra("data"), PhotoF::class.java)
-        }
+    fun fullscreenPhoto() = FragmentScreen {
+        FullscreenPhotoFragment()
     }
 }

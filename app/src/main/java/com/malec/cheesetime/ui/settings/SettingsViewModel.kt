@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.terrakok.cicerone.Router
 import com.malec.cheesetime.model.Recipe
 import com.malec.cheesetime.repo.UserRepo
 import kotlinx.coroutines.launch
-import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 class SettingsViewModel @Inject constructor(

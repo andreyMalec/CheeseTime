@@ -2,24 +2,22 @@ package com.malec.cheesetime.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.zxing.integration.android.IntentIntegrator
-import com.malec.cheesetime.R
+import com.github.terrakok.cicerone.Router
+import com.github.terrakok.cicerone.Screen
 import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.ui.Screens
+import com.malec.cheesetime.ui.base.BaseViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import ru.terrakok.cicerone.Router
-import ru.terrakok.cicerone.Screen
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     private val router: Router,
     private val repo: CheeseRepo,
     private val userRepo: UserRepo
-) : ViewModel() {
+) : BaseViewModel() {
     private var pressAgain = true
     private val pressAgainAwait = 2000L
 
@@ -40,53 +38,46 @@ class MainViewModel @Inject constructor(
     }
 
     fun onTaskListClick() {
-        replaceScreen(Screens.TaskListScreen)
+        replaceScreen(Screens.taskList())
     }
 
     fun onCheeseListClick() {
-        replaceScreen(Screens.CheeseListScreen)
+        replaceScreen(Screens.cheeseList())
     }
 
     fun onReportsClick() {
-        replaceScreen(Screens.ReportsScreen)
+        replaceScreen(Screens.reports())
     }
 
-    fun onScanClick(activity: MainActivity) {
-        IntentIntegrator(activity).apply {
-            setOrientationLocked(false)
-            setPrompt(activity.getString(R.string.scan_code))
-        }.initiateScan()
+    fun onScanClick() {
+        router.navigateTo(Screens.scan())
     }
 
     fun onScanSuccess(result: String) {
-        viewModelScope.launch {
+        safeRun {
             val cheese = repo.getById(result.toLong())
-            router.navigateTo(Screens.CheeseManageScreen(cheese))
+            router.navigateTo(Screens.cheeseManage(cheese))
         }
     }
 
     fun onFABClick() {
-        when (currentScreen) {
-            Screens.TaskListScreen -> {
-                router.navigateTo(Screens.TaskManageScreen())
-            }
-            Screens.CheeseListScreen -> {
-                router.navigateTo(Screens.CheeseManageScreen())
-            }
-            Screens.ReportsScreen -> {
+        when (currentScreen.screenKey) {
+            Screens.TASK_LIST -> router.navigateTo(Screens.taskManage())
+            Screens.CHEESE_LIST -> router.navigateTo(Screens.cheeseManage())
+            Screens.REPORTS -> {
             }
         }
     }
 
     fun logout() {
-        viewModelScope.launch {
+        safeRun {
             userRepo.logout()
-            router.newRootScreen(Screens.LoginScreen)
+            router.newRootScreen(Screens.login())
         }
     }
 
     fun showSettings() {
-        router.navigateTo(Screens.SettingsScreen)
+        router.navigateTo(Screens.settings())
     }
 
     private fun replaceScreen(screen: Screen) {
@@ -110,4 +101,6 @@ class MainViewModel @Inject constructor(
         delay(timeInMillis)
         block()
     }
+
+    override fun setError(t: Throwable?) {}
 }

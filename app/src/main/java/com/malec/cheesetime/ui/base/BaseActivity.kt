@@ -5,13 +5,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.github.terrakok.cicerone.NavigatorHolder
+import com.github.terrakok.cicerone.androidx.AppNavigator
 import com.google.android.material.snackbar.Snackbar
 import com.malec.cheesetime.R
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
-import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
@@ -24,7 +24,7 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
     @Inject
     lateinit var navHolder: NavigatorHolder
 
-    protected abstract val navigator: SupportAppNavigator?
+    protected abstract val navigator: AppNavigator?
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 

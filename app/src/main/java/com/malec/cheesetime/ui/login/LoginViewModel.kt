@@ -2,12 +2,12 @@ package com.malec.cheesetime.ui.login
 
 import android.content.Intent
 import androidx.lifecycle.MutableLiveData
+import com.github.terrakok.cicerone.Router
 import com.malec.cheesetime.model.User
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.service.Resources
 import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.ui.base.BaseViewModel
-import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
@@ -43,12 +43,12 @@ class LoginViewModel @Inject constructor(
             }
     }
 
-    private fun startMainScreen() = router.newRootScreen(Screens.MainScreen)
+    private fun startMainScreen() = router.newRootScreen(Screens.main())
 
-    fun googleLogin() = router.navigateTo(Screens.GoogleLoginScreen)
+    fun googleLogin() = router.navigateTo(Screens.googleLogin())
 
     fun handleActivityResult(requestCode: Int, data: Intent?) {
-        if (requestCode == Screens.GoogleLoginScreen.requestCode)
+        if (requestCode == Screens.CODE_GOOGLE_LOGIN)
             safeRun {
                 repo.googleLogin(data)
                 startMainScreen()

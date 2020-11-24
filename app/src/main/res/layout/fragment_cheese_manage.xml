@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="cheese"
+            type="com.malec.cheesetime.model.Cheese" />
+
+        <import type="com.malec.cheesetime.ui.BindingAdapter" />
+    </data>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundLight"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/backgroundLight"
+            android:orientation="vertical"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="24dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/nameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="6dp"
+                android:hint="@string/cheese_name"
+                app:boxBackgroundColor="@color/backgroundLight"
+                app:errorIconTint="@color/colorError"
+                app:errorTextColor="@color/colorError">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@={cheese.name}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cheese_date"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/dateText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        app:dateSimpleFormat="@{cheese.date}" />
+
+                    <Button
+                        android:id="@+id/dateButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:backgroundTint="@color/colorPrimaryDark"
+                        android:drawableLeft="@drawable/icon_date_range"
+                        android:text="@string/date_pick"
+                        android:textColor="@color/colorPrimary"
+                        app:errorIconTint="@color/colorError" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/recipeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
+
+                <TextView
+                    android:id="@+id/recipeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cheese_recipe"
+                    android:textSize="18sp" />
+
+                <Spinner
+                    android:id="@+id/recipeSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:entries="@array/recipes" />
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/commentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="6dp"
+                android:hint="@string/cheese_comment"
+                app:boxBackgroundColor="@color/backgroundLight">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/commentEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@={cheese.comment}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.malec.cheesetime.ui.customView.DropDownLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:titleMarginStart="8dp"
+                app:titleText="@string/cheese_milk">
+
+                <EditText
+                    android:id="@+id/milkTypeEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:foregroundTint="@color/colorError"
+                    android:hint="@string/milk_type"
+                    android:text="@={cheese.milkType}" />
+
+                <EditText
+                    android:id="@+id/milkVolumeEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/milk_volume"
+                    android:text="@={cheese.milkVolume}" />
+
+                <EditText
+                    android:id="@+id/milkAgeEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/milk_age"
+                    android:text="@={cheese.milkAge}" />
+            </com.malec.cheesetime.ui.customView.DropDownLayout>
+
+            <com.malec.cheesetime.ui.customView.DropDownLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:titleMarginStart="8dp"
+                app:titleText="@string/cheese_composition">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:text="@={cheese.composition}" />
+            </com.malec.cheesetime.ui.customView.DropDownLayout>
+
+            <com.malec.cheesetime.ui.customView.DropDownLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:contentGravity="end"
+                app:titleMarginStart="8dp"
+                app:titleText="@string/cheese_stages">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/stagesRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <com.malec.cheesetime.ui.customView.ActionButton
+                    android:id="@+id/stageAddButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="8dp"
+                    app:ab_backgroundColor="@color/colorPrimaryDark"
+                    app:ab_elevation="2dp"
+                    app:ab_image="@drawable/icon_add"
+                    app:ab_size="small" />
+            </com.malec.cheesetime.ui.customView.DropDownLayout>
+
+            <TextView
+                android:id="@+id/colorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/cheese_color"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/colorLayout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge1"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge3"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge2"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge4"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge8"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge9"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/colorLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge11"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge12"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge5"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge6"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge10"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/badge7"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="2dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/photoText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/cheese_photo"
+                android:textSize="18sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/photoRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.malec.cheesetime.ui.customView.ActionButton
+                android:id="@+id/photoAddButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="8dp"
+                app:ab_backgroundColor="@color/colorPrimaryDark"
+                app:ab_elevation="2dp"
+                app:ab_image="@drawable/icon_add"
+                app:ab_size="small" />
+
+            <ImageView
+                android:id="@+id/barcodeImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:background="@color/colorWhite"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
+                android:visibility="gone"
+                app:barcode="@{cheese.id}" />
+        </LinearLayout>
+    </ScrollView>
+</layout>

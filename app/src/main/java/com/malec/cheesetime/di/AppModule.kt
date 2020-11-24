@@ -2,6 +2,7 @@ package com.malec.cheesetime.di
 
 import android.content.Context
 import com.malec.cheesetime.di.activity.ActivityModule
+import com.malec.cheesetime.di.module.NavigationModule
 import com.malec.cheesetime.di.viewModule.ViewModelModule
 import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.repo.TaskRepo
@@ -20,7 +21,7 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(includes = [ActivityModule::class, ViewModelModule::class, Navigation::class])
+@Module(includes = [ActivityModule::class, ViewModelModule::class, NavigationModule::class])
 class AppModule {
     @Provides
     @Singleton
@@ -58,5 +59,5 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun bitampDecoder(context: Context): BitmapDecoder = BitmapDecoder(context)
+    fun bitmapDecoder(context: Context): BitmapDecoder = BitmapDecoder(context)
 }

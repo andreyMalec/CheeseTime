@@ -8,15 +8,14 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.core.widget.doAfterTextChanged
-import androidx.databinding.DataBindingUtil
+import com.github.terrakok.cicerone.androidx.AppNavigator
 import com.malec.cheesetime.R
 import com.malec.cheesetime.databinding.ActivityTaskManageBinding
-import com.malec.cheesetime.ui.Screens
+import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.ui.allertDialogBuilder.TaskDeleteDialog
 import com.malec.cheesetime.ui.base.BaseActivity
+import com.malec.cheesetime.ui.parseExtraIntent
 import com.malec.cheesetime.util.DateTimePicker
-import kotlinx.android.synthetic.main.activity_task_manage.*
-import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 class TaskManageActivity : BaseActivity() {
     private val viewModel: TaskManageViewModel by viewModels {
@@ -30,6 +29,8 @@ class TaskManageActivity : BaseActivity() {
     private var deleteButton: MenuItem? = null
     private var isDeleteActive = false
     private var isSaveActive = false
+
+    private lateinit var binding: ActivityTaskManageBinding
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_manage, menu)
@@ -56,14 +57,14 @@ class TaskManageActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override val navigator: SupportAppNavigator? = null
+    override val navigator: AppNavigator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding: ActivityTaskManageBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_task_manage)
+        binding = ActivityTaskManageBinding.inflate(layoutInflater)
+        setContentView(binding.getRoot())
 
-        val task = Screens.TaskManageScreen.parseExtraIntent(intent)
+        val task = parseExtraIntent<Task>(intent)
         viewModel.setTask(task)
         binding.task = viewModel.task.value
 
@@ -73,7 +74,7 @@ class TaskManageActivity : BaseActivity() {
 
         adapter =
             ArrayAdapter(this, android.R.layout.simple_list_item_1, android.R.id.text1, cheeseList)
-        cheeseSpinner.adapter = adapter
+        binding.cheeseSpinner.adapter = adapter
     }
 
     private fun initViewModelListeners() {
@@ -83,15 +84,15 @@ class TaskManageActivity : BaseActivity() {
         })
 
         viewModel.cheesePosition.observe(this, {
-            cheeseSpinner.setSelection(it)
+            binding.cheeseSpinner.setSelection(it)
         })
 
         viewModel.date.observe(this, {
-            dateText.text = it
+            binding.dateText.text = it
         })
 
         viewModel.time.observe(this, {
-            timeText.text = it
+            binding.timeText.text = it
         })
 
         viewModel.isSaveActive.observe(this, { active ->
@@ -121,23 +122,23 @@ class TaskManageActivity : BaseActivity() {
     }
 
     private fun initInputListeners() {
-        cheeseSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.cheeseSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {}
 
             override fun onItemSelected(a: AdapterView<*>?, v: View?, p: Int, p2: Long) {
                 viewModel.selectCheeseAt(p)
             }
         }
-        todoEditText.doAfterTextChanged {
+        binding.todoEditText.doAfterTextChanged {
             viewModel.checkCanSave()
         }
-        dateButton.setOnClickListener {
+        binding.dateButton.setOnClickListener {
             DateTimePicker(this).pickDate {
                 viewModel.date.value = it
                 viewModel.checkCanSave()
             }
         }
-        timeButton.setOnClickListener {
+        binding.timeButton.setOnClickListener {
             DateTimePicker(this).pickTime {
                 viewModel.time.value = it
                 viewModel.checkCanSave()
@@ -146,8 +147,8 @@ class TaskManageActivity : BaseActivity() {
     }
 
     private fun initToolbar() {
-        toolbar.setTitle(R.string.toolbar_manage_task)
-        setSupportActionBar(toolbar)
+        binding.toolbar.setTitle(R.string.toolbar_manage_task)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 }

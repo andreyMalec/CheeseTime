@@ -1,9 +1,11 @@
 package com.malec.cheesetime.ui.main.cheese.cheeseManage
 
-import android.view.View
-import androidx.core.util.Pair
 import androidx.lifecycle.MutableLiveData
-import com.malec.cheesetime.model.*
+import com.github.terrakok.cicerone.Router
+import com.malec.cheesetime.model.Cheese
+import com.malec.cheesetime.model.Photo
+import com.malec.cheesetime.model.Recipe
+import com.malec.cheesetime.model.StringValue
 import com.malec.cheesetime.repo.CheeseRepo
 import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.service.Resources
@@ -13,7 +15,6 @@ import com.malec.cheesetime.ui.base.ManageViewModel
 import com.malec.cheesetime.util.BitmapDecoder
 import com.malec.cheesetime.util.PhotoDownloader
 import com.malec.cheesetime.util.PhotoSharer
-import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 class CheeseManageViewModel @Inject constructor(
@@ -31,6 +32,7 @@ class CheeseManageViewModel @Inject constructor(
     override val manageResult = MutableLiveData<String>(null)
     override val isSaveActive = MutableLiveData(false)
     override val isDeleteActive = MutableLiveData(false)
+    val isProgressVisible = MutableLiveData(false)
 
     val cheese = MutableLiveData<Cheese>(null)
     val stages = MutableLiveData<MutableList<StringValue>>(mutableListOf())
@@ -43,6 +45,8 @@ class CheeseManageViewModel @Inject constructor(
     private var isStagesFirstLoad = true
 
     init {
+        router.replaceScreen(Screens.cheeseManageFragment())
+
         safeRun {
             mRecipes.addAll(userRepo.getRecipes())
             recipes.value =
@@ -108,17 +112,18 @@ class CheeseManageViewModel @Inject constructor(
         }
     }
 
-    fun onPhotoClick(photo: Photo, transitionOptions: Pair<View, String>) {
-        fullscreenPhoto.value = photo
-        router.navigateTo(Screens.FullscreenPhotoScreen(PhotoF.from(photo), transitionOptions))
+    fun onPhotoClick(photo: Photo) {
+        isFullscreen.value = true
+        fullscreenPhotoPosition.value = photos.value?.indexOf(photo)
+        router.replaceScreen(Screens.fullscreenPhoto())
     }
 
     fun onAttachFromGallery() {
-        router.navigateTo(Screens.GalleryPickScreen)
+        router.navigateTo(Screens.galleryPick())
     }
 
     fun onAttachFromCamera() {
-        router.navigateTo(Screens.CameraPickScreen)
+        router.navigateTo(Screens.cameraPick())
     }
 
     override fun onRemoveClick(value: StringValue?) {
@@ -133,6 +138,8 @@ class CheeseManageViewModel @Inject constructor(
     }
 
     fun checkAndManageCheese() {
+        isProgressVisible.value = true
+
         val mCheese = cheese.value
         val mStages = stages.value
         val mColor = badgeColor.value
@@ -164,6 +171,7 @@ class CheeseManageViewModel @Inject constructor(
                 repo.update(cheese)
                 res.stringCheeseUpdated()
             }
+            isProgressVisible.value = false
         }
     }
 

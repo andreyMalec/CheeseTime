@@ -8,14 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.malec.cheesetime.R
+import com.malec.cheesetime.databinding.FragmentTaskListBinding
 import com.malec.cheesetime.di.Injectable
 import com.malec.cheesetime.ui.allertDialogBuilder.TaskDeleteDialog
-import kotlinx.android.synthetic.main.fragment_task_list.*
 import javax.inject.Inject
 
 class TaskListFragment : Fragment(), Injectable {
@@ -28,18 +26,21 @@ class TaskListFragment : Fragment(), Injectable {
 
     private lateinit var adapter: TaskAdapter
 
+    private var _binding: FragmentTaskListBinding? = null
+    private val binding get() = _binding!!
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initRecycler()
         viewModel.autoRepeat(::updateTime)
 
-        viewModel.taskList.observe(viewLifecycleOwner, Observer {
+        viewModel.taskList.observe(viewLifecycleOwner, {
             adapter.submitList(it)
-            swipeRefresh.isRefreshing = false
+            binding.swipeRefresh.isRefreshing = false
         })
 
-        swipeRefresh.setOnRefreshListener {
+        binding.swipeRefresh.setOnRefreshListener {
             viewModel.update()
         }
     }
@@ -50,8 +51,8 @@ class TaskListFragment : Fragment(), Injectable {
 
     private fun initRecycler() {
         adapter = TaskAdapter(viewModel)
-        taskRecycler.adapter = adapter
-        taskRecycler.layoutManager =
+        binding.taskRecycler.adapter = adapter
+        binding.taskRecycler.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         val helper = ItemTouchHelper(
@@ -60,7 +61,7 @@ class TaskListFragment : Fragment(), Injectable {
                 requireContext()
             )
         )
-        helper.attachToRecyclerView(taskRecycler)
+        helper.attachToRecyclerView(binding.taskRecycler)
     }
 
     private fun onTaskSwipe(position: Int) {
@@ -77,11 +78,17 @@ class TaskListFragment : Fragment(), Injectable {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_task_list, container, false)
+        _binding = FragmentTaskListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.update()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

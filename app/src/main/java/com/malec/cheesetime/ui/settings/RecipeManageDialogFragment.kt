@@ -9,29 +9,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import com.malec.cheesetime.R
+import com.malec.cheesetime.databinding.FragmentRecipeManageBinding
 import com.malec.cheesetime.model.Recipe
-import kotlinx.android.synthetic.main.fragment_recipe_manage.*
 
 class RecipeManageDialogFragment(
     private val recipe: Recipe? = null,
     private val onOkClick: (recipe: Recipe) -> Unit
 ) : DialogFragment() {
+
+    private var _binding: FragmentRecipeManageBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.fragment_recipe_manage, container, false)
+        _binding = FragmentRecipeManageBinding.inflate(inflater, container, false)
 
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val nameEditText = v.findViewById<EditText>(R.id.nameEditText)
-        val okButton = v.findViewById<TextView>(R.id.okButton)
+        val nameEditText = binding.nameEditText
+        val okButton = binding.okButton
         nameEditText.requestFocus()
         nameEditText.doAfterTextChanged {
             val color = if (it.isNullOrBlank()) {
@@ -49,25 +52,25 @@ class RecipeManageDialogFragment(
             dialog?.dismiss()
         }
 
-        v.findViewById<View>(R.id.cancelButton).setOnClickListener {
+        binding.cancelButton.setOnClickListener {
             dialog?.dismiss()
         }
 
-        v.findViewById<View>(R.id.stageAddButton).setOnClickListener {
+        binding.stageAddButton.setOnClickListener {
             addStage()
         }
 
-        return v
+        return binding.root
     }
 
     private fun createRecipe(): Recipe {
         val stages = mutableSetOf<String>()
-        for (c in stagesLayout.children) {
+        for (c in binding.stagesLayout.children) {
             val text = c.findViewById<EditText>(R.id.editText).text.toString().trim()
             val stage = text[0].toUpperCase() + text.drop(1)
             stages.add(stage)
         }
-        val text = nameEditText.text.toString().trim()
+        val text = binding.nameEditText.text.toString().trim()
         val name = text[0].toUpperCase() + text.drop(1)
         return Recipe(recipe?.id ?: 0, name, stages.toList())
     }
@@ -76,11 +79,11 @@ class RecipeManageDialogFragment(
         val inflater =
             requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val newStageLayout = inflater.inflate(R.layout.item_removable_edittext, null)
-        stagesLayout.addView(newStageLayout, stagesLayout.childCount)
+        binding.stagesLayout.addView(newStageLayout, binding.stagesLayout.childCount)
         val editText = newStageLayout.findViewById<EditText>(R.id.editText)
         editText.requestFocus()
         newStageLayout.findViewById<View>(R.id.removeButton).setOnClickListener {
-            stagesLayout.removeView(it.parent as View)
+            binding.stagesLayout.removeView(it.parent as View)
         }
         text?.let {
             editText.setText(text)
@@ -99,9 +102,14 @@ class RecipeManageDialogFragment(
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
 
         if (recipe != null) {
-            nameEditText.setText(recipe.name)
+            binding.nameEditText.setText(recipe.name)
             for (stage in recipe.stages)
                 addStage(stage)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

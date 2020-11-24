@@ -11,26 +11,26 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.zxing.integration.android.IntentIntegrator
 import com.malec.cheesetime.R
+import com.malec.cheesetime.databinding.ActivityMainBinding
 import com.malec.cheesetime.ui.allertDialogBuilder.LogoutDialog
 import com.malec.cheesetime.ui.base.BaseActivity
 import dagger.android.HasAndroidInjector
-import kotlinx.android.synthetic.main.activity_main.*
-import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 class MainActivity : BaseActivity(), HasAndroidInjector {
     private val viewModel: MainViewModel by viewModels {
         viewModelFactory
     }
 
-    override val navigator = SupportAppNavigator(
+    override val navigator = ResultNavigator(
         this,
-        supportFragmentManager,
         R.id.navHostFragment
     )
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.scanButton -> viewModel.onScanClick(this)
+            R.id.scanButton -> viewModel.onScanClick()
         }
 
         return super.onOptionsItemSelected(item)
@@ -48,14 +48,15 @@ class MainActivity : BaseActivity(), HasAndroidInjector {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.getRoot())
 
         initViewModelListeners()
         initTabHost()
         initToolbar()
         initClickListeners()
 
-        mainNavView.setNavigationItemSelectedListener {
+        binding.mainNavView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.settingsButton -> viewModel.showSettings()
             }
@@ -71,12 +72,13 @@ class MainActivity : BaseActivity(), HasAndroidInjector {
         })
 
         viewModel.userLogin.observe(this, {
-            mainNavView.getHeaderView(0).findViewById<TextView>(R.id.userLoginText).text = it
+            binding.mainNavView.getHeaderView(0).findViewById<TextView>(R.id.userLoginText).text =
+                it
         })
     }
 
     private fun initTabHost() {
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
 
@@ -94,9 +96,9 @@ class MainActivity : BaseActivity(), HasAndroidInjector {
     }
 
     private fun initToolbar() {
-        toolbar.setTitle(R.string.app_name)
-        setSupportActionBar(toolbar)
-        root.setOnApplyWindowInsetsListener { _, insets ->
+        binding.toolbar.setTitle(R.string.app_name)
+        setSupportActionBar(binding.toolbar)
+        binding.root.setOnApplyWindowInsetsListener { _, insets ->
             val statusBarHeight =
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
                     insets.getInsets(WindowInsets.Type.systemBars()).top
@@ -104,9 +106,9 @@ class MainActivity : BaseActivity(), HasAndroidInjector {
                     insets.systemWindowInsetTop
 
             val h = (resources.getDimension(R.dimen.toolbar_height) + statusBarHeight).toInt()
-            val lp = toolbar.layoutParams as AppBarLayout.LayoutParams
-            toolbar.layoutParams = lp.also { it.height = h }
-            toolbar.updatePadding(top = statusBarHeight)
+            val lp = binding.toolbar.layoutParams as AppBarLayout.LayoutParams
+            binding.toolbar.layoutParams = lp.also { it.height = h }
+            binding.toolbar.updatePadding(top = statusBarHeight)
             insets
         }
 
@@ -125,11 +127,11 @@ class MainActivity : BaseActivity(), HasAndroidInjector {
     }
 
     private fun initClickListeners() {
-        addFAB.setOnClickListener {
+        binding.addFAB.setOnClickListener {
             viewModel.onFABClick()
         }
 
-        logoutButton.setOnClickListener {
+        binding.logoutButton.setOnClickListener {
             LogoutDialog(this).setOnOkButtonClickListener {
                 viewModel.logout()
             }.show()

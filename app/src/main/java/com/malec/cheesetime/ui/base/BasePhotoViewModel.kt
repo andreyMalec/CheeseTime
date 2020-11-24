@@ -3,12 +3,13 @@ package com.malec.cheesetime.ui.base
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
+import com.github.terrakok.cicerone.Router
 import com.malec.cheesetime.model.Photo
 import com.malec.cheesetime.service.Resources
+import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.util.BitmapDecoder
 import com.malec.cheesetime.util.PhotoDownloader
 import com.malec.cheesetime.util.PhotoSharer
-import ru.terrakok.cicerone.Router
 import java.util.*
 
 abstract class BasePhotoViewModel(
@@ -23,7 +24,9 @@ abstract class BasePhotoViewModel(
     val photos = MutableLiveData<List<Photo>>(listOf())
     val photoManageResult = MutableLiveData<String>(null)
 
-    val fullscreenPhoto = MutableLiveData<Photo>(null)
+    val fullscreenPhotoPosition = MutableLiveData(-1)
+    val isFullscreen = MutableLiveData(false)
+    val isToolbarVisible = MutableLiveData(true)
 
     fun setDownloadedPhoto(photo: Photo) {
         downloadedPhoto.value = photo
@@ -48,10 +51,15 @@ abstract class BasePhotoViewModel(
     }
 
     open fun onPhotoDeleteClick(photo: Photo) {
-        fullscreenPhoto.value = null
         photos.value = photos.value?.toMutableList()?.apply {
             remove(photo)
         }
+    }
+
+    fun exitFullscreenPhotoView() {
+        isFullscreen.value = false
+        isToolbarVisible.value = true
+        router.replaceScreen(Screens.cheeseManageFragment())
     }
 
     fun getImageFromUri(uri: Uri?) {

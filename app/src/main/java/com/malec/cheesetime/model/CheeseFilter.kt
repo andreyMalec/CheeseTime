@@ -13,30 +13,29 @@ data class CheeseFilter(
 
 fun List<Cheese>.filteredBy(filter: CheeseFilter): List<Cheese> {
     var filteredList = toList()
-    if (filter.dateStart != null) {
-        val start = DateFormatter.dateFromString(filter.dateStart)
+    filter.dateStart?.let { dateStart ->
+        val start = DateFormatter.dateFromString(dateStart)
         filteredList = filteredList.filter { it.date >= start }
     }
-    if (filter.dateEnd != null) {
-        val end = DateFormatter.dateFromString(filter.dateEnd)
+    filter.dateEnd?.let { dateEnd ->
+        val end = DateFormatter.dateFromString(dateEnd)
         filteredList = filteredList.filter { it.date <= end }
     }
-    if (filter.type != null)
+    filter.type?.let { type ->
         filteredList = filteredList.filter {
-            it.recipe.toLowerCase(Locale.ROOT).contains(filter.type.toLowerCase(Locale.ROOT))
+            it.recipe.toLowerCase(Locale.ROOT).contains(type.toLowerCase(Locale.ROOT))
         }
-    if (filter.archived != null)
-        filteredList = filteredList.filter { it.isArchived == filter.archived }
+    }
+    filter.archived?.let { archived ->
+        filteredList = filteredList.filter { it.isArchived == archived }
+    }
 
     filteredList = when (filter.sortBy) {
         CheeseSort.DATE_START -> filteredList.sortedBy { it.date }
-        CheeseSort.DATE_END -> filteredList.sortedBy { it.date }
+        CheeseSort.DATE_END -> filteredList.sortedBy { it.date }.reversed()
         CheeseSort.TYPE -> filteredList.sortedBy { it.recipe }
-        else ->
-            filteredList.sortedBy { it.id }
+        else -> filteredList.sortedBy { it.id }.reversed()
     }
-    if (filter.sortBy == null || filter.sortBy == CheeseSort.DATE_END)
-        filteredList = filteredList.reversed()
 
     return filteredList
 }

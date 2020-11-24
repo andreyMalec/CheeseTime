@@ -8,7 +8,6 @@ import com.malec.cheesetime.ui.login.LoginViewModel
 import com.malec.cheesetime.ui.main.MainViewModel
 import com.malec.cheesetime.ui.main.cheese.cheeseList.CheeseListViewModel
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageViewModel
-import com.malec.cheesetime.ui.main.cheese.cheeseManage.fullscreenPhoto.FullscreenPhotoViewModel
 import com.malec.cheesetime.ui.main.report.ReportsViewModel
 import com.malec.cheesetime.ui.main.task.taskList.TaskListViewModel
 import com.malec.cheesetime.ui.main.task.taskManage.TaskManageViewModel
@@ -33,11 +32,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(CheeseManageViewModel::class)
     abstract fun cheeseViewModel(viewModel: CheeseManageViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(FullscreenPhotoViewModel::class)
-    abstract fun photoViewModel(viewModel: FullscreenPhotoViewModel): ViewModel
 
     @Binds
     @IntoMap

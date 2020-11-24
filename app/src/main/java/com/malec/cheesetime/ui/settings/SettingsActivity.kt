@@ -8,11 +8,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.terrakok.cicerone.androidx.AppNavigator
 import com.malec.cheesetime.R
+import com.malec.cheesetime.databinding.ActivitySettingsBinding
 import com.malec.cheesetime.model.Recipe
 import com.malec.cheesetime.ui.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_settings.*
-import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 class SettingsActivity : BaseActivity(), RecipeAdapter.RecipeAction {
     private val viewModel: SettingsViewModel by viewModels {
@@ -21,9 +21,10 @@ class SettingsActivity : BaseActivity(), RecipeAdapter.RecipeAction {
 
     private lateinit var adapter: RecipeAdapter
 
-    override val navigator = SupportAppNavigator(
+    private lateinit var binding: ActivitySettingsBinding
+
+    override val navigator = AppNavigator(
         this,
-        supportFragmentManager,
         R.id.navHostFragment
     )
 
@@ -40,18 +41,19 @@ class SettingsActivity : BaseActivity(), RecipeAdapter.RecipeAction {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         initToolbar()
 
-        recipeAddButton.setOnClickListener {
+        binding.recipeAddButton.setOnClickListener {
             manageRecipe()
         }
 
         adapter = RecipeAdapter(this)
-        recipeRecycler.layoutManager =
+        binding.recipeRecycler.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recipeRecycler.adapter = adapter
+        binding.recipeRecycler.adapter = adapter
 
         viewModel.recipes.observe(this, Observer {
             adapter.submitList(it)
@@ -59,10 +61,10 @@ class SettingsActivity : BaseActivity(), RecipeAdapter.RecipeAction {
     }
 
     private fun initToolbar() {
-        toolbar.setTitle(R.string.menu_settings)
-        setSupportActionBar(toolbar)
+        binding.toolbar.setTitle(R.string.menu_settings)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.setOnApplyWindowInsetsListener { _, insets ->
+        binding.toolbar.setOnApplyWindowInsetsListener { _, insets ->
             val statusBarHeight =
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
                     insets.getInsets(WindowInsets.Type.systemBars()).top
@@ -70,9 +72,9 @@ class SettingsActivity : BaseActivity(), RecipeAdapter.RecipeAction {
                     insets.systemWindowInsetTop
 
             val h = (resources.getDimension(R.dimen.toolbar_height) + statusBarHeight).toInt()
-            val lp = toolbar.layoutParams as ConstraintLayout.LayoutParams
-            toolbar.layoutParams = lp.also { it.height = h }
-            toolbar.updatePadding(top = statusBarHeight)
+            val lp = binding.toolbar.layoutParams as ConstraintLayout.LayoutParams
+            binding.toolbar.layoutParams = lp.also { it.height = h }
+            binding.toolbar.updatePadding(top = statusBarHeight)
             insets
         }
     }

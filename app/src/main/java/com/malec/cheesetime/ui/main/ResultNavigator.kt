@@ -1,65 +1,61 @@
 package com.malec.cheesetime.ui.main
 
-import android.content.Intent
-import android.os.Bundle
-import androidx.core.app.ActivityOptionsCompat
+import android.content.ActivityNotFoundException
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import com.github.terrakok.cicerone.Forward
+import com.github.terrakok.cicerone.androidx.*
+import com.malec.cheesetime.R
 import com.malec.cheesetime.ui.Screens
-import ru.terrakok.cicerone.android.support.SupportAppNavigator
-import ru.terrakok.cicerone.android.support.SupportAppScreen
-import ru.terrakok.cicerone.commands.Command
-import ru.terrakok.cicerone.commands.Forward
+import com.malec.cheesetime.ui.main.cheese.cheeseManage.fragments.FullscreenPhotoFragment
 
 class ResultNavigator(
     activity: FragmentActivity,
-    fragmentManager: FragmentManager,
     containerId: Int
-) : SupportAppNavigator(activity, fragmentManager, containerId) {
-    override fun activityForward(command: Forward) {
-        val screen = command.screen as SupportAppScreen
-        val activityIntent = screen.getActivityIntent(activity)
-
-        // Start activity for result
-        if (activityIntent != null) {
-            val options = createStartActivityOptions(command, activityIntent)
-            checkAndStartActivity(screen, activityIntent, options)
-        } else {
-            fragmentForward(command)
+) : AppNavigator(activity, containerId) {
+    override fun forward(command: Forward) {
+        when (val screen = command.screen as AppScreen) {
+            is ActivityScreen -> {
+                checkAndStartActivity(screen)
+            }
+            is FragmentScreen -> {
+                val type = if (command.clearContainer) TransactionInfo.Type.REPLACE
+                else TransactionInfo.Type.ADD
+                commitNewFragmentScreen(screen, type, true)
+            }
         }
     }
 
-    override fun createStartActivityOptions(command: Command, activityIntent: Intent): Bundle? {
-        return if (command is Forward && command.screen is Screens.FullscreenPhotoScreen) {
-            val photoScreen = command.screen as Screens.FullscreenPhotoScreen
-            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                activity,
-                photoScreen.getOptions()
-            )
-            options.toBundle()
-        } else super.createStartActivityOptions(command, activityIntent)
+    override fun setupFragmentTransaction(
+        fragmentTransaction: FragmentTransaction,
+        currentFragment: Fragment?,
+        nextFragment: Fragment?
+    ) {
+        super.setupFragmentTransaction(fragmentTransaction, currentFragment, nextFragment)
+
+        if (nextFragment is FullscreenPhotoFragment || currentFragment is FullscreenPhotoFragment)
+            fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
     }
 
-    private fun checkAndStartActivity(
-        screen: SupportAppScreen,
-        activityIntent: Intent,
-        options: Bundle?
-    ) {
-        val requestCode = when (screen) {
-            is Screens.GalleryPickScreen -> Screens.GalleryPickScreen.requestCode
-            is Screens.CameraPickScreen -> Screens.CameraPickScreen.requestCode
-            is Screens.GoogleLoginScreen -> Screens.GoogleLoginScreen.requestCode
-            is Screens.FullscreenPhotoScreen -> Screens.FullscreenPhotoScreen.requestCode
+    private fun checkAndStartActivity(screen: ActivityScreen) {
+        val requestCode = when (screen.screenKey) {
+            Screens.GALLERY -> Screens.CODE_GALLERY
+            Screens.CAMERA -> Screens.CODE_CAMERA
+            Screens.GOOGLE_LOGIN -> Screens.CODE_GOOGLE_LOGIN
+            Screens.SCAN -> Screens.CODE_SCAN
             else -> -1
         }
-
-        // Check if we can start activity
-        if (activityIntent.resolveActivity(activity.packageManager) != null) {
+        val activityIntent = screen.createIntent(activity)
+        try {
             if (requestCode >= 0)
-                activity.startActivityForResult(activityIntent, requestCode, options)
+                activity.startActivityForResult(
+                    activityIntent,
+                    requestCode
+                )
             else
-                activity.startActivity(activityIntent, options)
-        } else {
+                activity.startActivity(activityIntent, screen.startActivityOptions)
+        } catch (e: ActivityNotFoundException) {
             unexistingActivity(screen, activityIntent)
         }
     }

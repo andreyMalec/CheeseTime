@@ -15,17 +15,19 @@ class UserRepo(
     private val context: Context
 ) {
     companion object {
-        private var client: GoogleSignInClient? = null
+        private var _client: GoogleSignInClient? = null
+        private val client: GoogleSignInClient
+            get() = _client!!
 
-        fun googleSignInClient(context: Context): GoogleSignInClient? {
-            if (client != null)
+        fun googleSignInClient(context: Context): GoogleSignInClient {
+            if (_client != null)
                 return client
 
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(context.getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
-            client = GoogleSignIn.getClient(context, gso)
+            _client = GoogleSignIn.getClient(context, gso)
             return client
         }
     }
@@ -36,7 +38,7 @@ class UserRepo(
 
     suspend fun logout() {
         api.logout()
-        googleSignInClient(context)?.signOut()?.await()
+        googleSignInClient(context).signOut().await()
     }
 
     suspend fun register(email: String, pass: String) = api.register(email, pass)

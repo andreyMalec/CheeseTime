@@ -5,17 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import androidx.activity.viewModels
-import androidx.databinding.DataBindingUtil
 import com.malec.cheesetime.R
 import com.malec.cheesetime.databinding.ActivityLoginBinding
 import com.malec.cheesetime.ui.base.BaseActivity
 import com.malec.cheesetime.ui.main.ResultNavigator
-import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : BaseActivity() {
     override val navigator = ResultNavigator(
         this,
-        supportFragmentManager,
         R.id.navHostFragment
     )
 
@@ -23,10 +20,12 @@ class LoginActivity : BaseActivity() {
         viewModelFactory
     }
 
+    private lateinit var binding: ActivityLoginBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding: ActivityLoginBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_login)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.getRoot())
         binding.user = viewModel.user.value
 
         initViewModelListeners()
@@ -43,22 +42,22 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun initClickListeners() {
-        passEditText.setOnEditorActionListener { _, id, _ ->
+        binding.passEditText.setOnEditorActionListener { _, id, _ ->
             return@setOnEditorActionListener if (id == EditorInfo.IME_ACTION_DONE) {
-                loginButton.performClick()
+                binding.loginButton.performClick()
                 true
             } else false
         }
 
-        loginButton.setOnClickListener {
+        binding.loginButton.setOnClickListener {
             viewModel.login()
         }
 
-        registerButton.setOnClickListener {
+        binding.registerButton.setOnClickListener {
             viewModel.register()
         }
 
-        googleLoginButton.setOnClickListener {
+        binding.googleLoginButton.setOnClickListener {
             viewModel.googleLogin()
         }
     }
