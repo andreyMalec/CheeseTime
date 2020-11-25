@@ -164,7 +164,7 @@ class CheeseManageViewModel @Inject constructor(
             )
 
             repo.updatePhotos(mCheese?.photos, mPhotos)
-            manageResult.value = if (cheese.id == 0L) {
+            manageResult.value = if (mCheese?.id == 0L) {
                 repo.create(cheese)
                 res.stringCheeseCreated()
             } else {
