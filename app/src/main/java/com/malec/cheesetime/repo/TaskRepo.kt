@@ -6,6 +6,7 @@ import com.malec.cheesetime.service.network.CheeseApi
 import com.malec.cheesetime.service.network.TaskApi
 import com.malec.cheesetime.service.notifications.TaskScheduler
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 
 class TaskRepo(
     private val api: TaskApi,
@@ -23,7 +24,7 @@ class TaskRepo(
     }
 
     suspend fun getCheeseList() =
-        cheeseApi.getAllFiltered(CheeseFilter())
+        cheeseApi.getAllFiltered(CheeseFilter()).first()
 
     suspend fun getNextId() = try {
         api.getNextId()

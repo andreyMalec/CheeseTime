@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.malec.cheesetime.databinding.FragmentTaskListBinding
 import com.malec.cheesetime.di.Injectable
 import com.malec.cheesetime.ui.allertDialogBuilder.TaskDeleteDialog
+import com.malec.cheesetime.ui.main.DeleteSwipeCallback
 import javax.inject.Inject
 
 class TaskListFragment : Fragment(), Injectable {
@@ -56,7 +57,7 @@ class TaskListFragment : Fragment(), Injectable {
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         val helper = ItemTouchHelper(
-            TaskSwipeCallback(
+            DeleteSwipeCallback(
                 ::onTaskSwipe,
                 requireContext()
             )
@@ -77,7 +78,7 @@ class TaskListFragment : Fragment(), Injectable {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentTaskListBinding.inflate(inflater, container, false)
         return binding.root
     }

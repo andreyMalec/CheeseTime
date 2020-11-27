@@ -10,7 +10,6 @@ import androidx.core.view.children
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.transition.TransitionInflater
 import com.malec.cheesetime.Permissions
 import com.malec.cheesetime.R
 import com.malec.cheesetime.databinding.FragmentCheeseManageBinding
@@ -29,7 +28,8 @@ class CheeseManageFragment : PhotoManager(), PhotoAction, Injectable {
         viewModelFactory
     }
 
-    private lateinit var binding: FragmentCheeseManageBinding
+    private var _binding: FragmentCheeseManageBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var adapter: PhotoAdapter
     private lateinit var recipeAdapter: ArrayAdapter<String>
@@ -42,19 +42,6 @@ class CheeseManageFragment : PhotoManager(), PhotoAction, Injectable {
     private lateinit var stagesAdapter: StringAdapter
 
     private val recipes = mutableListOf<String>()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        parent: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentCheeseManageBinding.inflate(inflater, parent, false)
-//        binding.cheese = viewModel.fullscreenPhoto.value
-        binding.cheese = viewModel.cheese.value
-        sharedElementEnterTransition =
-            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
-        return binding.root
-    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_manage, menu)
@@ -242,5 +229,20 @@ class CheeseManageFragment : PhotoManager(), PhotoAction, Injectable {
         binding.photoAddButton.setOnClickListener {
             showImageDialog()
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        parent: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentCheeseManageBinding.inflate(inflater, parent, false)
+        binding.cheese = viewModel.cheese.value
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

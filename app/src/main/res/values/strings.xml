@@ -67,6 +67,8 @@
     <string name="cheese_milk">Milk</string>
     <string name="cheese_composition">Composition</string>
     <string name="cheese_stages">Stages</string>
+    <string name="cheese_volume">Current volume:</string>
+    <string name="cheese_volume_max">Full volume:</string>
     <string name="cheese_color">Badge color</string>
     <string name="cheese_photo">Gallery</string>
 
@@ -79,6 +81,16 @@
     <string name="task_cheese">Choose cheese:</string>
     <string name="task_todo">What to do:</string>
     <string name="task_date">Date/time:</string>
+    <string-array name="task_date_preset">
+        <item>10 min</item>
+        <item>15 min</item>
+        <item>30 min</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>5 hours</item>
+        <item>24 hours</item>
+        <item>0 min</item>
+    </string-array>
     <string name="task_comment">Comment:</string>
 
     <string name="milk_type">Type:</string>

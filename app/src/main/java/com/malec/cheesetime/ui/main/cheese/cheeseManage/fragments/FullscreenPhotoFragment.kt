@@ -17,20 +17,12 @@ class FullscreenPhotoFragment : PhotoManager(), Injectable {
         viewModelFactory
     }
 
-    private lateinit var binding: FragmentFullscreenPhotoBinding
+    private var _binding: FragmentFullscreenPhotoBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var adapter: FullscreenPhotoAdapter
 
     private val photos = mutableListOf<Photo>()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        parent: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentFullscreenPhotoBinding.inflate(inflater, parent, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -97,5 +89,19 @@ class FullscreenPhotoFragment : PhotoManager(), Injectable {
         binding.deleteButton.setOnClickListener {
             deletePhotoDialog(requireContext(), photos[binding.photoViewPager.currentItem])
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        parent: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentFullscreenPhotoBinding.inflate(inflater, parent, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

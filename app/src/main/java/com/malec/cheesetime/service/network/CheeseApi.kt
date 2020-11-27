@@ -5,6 +5,8 @@ import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.CheeseF
 import com.malec.cheesetime.model.CheeseFilter
 import com.malec.cheesetime.model.filteredBy
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.tasks.await
 
 class CheeseApi(private val ref: ReferenceAllocator) {
@@ -22,8 +24,8 @@ class CheeseApi(private val ref: ReferenceAllocator) {
         return cheeses.filterNotNull()
     }
 
-    suspend fun getAllFiltered(filter: CheeseFilter): List<Cheese> {
-        return getAll().filteredBy(filter)
+    suspend fun getAllFiltered(filter: CheeseFilter): Flow<List<Cheese>> {
+        return flowOf(getAll().filteredBy(filter))
     }
 
     suspend fun getById(id: Long): Cheese? {

@@ -1,17 +1,21 @@
 package com.malec.cheesetime.ui.main.cheese.cheeseList
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RelativeLayout
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -20,6 +24,7 @@ import com.malec.cheesetime.databinding.FragmentCheeseListBinding
 import com.malec.cheesetime.di.Injectable
 import com.malec.cheesetime.model.CheeseSort
 import com.malec.cheesetime.ui.allertDialogBuilder.CheeseDeleteDialog
+import com.malec.cheesetime.ui.main.DeleteSwipeCallback
 import com.malec.cheesetime.util.DateTimePicker
 import javax.inject.Inject
 
@@ -51,13 +56,40 @@ class CheeseListFragment : Fragment(), Injectable {
     private var _binding: FragmentCheeseListBinding? = null
     private val binding get() = _binding!!
 
+    private var searchView: SearchView? = null
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if (isMainMenu)
             inflater.inflate(R.menu.menu_main, menu)
         else
             inflater.inflate(R.menu.menu_main_selected, menu)
 
+        if (searchView == null) {
+            searchView = menu.findItem(R.id.appBarSearch).actionView as SearchView
+            initSearchView()
+        }
+
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    private fun initSearchView() {
+        searchView?.findViewById<View>(androidx.appcompat.R.id.search_plate)
+            ?.setBackgroundResource(android.R.color.transparent)
+        searchView?.queryHint = getString(R.string.search_hint)
+
+        initSearchViewListener()
+    }
+
+    private fun initSearchViewListener() {
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?) = false
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.searchQuery.value = newText
+
+                return false
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -170,7 +202,7 @@ class CheeseListFragment : Fragment(), Injectable {
             override fun onDrawerOpened(drawerView: View) {}
 
             override fun onDrawerClosed(drawerView: View) {
-                viewModel.applyFilters()
+                viewModel.searchQuery.value = viewModel.searchQuery.value
             }
         })
 
@@ -263,9 +295,27 @@ class CheeseListFragment : Fragment(), Injectable {
             }
         })
 
+        val helper = ItemTouchHelper(
+            DeleteSwipeCallback(
+                ::onTaskSwipe,
+                requireContext()
+            )
+        )
+        helper.attachToRecyclerView(binding.cheeseRecycler)
+
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.update()
         }
+    }
+
+    private fun onTaskSwipe(position: Int) {
+        CheeseDeleteDialog(requireContext()).setOnOkButtonClickListener {
+            viewModel.onSwipe(adapter.currentList[position])
+        }.setOnCancelButtonClickListener {
+            Handler(Looper.getMainLooper()).postDelayed({
+                adapter.notifyItemChanged(position)
+            }, 400)
+        }.show()
     }
 
     override fun onResume() {
@@ -276,7 +326,7 @@ class CheeseListFragment : Fragment(), Injectable {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentCheeseListBinding.inflate(inflater, container, false)
         return binding.root
     }

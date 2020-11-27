@@ -6,8 +6,12 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.widget.doAfterTextChanged
+import androidx.recyclerview.widget.RecyclerView
+import com.bekawestberg.loopinglayout.library.LoopingLayoutManager
+import com.bekawestberg.loopinglayout.library.LoopingSnapHelper
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import com.malec.cheesetime.R
 import com.malec.cheesetime.databinding.ActivityTaskManageBinding
@@ -69,6 +73,7 @@ class TaskManageActivity : BaseActivity() {
         binding.task = viewModel.task.value
 
         initViewModelListeners()
+        initTimeOffsetScroller()
         initInputListeners()
         initToolbar()
 
@@ -119,6 +124,26 @@ class TaskManageActivity : BaseActivity() {
                 onBackPressed()
             }
         })
+    }
+
+    private fun initTimeOffsetScroller() {
+        val snapHelper = LoopingSnapHelper()
+        val lm = LoopingLayoutManager(this, LoopingLayoutManager.VERTICAL, false)
+        val list = resources.getStringArray(R.array.task_date_preset).toList()
+        binding.dateTimeRecycler.apply {
+            setHasFixedSize(true)
+            adapter = DateTimeAdapter(list)
+            layoutManager = lm
+            snapHelper.attachToRecyclerView(this)
+            smoothScrollToPosition(viewModel.offsetPosition.value ?: 2)
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val v = snapHelper.findSnapView(lm) as TextView
+                    viewModel.updateTimeOffsetByPosition(list.indexOf(v.text.toString()))
+                }
+            })
+        }
     }
 
     private fun initInputListeners() {

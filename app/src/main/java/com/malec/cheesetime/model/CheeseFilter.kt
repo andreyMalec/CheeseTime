@@ -7,7 +7,7 @@ data class CheeseFilter(
     val dateStart: String? = null,
     val dateEnd: String? = null,
     val type: String? = null,
-    val archived: Boolean? = null,
+    val archived: Boolean? = false,
     val sortBy: CheeseSort? = null
 )
 

@@ -201,6 +201,47 @@
                     app:ab_size="small" />
             </com.malec.cheesetime.ui.customView.DropDownLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/volumeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:hint="@string/cheese_volume"
+                    app:boxBackgroundColor="@color/backgroundLight">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/volumeEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:text="@={cheese.volume}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/volumeMaxLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:hint="@string/cheese_volume_max"
+                    app:boxBackgroundColor="@color/backgroundLight">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/volumeMaxEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:text="@={cheese.volumeMax}" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/colorText"
                 android:layout_width="match_parent"
@@ -364,7 +405,7 @@
                 app:ab_image="@drawable/icon_add"
                 app:ab_size="small" />
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/barcodeImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

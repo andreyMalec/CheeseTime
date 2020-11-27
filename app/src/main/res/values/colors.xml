@@ -8,6 +8,8 @@
     <color name="colorWhite">#FFF</color>
     <color name="colorTextDisabled">#999</color>
     <color name="colorShadow">#33000000</color>
+    <color name="colorShadowLight">#10000000</color>
+    <color name="colorShadowBackgroundLight">#B0FFF9C0</color>
 
 
     <color name="badge1">#eda63b</color>

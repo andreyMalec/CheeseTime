@@ -145,12 +145,17 @@ class CheeseManageViewModel @Inject constructor(
         val mColor = badgeColor.value
         val mPhotos = photos.value
 
+        val volume = if (mCheese?.volume.isNullOrBlank() && !mCheese?.volumeMax.isNullOrBlank())
+            mCheese?.volumeMax
+        else
+            mCheese?.volume
+
         safeRun {
             val cheese = Cheese(
                 mCheese?.id.takeIf { it != 0L } ?: repo.getNextId(),
                 mCheese?.name,
-                mCheese?.date,
                 mCheese?.dateStart,
+                mCheese?.date,
                 mCheese?.recipe,
                 mCheese?.comment,
                 mCheese?.milkType,
@@ -158,6 +163,8 @@ class CheeseManageViewModel @Inject constructor(
                 mCheese?.milkAge,
                 mCheese?.composition,
                 mStages?.map { it.data },
+                volume,
+                mCheese?.volumeMax,
                 mColor,
                 mCheese?.isArchived,
                 mPhotos?.map { it.name }

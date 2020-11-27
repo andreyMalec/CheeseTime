@@ -65,6 +65,8 @@
     <string name="cheese_milk">Молоко</string>
     <string name="cheese_composition">Состав</string>
     <string name="cheese_stages">Этапы</string>
+    <string name="cheese_volume">Текущий объем:</string>
+    <string name="cheese_volume_max">Полный объем:</string>
     <string name="cheese_color">Цвет значка</string>
     <string name="cheese_photo">Галерея</string>
 
@@ -77,6 +79,16 @@
     <string name="task_cheese">Выберите сыр:</string>
     <string name="task_todo">Что сделать:</string>
     <string name="task_date">Дата/время:</string>
+    <string-array name="task_date_preset">
+        <item>10 мин</item>
+        <item>15 мин</item>
+        <item>30 мин</item>
+        <item>1 час</item>
+        <item>3 часа</item>
+        <item>5 часов</item>
+        <item>24 часа</item>
+        <item>0 мин</item>
+    </string-array>
     <string name="task_comment">Комментарий:</string>
 
     <string name="milk_type">Тип:</string>

@@ -24,6 +24,8 @@ class TaskManageViewModel @Inject constructor(
     val date = MutableLiveData("")
     val time = MutableLiveData("")
 
+    val offsetPosition = MutableLiveData(0)
+
     val cheeseList = MutableLiveData<MutableList<String>>()
     val cheesePosition = MutableLiveData(-1)
 
@@ -60,8 +62,7 @@ class TaskManageViewModel @Inject constructor(
             task.value = if (newTask != null) {
                 isDeleteActive.value = true
                 date.value = DateFormatter.simpleFormat(newTask.date)
-                time.value =
-                    DateFormatter.simpleFormatTime(newTask.date % DateFormatter.millisecondsInDay)
+                time.value = DateFormatter.simpleFormatTime(newTask.date)
                 newTask
             } else
                 Task.empty()
@@ -113,6 +114,28 @@ class TaskManageViewModel @Inject constructor(
                 repo.update(task)
                 res.stringTaskUpdated()
             }
+        }
+    }
+
+    fun updateTimeOffsetByPosition(position: Int) {
+        offsetPosition.value = position
+        val offset = offsetByPosition(position)
+        val mTask = task.value
+        val time = mTask?.date ?: System.currentTimeMillis()
+        date.value = DateFormatter.simpleFormat(time + offset)
+        this.time.value = DateFormatter.simpleFormatTime(time + offset)
+    }
+
+    private fun offsetByPosition(position: Int): Long {
+        return when (position) {
+            0 -> DateFormatter.millisecondsInMinute * 10
+            1 -> DateFormatter.millisecondsInMinute * 15
+            2 -> DateFormatter.millisecondsIn30Min
+            3 -> DateFormatter.millisecondsInHour
+            4 -> DateFormatter.millisecondsInHour * 3
+            5 -> DateFormatter.millisecondsInHour * 5
+            6 -> DateFormatter.millisecondsInDay
+            else -> 0
         }
     }
 

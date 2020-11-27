@@ -1,5 +1,6 @@
 package com.malec.cheesetime.ui.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -30,6 +31,9 @@ class MainViewModel @Inject constructor(
         get() = _userLogin
 
     private lateinit var currentScreen: Screen
+    private val _currentTab = MutableLiveData(0)
+    val currentTab: LiveData<Int>
+        get() = _currentTab
 
     init {
         onTaskListClick()
@@ -39,14 +43,17 @@ class MainViewModel @Inject constructor(
 
     fun onTaskListClick() {
         replaceScreen(Screens.taskList())
+        _currentTab.value = 0
     }
 
     fun onCheeseListClick() {
         replaceScreen(Screens.cheeseList())
+        _currentTab.value = 1
     }
 
     fun onReportsClick() {
         replaceScreen(Screens.reports())
+        _currentTab.value = 2
     }
 
     fun onScanClick() {
@@ -102,5 +109,7 @@ class MainViewModel @Inject constructor(
         block()
     }
 
-    override fun setError(t: Throwable?) {}
+    override fun setError(t: Throwable?) {
+        Log.e("MainViewModel", "setError", t);
+    }
 }

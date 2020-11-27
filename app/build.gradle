@@ -15,8 +15,8 @@ android {
         applicationId "com.malec.cheesetime"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 59
-        versionName "0.7.22"
+        versionCode 60
+        versionName "0.8.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -42,6 +42,8 @@ dependencies {
     kapt 'androidx.databinding:databinding-compiler-common:4.1.1'
 
     implementation "com.github.terrakok:cicerone:6.5"
+
+    implementation 'com.github.beksomega:loopinglayout:0.3.2'
 
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'com.google.zxing:core:3.4.1'

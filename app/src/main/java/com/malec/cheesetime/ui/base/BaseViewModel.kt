@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel : ViewModel() {
-    protected abstract fun setError(t: Throwable?)
+    abstract fun setError(t: Throwable?)
 
     protected inline fun safeRun(crossinline block: suspend () -> Unit) {
         viewModelScope.launch {

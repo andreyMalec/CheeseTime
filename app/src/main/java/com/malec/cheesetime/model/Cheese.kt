@@ -12,6 +12,8 @@ data class Cheese(
     var milkAge: String,
     var composition: String,
     var stages: List<String>,
+    var volume: String,
+    var volumeMax: String,
     var badgeColor: Int,
     var isSelected: Boolean,
     var isArchived: Boolean,
@@ -33,6 +35,8 @@ data class Cheese(
         milkAge: String? = null,
         composition: String? = null,
         stages: List<String>? = null,
+        volume: String? = null,
+        volumeMax: String? = null,
         badgeColor: Int? = null,
         isArchived: Boolean? = null,
         photos: List<String>? = null
@@ -48,6 +52,8 @@ data class Cheese(
         milkAge ?: "",
         composition ?: "",
         stages ?: listOf(),
+        volume ?: "",
+        volumeMax ?: "",
         badgeColor ?: 0,
         false,
         isArchived ?: false,
@@ -64,6 +70,8 @@ data class Cheese(
         "milk" to "$milkType$separator$milkVolume$separator$milkAge",
         "composition" to composition,
         "stages" to stages.joinToString(separator),
+        "volume" to volume,
+        "volumeMax" to volumeMax,
         "badgeColor" to badgeColor,
         "archived" to isArchived,
         "photo" to photos.joinToString(separator)
@@ -88,6 +96,8 @@ class CheeseF : DTO() {
     val milk: String = ""
     val composition: String = ""
     val stages: String = ""
+    val volume: String = ""
+    val volumeMax: String = ""
     val badgeColor: Int = 0
     val archived: Boolean = false
     val photo: String = ""
@@ -110,6 +120,8 @@ class CheeseF : DTO() {
             milkParams[2],
             composition,
             stages.split(separator),
+            volume,
+            volumeMax,
             badgeColor,
             false,
             archived,

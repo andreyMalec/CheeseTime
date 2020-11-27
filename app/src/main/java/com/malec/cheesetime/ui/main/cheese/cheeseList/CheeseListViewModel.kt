@@ -1,8 +1,10 @@
 package com.malec.cheesetime.ui.main.cheese.cheeseList
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.asLiveData
 import com.github.terrakok.cicerone.Router
 import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.CheeseFilter
@@ -12,7 +14,7 @@ import com.malec.cheesetime.repo.UserRepo
 import com.malec.cheesetime.service.Resources
 import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.ui.base.BaseViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flatMapLatest
 import javax.inject.Inject
 
 class CheeseListViewModel @Inject constructor(
@@ -21,8 +23,10 @@ class CheeseListViewModel @Inject constructor(
     private val router: Router,
     private val res: Resources
 ) : BaseViewModel(), CheeseAdapter.CheeseAction {
-    val cheeseList = MutableLiveData<List<Cheese>>(null)
+    val cheeseList: LiveData<List<Cheese>>
     val selectedCount = MutableLiveData(0)
+
+    val searchQuery = MutableLiveData<String>(null)
 
     val dateFilterStart = MutableLiveData<String>(null)
     val dateFilterEnd = MutableLiveData<String>(null)
@@ -35,7 +39,21 @@ class CheeseListViewModel @Inject constructor(
     init {
         update()
 
-        viewModelScope.launch {
+        cheeseList = searchQuery.asFlow().flatMapLatest { query ->
+            val filter = CheeseFilter(
+                dateFilterStart.value,
+                dateFilterEnd.value,
+                cheeseTypeFilter.value,
+                archivedFilter.value,
+                sortBy.value
+            )
+            if (query.isNullOrBlank())
+                repo.getAllFiltered(filter)
+            else
+                repo.getAllTitleContains(filter, query)
+        }.asLiveData()
+
+        safeRun {
             cheeseTypes.value = (
                     userRepo.getRecipes().map { it.name }.takeIf { it.isNotEmpty() }
                         ?: res.recipes()
@@ -44,47 +62,40 @@ class CheeseListViewModel @Inject constructor(
     }
 
     fun update() {
-        applyFilters()
+        searchQuery.value = null
         selectedCount.value = repo.getSelectedIds().size
     }
 
-    fun applyFilters() {
-        safeRun {
-            cheeseList.value = repo.getAllFiltered(
-                CheeseFilter(
-                    dateFilterStart.value,
-                    dateFilterEnd.value,
-                    cheeseTypeFilter.value,
-                    archivedFilter.value,
-                    sortBy.value
-                )
-            )
-        }
-    }
-
     fun archiveSelected() {
-        viewModelScope.launch {
+        safeRun {
             repo.archiveSelected()
             update()
         }
     }
 
     fun printSelected() {
-        viewModelScope.launch {
+        safeRun {
             repo.share(repo.getAllSelected())
         }
     }
 
     fun deleteSelected() {
-        viewModelScope.launch {
+        safeRun {
             repo.deleteSelected()
             update()
         }
     }
 
     fun unselect() {
-        viewModelScope.launch {
+        safeRun {
             repo.unselect()
+            update()
+        }
+    }
+
+    fun onSwipe(cheese: Cheese) {
+        safeRun {
+            repo.deleteById(cheese.id)
             update()
         }
     }
@@ -102,6 +113,6 @@ class CheeseListViewModel @Inject constructor(
     }
 
     override fun setError(t: Throwable?) {
-        Log.e("test", "testMessage: " + t)
+        Log.e("CheeseListViewModel", "setError: " + t)
     }
 }

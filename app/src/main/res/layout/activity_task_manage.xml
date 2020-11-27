@@ -101,34 +101,68 @@
                         android:text="@string/task_date"
                         android:textSize="18sp" />
 
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp">
 
-                        <Button
-                            android:id="@+id/dateButton"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:id="@+id/dateTimeButtonLayout"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/colorPrimaryDark"
-                            android:drawableLeft="@drawable/icon_date_range"
-                            android:text="@string/date_pick"
-                            android:textColor="@color/colorPrimary"
-                            app:errorIconTint="@color/colorError" />
+                            android:gravity="center"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/dateTimeRecycler"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <Button
-                            android:id="@+id/timeButton"
+                            <androidx.appcompat.widget.AppCompatImageButton
+                                android:id="@+id/dateButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/colorPrimaryDark"
+                                android:padding="16dp"
+                                android:src="@drawable/icon_date_range"
+                                app:errorIconTint="@color/colorError" />
+
+                            <androidx.appcompat.widget.AppCompatImageButton
+                                android:id="@+id/timeButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:backgroundTint="@color/colorPrimaryDark"
+                                android:padding="16dp"
+                                android:src="@drawable/icon_time"
+                                app:errorIconTint="@color/colorError" />
+                        </LinearLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/dateTimeRecycler"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="100dp"
                             android:layout_marginStart="32dp"
-                            android:backgroundTint="@color/colorPrimaryDark"
-                            android:drawableLeft="@drawable/icon_time"
-                            android:text="@string/date_pick"
-                            android:textColor="@color/colorPrimary"
-                            app:errorIconTint="@color/colorError" />
-                    </LinearLayout>
+                            android:minWidth="100dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="33dp"
+                            android:background="@color/colorShadowBackgroundLight"
+                            app:layout_constraintEnd_toEndOf="@+id/dateTimeRecycler"
+                            app:layout_constraintStart_toStartOf="@+id/dateTimeRecycler"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="33dp"
+                            android:background="@color/colorShadowBackgroundLight"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/dateTimeRecycler"
+                            app:layout_constraintStart_toStartOf="@+id/dateTimeRecycler" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"

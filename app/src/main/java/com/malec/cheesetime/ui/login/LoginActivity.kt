@@ -49,15 +49,15 @@ class LoginActivity : BaseActivity() {
             } else false
         }
 
-        binding.loginButton.setOnClickListener {
+        binding.loginButton?.setOnClickListener {
             viewModel.login()
         }
 
-        binding.registerButton.setOnClickListener {
+        binding.registerButton?.setOnClickListener {
             viewModel.register()
         }
 
-        binding.googleLoginButton.setOnClickListener {
+        binding.googleLoginButton?.setOnClickListener {
             viewModel.googleLogin()
         }
     }

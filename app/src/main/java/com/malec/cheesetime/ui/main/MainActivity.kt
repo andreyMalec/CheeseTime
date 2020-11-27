@@ -75,6 +75,10 @@ class MainActivity : BaseActivity(), HasAndroidInjector {
             binding.mainNavView.getHeaderView(0).findViewById<TextView>(R.id.userLoginText).text =
                 it
         })
+
+        viewModel.currentTab.observe(this, {
+            binding.tabLayout.getTabAt(it)?.select()
+        })
     }
 
     private fun initTabHost() {

@@ -7,6 +7,9 @@ import com.malec.cheesetime.model.PhotoF
 import com.malec.cheesetime.service.network.CheeseApi
 import com.malec.cheesetime.service.network.StorageApi
 import com.malec.cheesetime.util.CheeseSharer
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import java.util.*
 
 class CheeseRepo(
     private val api: CheeseApi,
@@ -29,10 +32,18 @@ class CheeseRepo(
     }
 
     suspend fun getAllFiltered(filter: CheeseFilter) =
-        api.getAllFiltered(filter).also {
-            it.forEach { cheese ->
+        api.getAllFiltered(filter).onEach { list ->
+            list.onEach { cheese ->
                 if (selected.contains(cheese.id))
                     cheese.toggleSelect()
+            }
+        }
+
+    suspend fun getAllTitleContains(filter: CheeseFilter, searchQuery: String) =
+        getAllFiltered(filter).map { list ->
+            list.filter {
+                it.name.toLowerCase(Locale.getDefault())
+                    .contains(searchQuery.toLowerCase(Locale.getDefault()))
             }
         }
 
@@ -40,7 +51,11 @@ class CheeseRepo(
 
     suspend fun create(cheese: Cheese) = api.create(cheese)
 
-    suspend fun update(cheese: Cheese) = api.update(cheese)
+    suspend fun update(cheese: Cheese) {
+        if (cheese.volume == "0")
+            cheese.isArchived = true
+        api.update(cheese)
+    }
 
     suspend fun deleteById(id: Long) = api.deleteById(id)
 

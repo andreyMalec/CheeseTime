@@ -41,4 +41,12 @@
         <attr name="ab_checkable" format="boolean" />
         <attr name="ab_elevation" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="CircularDiagram">
+        <attr name="fillColor" format="color" />
+        <attr name="strokeColor" format="color" />
+        <attr name="backgroundColor" format="color" />
+        <attr name="value" format="float" />
+        <attr name="maxValue" format="float" />
+    </declare-styleable>
 </resources>
