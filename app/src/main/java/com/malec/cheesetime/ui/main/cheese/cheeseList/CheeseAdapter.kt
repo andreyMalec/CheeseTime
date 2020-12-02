@@ -19,19 +19,7 @@ class CheeseAdapter(private val vm: CheeseAction) :
             }
 
             override fun areContentsTheSame(oldItem: Cheese, newItem: Cheese): Boolean {
-                return oldItem.id == newItem.id &&
-                        oldItem.name == newItem.name &&
-                        oldItem.date == newItem.date &&
-                        oldItem.recipe == newItem.recipe &&
-                        oldItem.comment == newItem.comment &&
-                        oldItem.milkType == newItem.milkType &&
-                        oldItem.milkVolume == newItem.milkVolume &&
-                        oldItem.milkAge == newItem.milkAge &&
-                        oldItem.composition == newItem.composition &&
-                        oldItem.stages == newItem.stages &&
-                        oldItem.badgeColor == newItem.badgeColor &&
-                        oldItem.isSelected == newItem.isSelected &&
-                        oldItem.photos == newItem.photos
+                return oldItem == newItem
             }
         }
     }

@@ -19,9 +19,7 @@ class RecipeAdapter(private val vm: RecipeAction) :
             }
 
             override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
-                return oldItem.id == newItem.id &&
-                        oldItem.name == newItem.name &&
-                        oldItem.stages == newItem.stages
+                return oldItem == newItem
             }
         }
     }

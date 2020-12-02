@@ -19,12 +19,7 @@ class TaskAdapter(private val vm: TaskAction) :
             }
 
             override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean {
-                return oldItem.id == newItem.id &&
-                        oldItem.cheeseId == newItem.cheeseId &&
-                        oldItem.cheeseName == newItem.cheeseName &&
-                        oldItem.todo == newItem.todo &&
-                        oldItem.date == newItem.date &&
-                        oldItem.comment == newItem.comment
+                return oldItem == newItem
             }
         }
     }

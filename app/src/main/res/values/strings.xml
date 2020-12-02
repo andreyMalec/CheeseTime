@@ -89,7 +89,6 @@
         <item>3 hours</item>
         <item>5 hours</item>
         <item>24 hours</item>
-        <item>0 min</item>
     </string-array>
     <string name="task_comment">Comment:</string>
 
