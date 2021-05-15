@@ -39,5 +39,8 @@ class TaskRepo(
 
     suspend fun update(task: Task) = api.update(task)
 
-    suspend fun deleteById(id: Long) = api.deleteById(id)
+    suspend fun deleteById(id: Long) {
+        scheduler.cancel(id)
+        api.deleteById(id)
+    }
 }

@@ -3,15 +3,13 @@ package com.malec.cheesetime.ui.main.cheese.cheeseList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.malec.cheesetime.databinding.ItemCheeseBinding
 import com.malec.cheesetime.model.Cheese
+import com.malec.cheesetime.ui.BindingListAdapter
 
 class CheeseAdapter(private val vm: CheeseAction) :
-    ListAdapter<Cheese, CheeseAdapter.CheeseItemViewHolder>(diffUtilCallback) {
+    BindingListAdapter<Cheese, ItemCheeseBinding>(diffUtilCallback) {
     companion object {
         private val diffUtilCallback = object : DiffUtil.ItemCallback<Cheese>() {
             override fun areItemsTheSame(oldItem: Cheese, newItem: Cheese): Boolean {
@@ -24,37 +22,31 @@ class CheeseAdapter(private val vm: CheeseAction) :
         }
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): CheeseAdapter.CheeseItemViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding: ItemCheeseBinding = ItemCheeseBinding.inflate(inflater, parent, false)
-        return CheeseItemViewHolder(binding.root)
-    }
+    override fun inflateBinding(inflater: LayoutInflater, parent: ViewGroup) =
+        ItemCheeseBinding.inflate(inflater, parent, false)
 
-    override fun onBindViewHolder(holder: CheeseAdapter.CheeseItemViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: BindingListAdapter<Cheese, ItemCheeseBinding>.ItemViewHolder,
+        position: Int
+    ) {
         val cheese = getItem(position)
 
-        holder.binding?.cheese = cheese
-        holder.binding?.selectMarker?.visibility = getMarkerVisibility(cheese)
+        holder.binding.cheese = cheese
+        holder.binding.selectMarker.visibility = getMarkerVisibility(cheese)
     }
 
-    inner class CheeseItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val binding: ItemCheeseBinding? = DataBindingUtil.bind(view)
+    override fun onCreateViewHolder(binding: ItemCheeseBinding) {
+        binding.root.setOnClickListener {
+            binding.cheese?.let {
+                vm.onClick(it)
+            }
+        }
 
-        init {
-            binding?.root?.setOnClickListener {
-                binding.cheese?.let {
-                    vm.onClick(it)
-                }
+        binding.root.setOnLongClickListener {
+            binding.cheese?.let {
+                vm.onLongClick(it)
             }
-            binding?.root?.setOnLongClickListener {
-                binding.cheese?.let {
-                    vm.onLongClick(it)
-                }
-                true
-            }
+            true
         }
     }
 

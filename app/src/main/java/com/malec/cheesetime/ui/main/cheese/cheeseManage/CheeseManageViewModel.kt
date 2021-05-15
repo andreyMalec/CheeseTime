@@ -28,14 +28,14 @@ class CheeseManageViewModel @Inject constructor(
 ) : BasePhotoViewModel(router, res, bitmapDecoder, photoDownloader, photoSharer), ManageViewModel,
     StringAdapter.RemovableEditTextAction {
 
-    override val manageError = MutableLiveData<String>(null)
-    override val manageResult = MutableLiveData<String>(null)
+    override val manageError = MutableLiveData<String?>(null)
+    override val manageResult = MutableLiveData<String?>(null)
     override val isSaveActive = MutableLiveData(false)
     override val isDeleteActive = MutableLiveData(false)
     val isProgressVisible = MutableLiveData(false)
 
-    val cheese = MutableLiveData<Cheese>(null)
-    val stages = MutableLiveData<MutableList<StringValue>>(mutableListOf())
+    val cheese = MutableLiveData<Cheese?>(null)
+    val stages = MutableLiveData<List<StringValue>>()
     val badgeColor = MutableLiveData<Int>()
 
     val recipes = MutableLiveData<List<String>>()
@@ -126,15 +126,12 @@ class CheeseManageViewModel @Inject constructor(
         router.navigateTo(Screens.cameraPick())
     }
 
-    override fun onRemoveClick(value: StringValue?) {
-        val rm = stages.value?.find { it.data == value?.data }
-        stages.value?.remove(rm)
-        stages.value = stages.value
+    override fun onRemoveClick(value: StringValue) {
+        stages.value = stages.value?.minus(value)
     }
 
     fun addNewStage() {
-        stages.value?.add(StringValue(""))
-        stages.value = stages.value
+        stages.value = stages.value?.plus(StringValue(""))
     }
 
     fun checkAndManageCheese() {

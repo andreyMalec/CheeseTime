@@ -15,7 +15,7 @@ class TaskListViewModel @Inject constructor(
     private val repo: TaskRepo,
     private val router: Router
 ) : BaseViewModel(), TaskAdapter.TaskAction {
-    val taskList = MutableLiveData<List<Task>>(null)
+    val taskList = MutableLiveData<List<Task>?>(null)
 
     private var isAutoRepeat = false
 

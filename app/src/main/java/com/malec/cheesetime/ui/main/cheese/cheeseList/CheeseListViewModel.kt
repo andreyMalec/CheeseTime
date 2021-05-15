@@ -26,13 +26,13 @@ class CheeseListViewModel @Inject constructor(
     val cheeseList: LiveData<List<Cheese>>
     val selectedCount = MutableLiveData(0)
 
-    val searchQuery = MutableLiveData<String>(null)
+    val searchQuery = MutableLiveData<String?>(null)
 
-    val dateFilterStart = MutableLiveData<String>(null)
-    val dateFilterEnd = MutableLiveData<String>(null)
-    val cheeseTypeFilter = MutableLiveData<String>(null)
+    val dateFilterStart = MutableLiveData<String?>(null)
+    val dateFilterEnd = MutableLiveData<String?>(null)
+    val cheeseTypeFilter = MutableLiveData<String?>(null)
     val archivedFilter = MutableLiveData(false)
-    val sortBy = MutableLiveData<CheeseSort>(null)
+    val sortBy = MutableLiveData<CheeseSort?>(null)
 
     val cheeseTypes = MutableLiveData<List<String>>()
 
@@ -113,6 +113,6 @@ class CheeseListViewModel @Inject constructor(
     }
 
     override fun setError(t: Throwable?) {
-        Log.e("CheeseListViewModel", "setError: " + t)
+        Log.e("CheeseListViewModel", "setError: $t")
     }
 }

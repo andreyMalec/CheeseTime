@@ -1,17 +1,14 @@
 package com.malec.cheesetime.ui.main.cheese.cheeseManage.fragments
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.malec.cheesetime.databinding.ItemPhotoBinding
 import com.malec.cheesetime.model.Photo
+import com.malec.cheesetime.ui.BindingListAdapter
 
 class PhotoAdapter(private val vm: PhotoAction) :
-    ListAdapter<Photo, PhotoAdapter.PhotoItemViewHolder>(diffUtilCallback) {
+    BindingListAdapter<Photo, ItemPhotoBinding>(diffUtilCallback) {
     companion object {
         val diffUtilCallback = object : DiffUtil.ItemCallback<Photo>() {
             override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean {
@@ -26,39 +23,38 @@ class PhotoAdapter(private val vm: PhotoAction) :
         }
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): PhotoItemViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding: ItemPhotoBinding = ItemPhotoBinding.inflate(inflater, parent, false)
-        return PhotoItemViewHolder(binding.root)
-    }
+    override fun inflateBinding(inflater: LayoutInflater, parent: ViewGroup) =
+        ItemPhotoBinding.inflate(inflater, parent, false)
 
-    override fun onBindViewHolder(holder: PhotoItemViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: BindingListAdapter<Photo, ItemPhotoBinding>.ItemViewHolder,
+        position: Int
+    ) {
         val photo = getItem(position)
 
-        holder.binding?.photo = photo
+        holder.binding.photo = photo
         photo.content?.let {
-            holder.binding?.photoImage?.setImageBitmap(it)
+            holder.binding.photoImage.setImageBitmap(it)
         }
     }
 
-    inner class PhotoItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val binding: ItemPhotoBinding? = DataBindingUtil.bind(view)
-
-        init {
-            binding?.root?.setOnLongClickListener {
-                binding.photo?.let {
-                    vm.onPhotoLongClick(it)
-                }
-                true
+    override fun onCreateViewHolder(binding: ItemPhotoBinding) {
+        binding.root.setOnLongClickListener {
+            binding.photo?.let {
+                vm.onPhotoLongClick(it)
             }
-            binding?.root?.setOnClickListener {
-                binding.photo?.let {
-                    vm.onPhotoClick(it)
-                }
+            true
+        }
+        binding.root.setOnClickListener {
+            binding.photo?.let {
+                vm.onPhotoClick(it)
             }
         }
+    }
+
+    interface PhotoAction {
+        fun onPhotoClick(photo: Photo)
+
+        fun onPhotoLongClick(photo: Photo)
     }
 }

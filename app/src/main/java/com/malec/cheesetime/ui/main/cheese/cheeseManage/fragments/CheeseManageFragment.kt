@@ -23,7 +23,7 @@ import com.malec.cheesetime.ui.main.cheese.cheeseManage.StringAdapter
 import com.malec.cheesetime.util.DateFormatter
 import com.malec.cheesetime.util.DateTimePicker
 
-class CheeseManageFragment : PhotoManager(), PhotoAction, Injectable {
+class CheeseManageFragment : PhotoManager(), PhotoAdapter.PhotoAction, Injectable {
     override val viewModel: CheeseManageViewModel by activityViewModels {
         viewModelFactory
     }
@@ -33,13 +33,12 @@ class CheeseManageFragment : PhotoManager(), PhotoAction, Injectable {
 
     private lateinit var adapter: PhotoAdapter
     private lateinit var recipeAdapter: ArrayAdapter<String>
+    private lateinit var stagesAdapter: StringAdapter
 
     private var saveButton: MenuItem? = null
     private var deleteButton: MenuItem? = null
     private var isDeleteActive = false
     private var isSaveActive = false
-
-    private lateinit var stagesAdapter: StringAdapter
 
     private val recipes = mutableListOf<String>()
 
@@ -85,12 +84,10 @@ class CheeseManageFragment : PhotoManager(), PhotoAction, Injectable {
             )
         binding.recipeSpinner.adapter = recipeAdapter
 
-        viewModel.stages.value?.let {
-            stagesAdapter = StringAdapter(it, viewModel)
-            binding.stagesRecycler.adapter = stagesAdapter
-            binding.stagesRecycler.layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        }
+        stagesAdapter = StringAdapter(viewModel)
+        binding.stagesRecycler.adapter = stagesAdapter
+        binding.stagesRecycler.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         binding.root.setOnApplyWindowInsetsListener { _, insets ->
             val statusBarHeight =
@@ -124,6 +121,7 @@ class CheeseManageFragment : PhotoManager(), PhotoAction, Injectable {
     private fun initViewModelListeners() {
         viewModel.stages.observe(viewLifecycleOwner, { stages ->
             stagesAdapter.submitList(stages)
+            (binding.stagesRecycler.parent as View).invalidate()
         })
 
         viewModel.isSaveActive.observe(viewLifecycleOwner, { active ->

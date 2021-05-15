@@ -15,12 +15,12 @@ class TaskManageViewModel @Inject constructor(
     private val res: Resources
 ) : BaseViewModel(), ManageViewModel {
 
-    override val manageError = MutableLiveData<String>(null)
-    override val manageResult = MutableLiveData<String>(null)
+    override val manageError = MutableLiveData<String?>(null)
+    override val manageResult = MutableLiveData<String?>(null)
     override val isSaveActive = MutableLiveData(false)
     override val isDeleteActive = MutableLiveData(false)
 
-    val task = MutableLiveData<Task>(null)
+    val task = MutableLiveData<Task?>(null)
     val date = MutableLiveData("")
     val time = MutableLiveData("")
 

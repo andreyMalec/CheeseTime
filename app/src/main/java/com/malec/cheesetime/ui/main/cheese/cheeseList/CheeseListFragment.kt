@@ -65,7 +65,7 @@ class CheeseListFragment : Fragment(), Injectable {
             inflater.inflate(R.menu.menu_main_selected, menu)
 
         if (searchView == null) {
-            searchView = menu.findItem(R.id.appBarSearch).actionView as SearchView
+            searchView = menu.findItem(R.id.appBarSearch)?.actionView as SearchView?
             initSearchView()
         }
 

@@ -19,10 +19,10 @@ abstract class BasePhotoViewModel(
     protected open val photoDownloader: PhotoDownloader,
     protected open val photoSharer: PhotoSharer
 ) : BaseViewModel() {
-    private val downloadedPhoto = MutableLiveData<Photo>(null)
+    private val downloadedPhoto = MutableLiveData<Photo?>(null)
 
     val photos = MutableLiveData<List<Photo>>(listOf())
-    val photoManageResult = MutableLiveData<String>(null)
+    val photoManageResult = MutableLiveData<String?>(null)
 
     val fullscreenPhotoPosition = MutableLiveData(-1)
     val isFullscreen = MutableLiveData(false)

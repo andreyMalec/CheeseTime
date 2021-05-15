@@ -1,17 +1,14 @@
 package com.malec.cheesetime.ui.main.task.taskList
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.malec.cheesetime.databinding.ItemTaskBinding
 import com.malec.cheesetime.model.Task
+import com.malec.cheesetime.ui.BindingListAdapter
 
 class TaskAdapter(private val vm: TaskAction) :
-    ListAdapter<Task, TaskAdapter.TaskItemViewHolder>(diffUtilCallback) {
+    BindingListAdapter<Task, ItemTaskBinding>(diffUtilCallback) {
     companion object {
         private val diffUtilCallback = object : DiffUtil.ItemCallback<Task>() {
             override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean {
@@ -24,29 +21,22 @@ class TaskAdapter(private val vm: TaskAction) :
         }
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): TaskItemViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding: ItemTaskBinding = ItemTaskBinding.inflate(inflater, parent, false)
-        return TaskItemViewHolder(binding.root)
-    }
+    override fun inflateBinding(inflater: LayoutInflater, parent: ViewGroup) =
+        ItemTaskBinding.inflate(inflater, parent, false)
 
-    override fun onBindViewHolder(holder: TaskItemViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: BindingListAdapter<Task, ItemTaskBinding>.ItemViewHolder,
+        position: Int
+    ) {
         val task = getItem(position)
 
-        holder.binding?.task = task
+        holder.binding.task = task
     }
 
-    inner class TaskItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val binding: ItemTaskBinding? = DataBindingUtil.bind(view)
-
-        init {
-            binding?.root?.setOnClickListener {
-                binding.task?.let {
-                    vm.onClick(it)
-                }
+    override fun onCreateViewHolder(binding: ItemTaskBinding) {
+        binding.root.setOnClickListener {
+            binding.task?.let {
+                vm.onClick(it)
             }
         }
     }

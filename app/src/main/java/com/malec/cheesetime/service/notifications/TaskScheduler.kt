@@ -9,51 +9,65 @@ import com.malec.cheesetime.model.Task
 import com.malec.cheesetime.util.DateFormatter
 
 class TaskScheduler(private val context: Context) {
+    private val alarmManager =
+        context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
     fun schedule(task: Task) {
         if (task.date - System.currentTimeMillis() <= 0)
             return
 
-        val title = "${task.todo} (${task.cheeseName} id: ${task.cheeseId})"
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            task.date,
+            createPendingIntent(task)
+        )
+
+        val date30Min = task.date - DateFormatter.millisecondsIn30Min
+        if (date30Min - System.currentTimeMillis() > DateFormatter.millisecondsInHour * 2)
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                date30Min,
+                createPendingIntent30Min(task)
+            )
+    }
+
+    fun cancel(taskId: Long) {
+        val notificationId = taskId.toInt() * 10
+        alarmManager.cancel(createPendingIntent(notificationId, "", ""))
+        alarmManager.cancel(createPendingIntent(notificationId + 1, "", ""))
+    }
+
+    private fun createPendingIntent30Min(task: Task): PendingIntent {
         val title30Min =
             "(${context.getString(R.string.date_in_30_min)}) ${task.todo} (${task.cheeseName} id: ${task.cheeseId})"
-        val notificationId = task.id.toInt() * 10
-        val notificationId30Min = notificationId + 1
+        val notificationId30Min = task.id.toInt() * 10 + 1
 
+        return createPendingIntent(notificationId30Min, title30Min, task.comment)
+    }
+
+    private fun createPendingIntent(task: Task): PendingIntent {
+        val title = "${task.todo} (${task.cheeseName} id: ${task.cheeseId})"
+        val notificationId = task.id.toInt() * 10
+
+        return createPendingIntent(notificationId, title, task.comment)
+    }
+
+    private fun createPendingIntent(
+        notificationId: Int,
+        title: String,
+        comment: String
+    ): PendingIntent {
         val notificationIntent = Intent(context, NotificationReceiver::class.java).apply {
             putExtra(NotificationReceiver.NOTIFICATION_ID, notificationId)
             putExtra(NotificationReceiver.NOTIFICATION_TITLE, title)
-            putExtra(NotificationReceiver.NOTIFICATION_MESSAGE, task.comment)
+            putExtra(NotificationReceiver.NOTIFICATION_MESSAGE, comment)
         }
-        val notificationIntent30Min = Intent(context, NotificationReceiver::class.java).apply {
-            putExtra(NotificationReceiver.NOTIFICATION_ID, notificationId30Min)
-            putExtra(NotificationReceiver.NOTIFICATION_TITLE, title30Min)
-            putExtra(NotificationReceiver.NOTIFICATION_MESSAGE, task.comment)
-        }
-        val pendingIntent = PendingIntent.getBroadcast(
+
+        return PendingIntent.getBroadcast(
             context,
             notificationId,
             notificationIntent,
             PendingIntent.FLAG_CANCEL_CURRENT
         )
-        val pendingIntent30Min = PendingIntent.getBroadcast(
-            context,
-            notificationId30Min,
-            notificationIntent30Min,
-            PendingIntent.FLAG_CANCEL_CURRENT
-        )
-
-        val alarmManager =
-            context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        val date30Min = task.date - DateFormatter.millisecondsIn30Min
-
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, task.date, pendingIntent)
-
-        if (date30Min - System.currentTimeMillis() > DateFormatter.millisecondsInHour * 2)
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                date30Min,
-                pendingIntent30Min
-            )
     }
 }

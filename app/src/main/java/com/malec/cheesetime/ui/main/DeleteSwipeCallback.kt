@@ -10,7 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.malec.cheesetime.R
-import com.malec.cheesetime.ui.main.cheese.cheeseList.CheeseAdapter
+import com.malec.cheesetime.databinding.ItemCheeseBinding
+import com.malec.cheesetime.ui.BindingListAdapter
 import kotlin.math.abs
 
 class DeleteSwipeCallback(
@@ -38,8 +39,9 @@ class DeleteSwipeCallback(
         viewHolder: RecyclerView.ViewHolder
     ): Int {
         //block swipe for selected items
-        return if (viewHolder is CheeseAdapter.CheeseItemViewHolder &&
-            viewHolder.binding?.selectMarker?.visibility == View.VISIBLE
+        return if (viewHolder is BindingListAdapter<*, *>.ItemViewHolder &&
+            viewHolder.binding is ItemCheeseBinding &&
+            viewHolder.binding.selectMarker.visibility == View.VISIBLE
         )
             0
         else

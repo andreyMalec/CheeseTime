@@ -16,7 +16,7 @@ class LoginViewModel @Inject constructor(
     private val router: Router
 ) : BaseViewModel() {
 
-    val loginError = MutableLiveData<String>(null)
+    val loginError = MutableLiveData<String?>(null)
 
     val user = MutableLiveData(User("", ""))
 
