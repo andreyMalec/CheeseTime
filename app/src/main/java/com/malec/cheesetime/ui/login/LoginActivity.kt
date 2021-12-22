@@ -1,19 +1,25 @@
 package com.malec.cheesetime.ui.login
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.viewModels
 import com.malec.cheesetime.R
 import com.malec.cheesetime.databinding.ActivityLoginBinding
+import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.ui.base.BaseActivity
 import com.malec.cheesetime.ui.main.ResultNavigator
 
-class LoginActivity : BaseActivity() {
+class LoginActivity : BaseActivity(), ActivityResultCallback<Intent?> {
+    private val googleLoginScreen = Screens.googleLogin()
+    private val googleLoginLauncher =
+        registerForActivityResult(ResultContract(googleLoginScreen), this)
+
     override val navigator = ResultNavigator(
         this,
-        R.id.navHostFragment
+        R.id.navHostFragment,
+        mapOf(Pair(googleLoginScreen.screenKey, googleLoginLauncher))
     )
 
     private val viewModel: LoginViewModel by viewModels {
@@ -49,23 +55,22 @@ class LoginActivity : BaseActivity() {
             } else false
         }
 
-        binding.loginButton?.setOnClickListener {
+        binding.loginButton.setOnClickListener {
             viewModel.login()
         }
 
-        binding.registerButton?.setOnClickListener {
+        binding.registerButton.setOnClickListener {
             viewModel.register()
         }
 
-        binding.googleLoginButton?.setOnClickListener {
+        binding.googleLoginButton.setOnClickListener {
             viewModel.googleLogin()
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK)
-            viewModel.handleActivityResult(requestCode, data)
-
-        super.onActivityResult(requestCode, resultCode, data)
+    override fun onActivityResult(result: Intent?) {
+        result?.let {
+            viewModel.handleActivityResult(it)
+        }
     }
 }

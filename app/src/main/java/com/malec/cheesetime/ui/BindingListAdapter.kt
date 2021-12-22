@@ -35,6 +35,8 @@ abstract class BindingListAdapter<Model, ModelDataBinding : ViewDataBinding> :
         parent: ViewGroup
     ): ModelDataBinding
 
+    protected abstract fun onBindViewHolder(binding: ModelDataBinding, position: Int)
+
     protected open fun onCurrentListChanged(previousList: List<Model>, currentList: List<Model>) {}
 
     protected open fun onCreateViewHolder(binding: ModelDataBinding) {}
@@ -53,6 +55,13 @@ abstract class BindingListAdapter<Model, ModelDataBinding : ViewDataBinding> :
 
     override fun getItemCount(): Int {
         return mDiffer.currentList.size
+    }
+
+    override fun onBindViewHolder(
+        holder: BindingListAdapter<Model, ModelDataBinding>.ItemViewHolder,
+        position: Int
+    ) {
+        onBindViewHolder(holder.binding, position)
     }
 
     override fun onCreateViewHolder(

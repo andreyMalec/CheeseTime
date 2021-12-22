@@ -1,10 +1,12 @@
 package com.malec.cheesetime.ui.main
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.WindowInsets
 import android.widget.TextView
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.viewModels
 import androidx.core.view.updatePadding
 import com.google.android.material.appbar.AppBarLayout
@@ -12,18 +14,24 @@ import com.google.android.material.tabs.TabLayout
 import com.google.zxing.integration.android.IntentIntegrator
 import com.malec.cheesetime.R
 import com.malec.cheesetime.databinding.ActivityMainBinding
+import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.ui.allertDialogBuilder.LogoutDialog
 import com.malec.cheesetime.ui.base.BaseActivity
+import com.malec.cheesetime.ui.login.ResultContract
 import dagger.android.HasAndroidInjector
 
-class MainActivity : BaseActivity(), HasAndroidInjector {
+class MainActivity : BaseActivity(), ActivityResultCallback<Intent?>, HasAndroidInjector {
+    private val scanScreen = Screens.scan()
+    private val scanLauncher = registerForActivityResult(ResultContract(scanScreen), this)
+
     private val viewModel: MainViewModel by viewModels {
         viewModelFactory
     }
 
     override val navigator = ResultNavigator(
         this,
-        R.id.navHostFragment
+        R.id.navHostFragment,
+        mapOf(Pair(scanScreen.screenKey, scanLauncher))
     )
 
     private lateinit var binding: ActivityMainBinding
@@ -36,14 +44,12 @@ class MainActivity : BaseActivity(), HasAndroidInjector {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val result = IntentIntegrator.parseActivityResult(resultCode, data)
+    override fun onActivityResult(result: Intent?) {
+        val data = IntentIntegrator.parseActivityResult(Activity.RESULT_OK, result)
 
-        result.contents?.let {
+        data.contents?.let {
             viewModel.onScanSuccess(it)
         }
-
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

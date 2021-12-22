@@ -47,12 +47,11 @@ class LoginViewModel @Inject constructor(
 
     fun googleLogin() = router.navigateTo(Screens.googleLogin())
 
-    fun handleActivityResult(requestCode: Int, data: Intent?) {
-        if (requestCode == Screens.CODE_GOOGLE_LOGIN)
-            safeRun {
-                repo.googleLogin(data)
-                startMainScreen()
-            }
+    fun handleActivityResult(result: Intent) {
+        safeRun {
+            repo.googleLogin(result)
+            startMainScreen()
+        }
     }
 
     override fun setError(t: Throwable?) {

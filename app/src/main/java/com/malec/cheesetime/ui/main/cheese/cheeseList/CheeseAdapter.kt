@@ -25,14 +25,11 @@ class CheeseAdapter(private val vm: CheeseAction) :
     override fun inflateBinding(inflater: LayoutInflater, parent: ViewGroup) =
         ItemCheeseBinding.inflate(inflater, parent, false)
 
-    override fun onBindViewHolder(
-        holder: BindingListAdapter<Cheese, ItemCheeseBinding>.ItemViewHolder,
-        position: Int
-    ) {
+    override fun onBindViewHolder(binding: ItemCheeseBinding, position: Int) {
         val cheese = getItem(position)
 
-        holder.binding.cheese = cheese
-        holder.binding.selectMarker.visibility = getMarkerVisibility(cheese)
+        binding.cheese = cheese
+        binding.selectMarker.visibility = getMarkerVisibility(cheese)
     }
 
     override fun onCreateViewHolder(binding: ItemCheeseBinding) {

@@ -15,20 +15,12 @@ class UserRepo(
     private val context: Context
 ) {
     companion object {
-        private var _client: GoogleSignInClient? = null
-        private val client: GoogleSignInClient
-            get() = _client!!
-
         fun googleSignInClient(context: Context): GoogleSignInClient {
-            if (_client != null)
-                return client
-
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(context.getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
-            _client = GoogleSignIn.getClient(context, gso)
-            return client
+            return GoogleSignIn.getClient(context, gso)
         }
     }
 

@@ -71,7 +71,7 @@ class RecipeManageDialogFragment(
             stages.add(stage)
         }
         val text = binding.nameEditText.text.toString().trim()
-        val name = text[0].toUpperCase() + text.drop(1)
+        val name = text[0].uppercaseChar() + text.drop(1)
         return Recipe(recipe?.id ?: 0, name, stages.toList())
     }
 

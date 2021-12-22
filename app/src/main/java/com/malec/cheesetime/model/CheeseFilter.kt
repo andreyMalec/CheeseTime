@@ -23,7 +23,7 @@ fun List<Cheese>.filteredBy(filter: CheeseFilter): List<Cheese> {
     }
     filter.type?.let { type ->
         filteredList = filteredList.filter {
-            it.recipe.toLowerCase(Locale.ROOT).contains(type.toLowerCase(Locale.ROOT))
+            it.recipe.lowercase().contains(type.lowercase())
         }
     }
     filter.archived?.let { archived ->

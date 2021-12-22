@@ -24,13 +24,10 @@ class StringAdapter(private val vm: RemovableEditTextAction) :
     override fun inflateBinding(inflater: LayoutInflater, parent: ViewGroup) =
         ItemRemovableEdittextBinding.inflate(inflater, parent, false)
 
-    override fun onBindViewHolder(
-        holder: BindingListAdapter<StringValue, ItemRemovableEdittextBinding>.ItemViewHolder,
-        position: Int
-    ) {
+    override fun onBindViewHolder(binding: ItemRemovableEdittextBinding, position: Int) {
         val value = getItem(position)
 
-        holder.binding.value = value
+        binding.value = value
     }
 
     override fun onCreateViewHolder(binding: ItemRemovableEdittextBinding) {

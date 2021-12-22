@@ -73,10 +73,7 @@ class DeleteSwipeCallback(
         if (abs(dX) >= maxWidth / 2F && vibrate)
             context.getSystemService(Context.VIBRATOR_SERVICE)?.let {
                 it as Vibrator
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                    it.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE))
-                else
-                    it.vibrate(30)
+                it.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE))
 
                 vibrate = false
             }

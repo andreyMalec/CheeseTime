@@ -42,8 +42,7 @@ class CheeseRepo(
     suspend fun getAllTitleContains(filter: CheeseFilter, searchQuery: String) =
         getAllFiltered(filter).map { list ->
             list.filter {
-                it.name.toLowerCase(Locale.getDefault())
-                    .contains(searchQuery.toLowerCase(Locale.getDefault()))
+                it.name.lowercase().contains(searchQuery.lowercase())
             }
         }
 

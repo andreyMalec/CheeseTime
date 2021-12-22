@@ -26,15 +26,12 @@ class PhotoAdapter(private val vm: PhotoAction) :
     override fun inflateBinding(inflater: LayoutInflater, parent: ViewGroup) =
         ItemPhotoBinding.inflate(inflater, parent, false)
 
-    override fun onBindViewHolder(
-        holder: BindingListAdapter<Photo, ItemPhotoBinding>.ItemViewHolder,
-        position: Int
-    ) {
+    override fun onBindViewHolder(binding: ItemPhotoBinding, position: Int) {
         val photo = getItem(position)
 
-        holder.binding.photo = photo
+        binding.photo = photo
         photo.content?.let {
-            holder.binding.photoImage.setImageBitmap(it)
+            binding.photoImage.setImageBitmap(it)
         }
     }
 

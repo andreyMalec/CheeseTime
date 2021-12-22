@@ -2,7 +2,6 @@ package com.malec.cheesetime.ui.main.cheese.cheeseManage
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.app.Activity
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -12,27 +11,37 @@ import android.os.Handler
 import android.os.Looper
 import android.view.ViewAnimationUtils
 import android.view.WindowInsets
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.viewModels
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import com.malec.cheesetime.Permissions
 import com.malec.cheesetime.R
 import com.malec.cheesetime.databinding.ActivityCheeseManageBinding
 import com.malec.cheesetime.model.Cheese
-import com.malec.cheesetime.ui.Screens.CODE_GALLERY
+import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.ui.base.BaseActivity
+import com.malec.cheesetime.ui.login.ResultContract
 import com.malec.cheesetime.ui.main.ResultNavigator
 import com.malec.cheesetime.ui.parseExtraIntent
 
-class CheeseManageActivity : BaseActivity() {
+class CheeseManageActivity : BaseActivity(), ActivityResultCallback<Intent?> {
+    private val cameraScreen = Screens.cameraPick()
+    private val cameraLauncher = registerForActivityResult(ResultContract(cameraScreen), this)
+    private val galleryScreen = Screens.galleryPick()
+    private val galleryLauncher = registerForActivityResult(ResultContract(galleryScreen), this)
+
     private val viewModel: CheeseManageViewModel by viewModels {
         viewModelFactory
     }
 
     override val navigator = ResultNavigator(
         this,
-        R.id.navHostFragment
+        R.id.navHostFragment,
+        mapOf(
+            Pair(cameraScreen.screenKey, cameraLauncher),
+            Pair(galleryScreen.screenKey, galleryLauncher)
+        )
     )
 
     private lateinit var binding: ActivityCheeseManageBinding
@@ -43,13 +52,11 @@ class CheeseManageActivity : BaseActivity() {
     private var backgroundShadow: Drawable? = null
     private var backgroundTransparent: Drawable? = null
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK && data != null && data.data != null && requestCode == CODE_GALLERY)
-            viewModel.getImageFromUri(data.data)
-        else if (resultCode == Activity.RESULT_OK && requestCode == Permissions.CAMERA.code)
+    override fun onActivityResult(result: Intent?) {
+        if (result != null && result.data != null)
+            viewModel.getImageFromUri(result.data)
+        else
             viewModel.getImageFromCamera()
-
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

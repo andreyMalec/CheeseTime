@@ -24,13 +24,10 @@ class TaskAdapter(private val vm: TaskAction) :
     override fun inflateBinding(inflater: LayoutInflater, parent: ViewGroup) =
         ItemTaskBinding.inflate(inflater, parent, false)
 
-    override fun onBindViewHolder(
-        holder: BindingListAdapter<Task, ItemTaskBinding>.ItemViewHolder,
-        position: Int
-    ) {
+    override fun onBindViewHolder(binding: ItemTaskBinding, position: Int) {
         val task = getItem(position)
 
-        holder.binding.task = task
+        binding.task = task
     }
 
     override fun onCreateViewHolder(binding: ItemTaskBinding) {

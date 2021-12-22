@@ -24,13 +24,10 @@ class RecipeAdapter(private val vm: RecipeAction) :
     override fun inflateBinding(inflater: LayoutInflater, parent: ViewGroup) =
         ItemRecipeBinding.inflate(inflater, parent, false)
 
-    override fun onBindViewHolder(
-        holder: BindingListAdapter<Recipe, ItemRecipeBinding>.ItemViewHolder,
-        position: Int
-    ) {
+    override fun onBindViewHolder(binding: ItemRecipeBinding, position: Int) {
         val recipe = getItem(position)
 
-        holder.binding.recipe = recipe
+        binding.recipe = recipe
     }
 
     override fun onCreateViewHolder(binding: ItemRecipeBinding) {
