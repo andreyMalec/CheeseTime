@@ -4,7 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.3"
 
     buildFeatures {
@@ -14,7 +14,7 @@ android {
     defaultConfig {
         applicationId "com.malec.cheesetime"
         minSdkVersion 26
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 64
         versionName "0.8.3"
 
@@ -58,6 +58,10 @@ android {
 }
 
 dependencies {
+
+    implementation project(':core:store')
+    implementation project(':core:presentation')
+
     kapt 'androidx.databinding:databinding-compiler-common:7.0.4'
 
     implementation "com.github.terrakok:cicerone:6.5"

@@ -1,2 +1,5 @@
-include ':app'
 rootProject.name = "CheeseTime"
+
+include ':app'
+include ':core:store'
+include ':core:presentation'
