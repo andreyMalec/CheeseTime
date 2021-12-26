@@ -1,0 +1,106 @@
+ext {
+    daggerVersion =                 '2.40.5'
+    glideVersion =                  '4.12.0'
+    lifecycleVersion =              '2.3.1'
+    navigationVersion =             '2.3.5'
+    loopinglayoutVersion =          '0.4.0'
+    zxingAndroidEmbeddedVersion =   '3.6.0'
+    zxingCoreVersion =              '3.4.1'
+    photoViewVersion =              '2.3.0'
+    databindingCompilerVersion =    '7.0.4'
+    kotlinxCoroutinesCoreVersion =  '1.6.0'
+    appcompatVersion =              '1.4.0'
+    coreKtxVersion =                '1.7.0'
+    constraintlayouteVersion =      '2.1.2'
+    legacySupportV4Version =        '1.0.0'
+    recyclerviewVersion =           '1.2.1'
+    vectordrawableVersion =         '1.1.0'
+    materialVersion =               '1.4.0'
+    coroutinesVersion =             '1.6.0'
+    gsonVersion =                   '2.8.9'
+    ciceroneVersion =               '6.5'
+
+    //firebase
+    firebaseAuthVersion =           '21.0.1'
+    firebaseStorageVersion =        '20.0.0'
+    firebaseDatabaseVersion =       '20.0.3'
+    firebaseFirestoreKtxVersion =   '24.0.0'
+    firebaseUiStorageVersion =      '7.2.0'
+    playServicesAuthVersion =       '20.0.0'
+    coroutinesPlayServicesVersion = '1.1.1'
+
+    //test
+    mockkVersion =                  '1.12.0'
+    junitVersion =                  '4.13.2'
+    androidxJunitVersion =          '1.1.3'
+    espressoCoreVersion =           '3.4.0'
+
+    daggerDependencies = [
+            android                       : "com.google.dagger:dagger-android:$daggerVersion",
+            compiler                      : "com.google.dagger:dagger-compiler:$daggerVersion",
+            androidSupport                : "com.google.dagger:dagger-android-support:$daggerVersion",
+            androidProcessor              : "com.google.dagger:dagger-android-processor:$daggerVersion"
+    ]
+
+    firebaseDependencies = [
+            auth                          : "com.google.firebase:firebase-auth:$firebaseAuthVersion",
+            storage                       : "com.google.firebase:firebase-storage:$firebaseStorageVersion",
+            playServicesAuth              : "com.google.android.gms:play-services-auth:$playServicesAuthVersion",
+            database                      : "com.google.firebase:firebase-database:$firebaseDatabaseVersion",
+            uiStorage                     : "com.firebaseui:firebase-ui-storage:$firebaseUiStorageVersion",
+            firestoreKtx                  : "com.google.firebase:firebase-firestore-ktx:$firebaseFirestoreKtxVersion",
+            kotlinxCoroutinesPlayServices : "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesPlayServicesVersion"
+    ]
+
+    androidDependencies = [
+            appcompat                     : "androidx.appcompat:appcompat:$appcompatVersion",
+            coreKtx                       : "androidx.core:core-ktx:$coreKtxVersion",
+            constraintlayout              : "androidx.constraintlayout:constraintlayout:$constraintlayouteVersion",
+            legacySupportV4               : "androidx.legacy:legacy-support-v4:$legacySupportV4Version",
+            recyclerview                  : "androidx.recyclerview:recyclerview:$recyclerviewVersion",
+            vectordrawable                : "androidx.vectordrawable:vectordrawable:$vectordrawableVersion",
+            material                      : "com.google.android.material:material:$materialVersion"
+    ]
+
+    testDependencies = [
+            coroutines                    : "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion",
+            junit                         : "junit:junit:$junitVersion",
+            mockk                         : "io.mockk:mockk:$mockkVersion",
+            androidMockk                  : "io.mockk:mockk-android:$mockkVersion",
+            androidJunit                  : "androidx.test.ext:junit:$androidxJunitVersion",
+            androidEspresso               : "androidx.test.espresso:espresso-core:$espressoCoreVersion"
+    ]
+
+    glideDependencies = [
+            core                          : "com.github.bumptech.glide:glide:$glideVersion",
+            compiler                      : "com.github.bumptech.glide:compiler:$glideVersion"
+    ]
+
+    navigationDependencies = [
+            ui                            : "androidx.navigation:navigation-ui-ktx:$navigationVersion",
+            fragment                      : "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
+    ]
+
+    zxingDependencies = [
+            core                          : "com.google.zxing:core:$zxingCoreVersion",
+            android                       : "com.journeyapps:zxing-android-embedded:$zxingAndroidEmbeddedVersion"
+    ]
+
+    dependencies = [
+            dagger                        : daggerDependencies,
+            firebase                      : firebaseDependencies,
+            android                       : androidDependencies,
+            test                          : testDependencies,
+            glide                         : glideDependencies,
+            navigation                    : navigationDependencies,
+            zxing                         : zxingDependencies,
+
+            kotlinStdlib                  : "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
+            gson                          : "com.google.code.gson:gson:$gsonVersion",
+            coroutines                    : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion",
+            cicerone                      : "com.github.terrakok:cicerone:$ciceroneVersion",
+            loopinglayout                 : "com.github.beksomega:loopinglayout:$loopinglayoutVersion",
+            photoView                     : "com.github.chrisbanes:PhotoView:$photoViewVersion",
+            databinding                   : "androidx.databinding:databinding-compiler-common:$databindingCompilerVersion"
+    ]
+}
