@@ -11,7 +11,6 @@ import com.malec.cheesetime.ui.main.cheese.cheeseManage.fragments.CheeseManageFr
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.fragments.FullscreenPhotoFragment
 import com.malec.cheesetime.ui.settings.SettingsActivity
 import com.malec.cheesetime.util.CameraIntentCreator
-import com.malec.domain.repository.UserRepo.Companion.googleSignInClient
 import com.malec.main.presentation.view.MainActivity
 
 object Screens {
@@ -23,7 +22,6 @@ object Screens {
 
     const val GALLERY = "Gallery"
     const val CAMERA = "Camera"
-    const val GOOGLE_LOGIN = "GoogleLogin"
 
     const val TASK_LIST = "TaskList"
     const val CHEESE_LIST = "CheeseList"
@@ -74,17 +72,6 @@ object Screens {
     fun settings() = ActivityScreen {
         it.createIntent<SettingsActivity>()
     }
-
-    fun googleLogin() = ActivityScreen(GOOGLE_LOGIN) {
-        googleSignInClient(it).signInIntent
-    }
-
-    object GoogleLoginScreen : ActivityScreen {
-        override val screenKey = GOOGLE_LOGIN
-        override fun createIntent(context: Context) =
-            googleSignInClient(context).signInIntent
-    }
-
 
     fun cheeseManageFragment() = FragmentScreen {
         CheeseManageFragment()

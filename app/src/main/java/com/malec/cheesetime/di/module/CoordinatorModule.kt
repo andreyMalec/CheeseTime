@@ -1,6 +1,7 @@
 package com.malec.cheesetime.di.module
 
 import com.github.terrakok.cicerone.Router
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.malec.cheesedetail.dependencies.CheeseDetailOutput
 import com.malec.cheeselist.dependencies.CheeseListOutput
 import com.malec.cheesetime.coordinator.*
@@ -23,8 +24,8 @@ class CoordinatorModule {
 
     @Provides
     @Singleton
-    fun signInOutput(router: Router): SignInOutput =
-        SignInCoordinator(router)
+    fun signInOutput(router: Router, client: GoogleSignInClient): SignInOutput =
+        SignInCoordinator(router, client)
 
     @Provides
     @Singleton

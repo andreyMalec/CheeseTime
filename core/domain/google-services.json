@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:832899933224:android:3c8769acbf0643afe0011d",
         "android_client_info": {
-          "package_name": "com.malec.domain"
+          "package_name": "com.malec.cheesetime"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "832899933224-4v0b282c158d3c3jsnh8li092ijqoj1t.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.malec.domain",
+            "package_name": "com.malec.cheesetime",
             "certificate_hash": "01b87039df67314a3263129ff1063b6f037c7621"
           }
         },
@@ -26,7 +26,7 @@
           "client_id": "832899933224-58lpqaf5q5r0tdoauc4aa9025l11fjgo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.malec.domain",
+            "package_name": "com.malec.cheesetime",
             "certificate_hash": "31cb6f10ed08c22246408416c82bab9f77b27300"
           }
         },
@@ -34,7 +34,7 @@
           "client_id": "832899933224-tdtatds5ibpae7384q9qc94n0256422m.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.malec.domain",
+            "package_name": "com.malec.cheesetime",
             "certificate_hash": "df81839c6db0911a961ee11c74ad5e242d59e440"
           }
         },
@@ -67,6 +67,30 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "832899933224-85l3uab1f2mq3p851gv6m805n48rl0v8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.malec.domain",
+            "certificate_hash": "01b87039df67314a3263129ff1063b6f037c7621"
+          }
+        },
+        {
+          "client_id": "832899933224-g70ifi1ee2imudcpell3dodvpnc3kb10.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.malec.domain",
+            "certificate_hash": "df81839c6db0911a961ee11c74ad5e242d59e440"
+          }
+        },
+        {
+          "client_id": "832899933224-l27ig0ivvc7fe23b3662cs7kiab3nh0j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.malec.domain",
+            "certificate_hash": "31cb6f10ed08c22246408416c82bab9f77b27300"
+          }
+        },
         {
           "client_id": "832899933224-7thfa4o83h05c1s9qkubsu6vb08982mk.apps.googleusercontent.com",
           "client_type": 3

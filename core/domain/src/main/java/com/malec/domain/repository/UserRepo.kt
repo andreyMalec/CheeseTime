@@ -1,36 +1,22 @@
 package com.malec.domain.repository
 
-import android.content.Context
 import android.content.Intent
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.malec.domain.R
 import com.malec.domain.api.UserApi
 import com.malec.domain.model.Recipe
 import kotlinx.coroutines.tasks.await
 
 class UserRepo(
     private val api: UserApi,
-    private val context: Context
+    private val client: GoogleSignInClient
 ) {
-    companion object {
-        fun googleSignInClient(context: Context): GoogleSignInClient {
-            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(context.getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build()
-            return GoogleSignIn.getClient(context, gso)
-        }
-    }
-
     fun isUserAuthorized() = api.isUserAuthorized()
 
     fun getUserLogin() = api.getUserLogin()
 
     suspend fun logout() {
         api.logout()
-        googleSignInClient(context).signOut().await()
+        client.signOut().await()
     }
 
     suspend fun register(email: String, pass: String) = api.register(email, pass)

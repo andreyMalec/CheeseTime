@@ -2,6 +2,7 @@ package com.malec.cheesetime.di
 
 import android.content.Context
 import android.util.Log
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.malec.cheesetime.di.module.CoordinatorModule
 import com.malec.cheesetime.di.module.NavigationModule
 import com.malec.cheesetime.di.module.UseCaseModule
@@ -18,11 +19,13 @@ import com.malec.domain.api.StorageApi
 import com.malec.domain.api.TaskApi
 import com.malec.domain.api.UserApi
 import com.malec.domain.repository.CheeseRepo
+import com.malec.domain.repository.GoogleSignInClientProvider
 import com.malec.domain.repository.TaskRepo
 import com.malec.domain.repository.TaskScheduler
 import com.malec.domain.util.CheeseSharer
 import com.malec.main.dependencies.MainActivityResultContracts
 import com.malec.presentation.Resources
+import com.malec.signin.GoogleLoginScreen
 import com.malec.store.ErrorHandler
 import dagger.Module
 import dagger.Provides
@@ -49,8 +52,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun userRepo(api: UserApi, context: Context): com.malec.domain.repository.UserRepo =
-        com.malec.domain.repository.UserRepo(api, context)
+    fun userRepo(api: UserApi, client: GoogleSignInClient): com.malec.domain.repository.UserRepo =
+        com.malec.domain.repository.UserRepo(api, client)
 
     @Provides
     @Singleton
@@ -86,24 +89,35 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun mainActivityResultContracts(bitmapDecoder: BitmapDecoder) = MainActivityResultContracts(
-        mapOf(
-            Pair(
-                Screens.ScanScreen.screenKey,
-                ScanResultContract(Screens.ScanScreen)
-            ),
-            Pair(
-                Screens.CameraPickScreen.screenKey,
-                PhotoResultContract(Screens.CameraPickScreen, bitmapDecoder)
-            ),
-            Pair(
-                Screens.GalleryPickScreen.screenKey,
-                PhotoResultContract(Screens.GalleryPickScreen, bitmapDecoder)
-            ),
-            Pair(
-                Screens.GoogleLoginScreen.screenKey,
-                GoogleLoginResultContract(Screens.GoogleLoginScreen)
+    fun provideGoogleSignInClient(context: Context): GoogleSignInClient =
+        GoogleSignInClientProvider.googleSignInClient(context)
+
+    @Provides
+    @Singleton
+    fun mainActivityResultContracts(
+        bitmapDecoder: BitmapDecoder,
+        client: GoogleSignInClient
+    ): MainActivityResultContracts {
+        val googleLoginScreen = GoogleLoginScreen(client)
+        return MainActivityResultContracts(
+            mapOf(
+                Pair(
+                    Screens.ScanScreen.screenKey,
+                    ScanResultContract(Screens.ScanScreen)
+                ),
+                Pair(
+                    Screens.CameraPickScreen.screenKey,
+                    PhotoResultContract(Screens.CameraPickScreen, bitmapDecoder)
+                ),
+                Pair(
+                    Screens.GalleryPickScreen.screenKey,
+                    PhotoResultContract(Screens.GalleryPickScreen, bitmapDecoder)
+                ),
+                Pair(
+                    googleLoginScreen.screenKey,
+                    GoogleLoginResultContract(googleLoginScreen)
+                )
             )
         )
-    )
+    }
 }
