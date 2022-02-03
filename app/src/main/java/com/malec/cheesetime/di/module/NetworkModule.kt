@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.malec.cheesetime.service.network.*
+import com.malec.domain.api.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

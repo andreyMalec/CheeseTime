@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_hint">Поиск…</string>
+    <string name="toolbar_n_selected">Выбрано: %1$d</string>
+
+    <string name="filter_title">Фильтр:</string>
+    <string name="filter_date_start">Дата начала</string>
+    <string name="filter_date_end">Дата окончания</string>
+    <string name="filter_cheese_type">Тип сыра</string>
+    <string name="filter_sort_title">Сортировать по:</string>
+    <string name="filter_archived">Архив</string>
+    <string name="filter_clear">Очистить фильтр</string>
+</resources>

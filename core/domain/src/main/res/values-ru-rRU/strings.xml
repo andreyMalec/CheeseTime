@@ -1,0 +1,24 @@
+<resources>
+    <string-array name="task_date_preset">
+        <item>10 мин</item>
+        <item>15 мин</item>
+        <item>30 мин</item>
+        <item>1 час</item>
+        <item>3 часа</item>
+        <item>5 часов</item>
+        <item>24 часа</item>
+    </string-array>
+
+    <string name="date_pick">Выбрать</string>
+    <string name="date_today">Сегодня</string>
+    <string name="date_yesterday">Вчера</string>
+    <string name="date_now">Сейчас</string>
+    <string name="date_expired">Просрочено</string>
+    <string name="date_in_n_hours">Через %1$d часа</string>
+    <string name="date_in_n_hours2">Через %1$d часов</string>
+    <string name="date_in_n_hours3">Через %1$d час</string>
+    <string name="date_in_n_minutes">Через %1$d минуты</string>
+    <string name="date_in_n_minutes2">Через %1$d минут</string>
+    <string name="date_in_n_minutes3">Через %1$d минуту</string>
+    <string name="date_in_30_min">Через 30 мин.</string>
+</resources>

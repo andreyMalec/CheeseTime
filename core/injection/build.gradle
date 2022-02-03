@@ -1,0 +1,53 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+
+android {
+    def config = rootProject.ext
+    compileSdkVersion config.androidCompileSdkVersion
+    buildToolsVersion config.androidBuildToolsVersion
+
+    defaultConfig {
+        minSdkVersion config.androidMinSdkVersion
+        targetSdkVersion config.androidTargetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    def dependencies = rootProject.ext.dependencies
+    def daggerDependencies = dependencies.dagger
+    def testDependencies = dependencies.test
+
+    //dagger
+    kapt daggerDependencies.androidProcessor
+    kapt daggerDependencies.compiler
+    implementation daggerDependencies.android
+    implementation daggerDependencies.androidSupport
+
+    //kotlin
+    implementation dependencies.kotlinStdlib
+    implementation dependencies.coroutines
+
+    //test
+    testImplementation testDependencies.junit
+    testImplementation testDependencies.coroutines
+}

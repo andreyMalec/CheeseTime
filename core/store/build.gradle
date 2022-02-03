@@ -13,10 +13,11 @@ dependencies {
     def testDependencies = dependencies.test
 
     //kotlin
-    implementation            dependencies.kotlinStdlib
-    implementation            dependencies.coroutines
+    implementation dependencies.kotlinStdlib
+    implementation dependencies.coroutines
 
     //test
-    testImplementation        testDependencies.junit
-    testImplementation        testDependencies.coroutines
+    testImplementation testDependencies.junit
+    testImplementation testDependencies.coroutines
+    testImplementation testDependencies.mockk
 }

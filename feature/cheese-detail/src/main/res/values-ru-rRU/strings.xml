@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="toolbar_edit_cheese">Редактирование сыра</string>
+
+    <string name="cheese_name">Название:</string>
+    <string name="cheese_date">Дата вызревания:</string>
+    <string name="cheese_recipe">Рецепт:</string>
+    <string name="cheese_comment">Комментарий:</string>
+    <string name="cheese_milk">Молоко</string>
+    <string name="cheese_composition">Состав</string>
+    <string name="cheese_stages">Этапы</string>
+    <string name="cheese_volume">Текущий объем:</string>
+    <string name="cheese_volume_max">Полный объем:</string>
+    <string name="cheese_color">Цвет значка</string>
+    <string name="cheese_photo">Галерея</string>
+
+    <string name="milk_type">Тип:</string>
+    <string name="milk_volume">Объем:</string>
+    <string name="milk_age">Возраст:</string>
+
+    <string name="n_stage">%1$d этап:</string>
+</resources>

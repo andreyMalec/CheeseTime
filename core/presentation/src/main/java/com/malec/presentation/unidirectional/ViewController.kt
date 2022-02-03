@@ -4,6 +4,4 @@ interface ViewController {
     fun attach()
 
     fun firstViewAttach()
-
-    fun detach()
 }

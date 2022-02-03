@@ -1,0 +1,22 @@
+plugins {
+    id 'java-library'
+    id 'kotlin'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    def dependencies = rootProject.ext.dependencies
+    def testDependencies = dependencies.test
+
+    //kotlin
+    implementation dependencies.kotlinStdlib
+    implementation dependencies.coroutines
+
+    //test
+    testImplementation testDependencies.junit
+    testImplementation testDependencies.coroutines
+}

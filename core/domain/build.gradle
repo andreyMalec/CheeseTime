@@ -1,0 +1,73 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+apply plugin: 'com.google.gms.google-services'
+
+android {
+    def config = rootProject.ext
+    compileSdkVersion config.androidCompileSdkVersion
+    buildToolsVersion config.androidBuildToolsVersion
+    defaultConfig {
+        minSdkVersion config.androidMinSdkVersion
+        targetSdkVersion config.androidTargetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    def dependencies = rootProject.ext.dependencies
+    def daggerDependencies = dependencies.dagger
+    def firebaseDependencies = dependencies.firebase
+    def testDependencies = dependencies.test
+
+    implementation project(':core:interactor')
+
+    //dagger
+    kapt daggerDependencies.androidProcessor
+    kapt daggerDependencies.compiler
+    implementation daggerDependencies.android
+    implementation daggerDependencies.androidSupport
+
+    //firebase
+    implementation firebaseDependencies.auth
+    implementation firebaseDependencies.storage
+    implementation firebaseDependencies.playServicesAuth
+    implementation firebaseDependencies.database
+    implementation firebaseDependencies.uiStorage
+    implementation firebaseDependencies.firestoreKtx
+    implementation firebaseDependencies.kotlinxCoroutinesPlayServices
+
+    //zxing
+    implementation dependencies.zxing.core
+    implementation dependencies.zxing.android
+
+    //kotlin
+    implementation dependencies.kotlinStdlib
+    implementation dependencies.coroutines
+
+    //test
+    testImplementation testDependencies.junit
+    testImplementation testDependencies.coroutines
+    testImplementation testDependencies.mockk
+    androidTestImplementation testDependencies.androidMockk
+    androidTestImplementation testDependencies.androidJunit
+}

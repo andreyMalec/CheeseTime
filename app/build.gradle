@@ -60,68 +60,79 @@ dependencies {
     def androidDependencies = dependencies.android
     def testDependencies = dependencies.test
 
+    implementation project(':core:store')
+    implementation project(':core:domain')
+    implementation project(':core:injection')
+    implementation project(':core:interactor')
+    implementation project(':core:presentation')
+    implementation project(':feature:main')
+    implementation project(':feature:signin')
+    implementation project(':feature:tabs')
+    implementation project(':feature:task-list')
+    implementation project(':feature:cheese-list')
+    implementation project(':feature:report-list')
+    implementation project(':feature:task-detail')
+    implementation project(':feature:cheese-detail')
+
     //dagger
-    kapt                      daggerDependencies.androidProcessor
-    kapt                      daggerDependencies.compiler
-    implementation            daggerDependencies.android
-    implementation            daggerDependencies.androidSupport
+    kapt daggerDependencies.androidProcessor
+    kapt daggerDependencies.compiler
+    implementation daggerDependencies.android
+    implementation daggerDependencies.androidSupport
 
     //firebase
-    implementation            firebaseDependencies.auth
-    implementation            firebaseDependencies.storage
-    implementation            firebaseDependencies.playServicesAuth
-    implementation            firebaseDependencies.database
-    implementation            firebaseDependencies.uiStorage
-    implementation            firebaseDependencies.firestoreKtx
-    implementation            firebaseDependencies.kotlinxCoroutinesPlayServices
+    implementation firebaseDependencies.auth
+    implementation firebaseDependencies.storage
+    implementation firebaseDependencies.playServicesAuth
+    implementation firebaseDependencies.database
+    implementation firebaseDependencies.uiStorage
+    implementation firebaseDependencies.firestoreKtx
+    implementation firebaseDependencies.kotlinxCoroutinesPlayServices
 
     //android
-    implementation            androidDependencies.appcompat
-    implementation            androidDependencies.coreKtx
-    implementation            androidDependencies.constraintlayout
-    implementation            androidDependencies.legacySupportV4
-    implementation            androidDependencies.recyclerview
-    implementation            androidDependencies.vectordrawable
-    implementation            androidDependencies.material
+    implementation androidDependencies.appcompat
+    implementation androidDependencies.coreKtx
+    implementation androidDependencies.constraintlayout
+    implementation androidDependencies.legacySupportV4
+    implementation androidDependencies.recyclerview
+    implementation androidDependencies.vectordrawable
+    implementation androidDependencies.material
 
     //glide
-    kapt                      dependencies.glide.compiler
-    implementation            dependencies.glide.core
+    kapt dependencies.glide.compiler
+    implementation dependencies.glide.core
 
     //navigation
-    implementation            dependencies.navigation.ui
-    implementation            dependencies.navigation.fragment
+    implementation dependencies.navigation.ui
+    implementation dependencies.navigation.fragment
 
     //zxing
-    implementation            dependencies.zxing.core
-    implementation            dependencies.zxing.android
+    implementation dependencies.zxing.core
+    implementation dependencies.zxing.android
 
     def lifecycle_version = "2.3.1"
-    kapt                      "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-    implementation            "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    implementation            "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    kapt "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
-    kapt                      dependencies.databinding
+    kapt dependencies.databinding
 
-    implementation            dependencies.cicerone
+    implementation dependencies.cicerone
 
-    implementation            dependencies.gson
+    implementation dependencies.gson
 
-    implementation            dependencies.loopinglayout
+    implementation dependencies.loopinglayout
 
-    implementation            dependencies.photoView
+    implementation dependencies.photoView
 
     //kotlin
-    implementation            dependencies.kotlinStdlib
-    implementation            dependencies.coroutines
-
-    implementation            project(':core:store')
-    implementation            project(':core:presentation')
+    implementation dependencies.kotlinStdlib
+    implementation dependencies.coroutines
 
     //test
-    testImplementation        testDependencies.junit
-    testImplementation        testDependencies.coroutines
-    testImplementation        testDependencies.mockk
+    testImplementation testDependencies.junit
+    testImplementation testDependencies.coroutines
+    testImplementation testDependencies.mockk
     androidTestImplementation testDependencies.androidMockk
     androidTestImplementation testDependencies.androidJunit
     androidTestImplementation testDependencies.androidEspresso

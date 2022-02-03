@@ -1,0 +1,7 @@
+<resources>
+    <string name="authorization">Авторизация</string>
+    <string name="email">Почта</string>
+    <string name="password">Пароль</string>
+    <string name="login">Войти</string>
+    <string name="register">Регистрация</string>
+</resources>

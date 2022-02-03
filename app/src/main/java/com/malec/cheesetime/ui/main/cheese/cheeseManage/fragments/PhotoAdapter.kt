@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.malec.cheesetime.databinding.ItemPhotoBinding
-import com.malec.cheesetime.model.Photo
-import com.malec.cheesetime.ui.BindingListAdapter
+import com.malec.domain.model.Photo
+import com.malec.presentation.base.BindingListAdapter
 
 class PhotoAdapter(private val vm: PhotoAction) :
     BindingListAdapter<Photo, ItemPhotoBinding>(diffUtilCallback) {

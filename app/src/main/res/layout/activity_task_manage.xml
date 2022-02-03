@@ -7,7 +7,7 @@
 
         <variable
             name="task"
-            type="com.malec.cheesetime.model.Task" />
+            type="com.malec.domain.model.Task" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

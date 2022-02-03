@@ -5,7 +5,7 @@
 
         <variable
             name="recipe"
-            type="com.malec.cheesetime.model.Recipe" />
+            type="com.malec.domain.model.Recipe" />
     </data>
 
     <LinearLayout

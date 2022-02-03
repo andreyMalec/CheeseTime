@@ -6,6 +6,8 @@ interface Store<State, Action> {
 
     val state: Flow<State>
 
+    val currentState: State
+
     fun dispatchAction(action: Action)
 
     fun dispose()

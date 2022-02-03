@@ -13,17 +13,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.malec.cheesetime.Permissions
 import com.malec.cheesetime.R
 import com.malec.cheesetime.databinding.FragmentCheeseManageBinding
-import com.malec.cheesetime.di.Injectable
-import com.malec.cheesetime.model.Photo
-import com.malec.cheesetime.ui.allertDialogBuilder.CheeseDeleteDialog
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.AttachSourceDialog
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageViewModel
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.PhotoMenuBuilder
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.StringAdapter
-import com.malec.cheesetime.util.DateFormatter
-import com.malec.cheesetime.util.DateTimePicker
+import com.malec.domain.model.Photo
+import com.malec.domain.util.DateFormatter
+import com.malec.presentation.dialog.CheeseDeleteDialog
+import com.malec.presentation.dialog.DateTimePicker
 
-class CheeseManageFragment : PhotoManager(), PhotoAdapter.PhotoAction, Injectable {
+class CheeseManageFragment : PhotoManager(), PhotoAdapter.PhotoAction,
+    com.malec.injection.Injectable {
     override val viewModel: CheeseManageViewModel by activityViewModels {
         viewModelFactory
     }
@@ -157,7 +157,7 @@ class CheeseManageFragment : PhotoManager(), PhotoAdapter.PhotoAction, Injectabl
             viewModel.checkCanSave()
         }
         binding.dateButton.setOnClickListener {
-            DateTimePicker(requireActivity()).pickDate {
+            DateTimePicker(requireActivity(), requireActivity().supportFragmentManager).pickDate {
                 viewModel.cheese.value?.date = DateFormatter.dateFromString(it)
                 binding.dateText.text = it
             }

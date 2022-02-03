@@ -1,0 +1,24 @@
+<resources>
+    <string-array name="task_date_preset">
+        <item>10 min</item>
+        <item>15 min</item>
+        <item>30 min</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>5 hours</item>
+        <item>24 hours</item>
+    </string-array>
+
+    <string name="date_pick">Pick</string>
+    <string name="date_today">Today</string>
+    <string name="date_yesterday">Yesterday</string>
+    <string name="date_now">Now</string>
+    <string name="date_expired">Expired</string>
+    <string name="date_in_n_hours">In %1$d hours</string>
+    <string name="date_in_n_hours2">In %1$d hours</string>
+    <string name="date_in_n_hours3">In %1$d hours</string>
+    <string name="date_in_n_minutes">In %1$d minutes</string>
+    <string name="date_in_n_minutes2">In %1$d minutes</string>
+    <string name="date_in_n_minutes3">In %1$d minutes</string>
+    <string name="date_in_30_min">In 30 min.</string>
+</resources>

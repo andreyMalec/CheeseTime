@@ -2,6 +2,7 @@ package com.malec.cheesetime.ui.allertDialogBuilder
 
 import android.content.Context
 import com.malec.cheesetime.R
+import com.malec.presentation.base.AlertDialogBuilder
 
 class PhotoDeleteDialog(context: Context) : AlertDialogBuilder(context) {
     fun show() {

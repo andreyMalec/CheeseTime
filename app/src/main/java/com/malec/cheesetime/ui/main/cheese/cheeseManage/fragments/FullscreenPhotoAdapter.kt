@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 import com.malec.cheesetime.databinding.ItemFullscreenPhotoBinding
-import com.malec.cheesetime.model.Photo
+import com.malec.domain.model.Photo
 
 class FullscreenPhotoAdapter(
     private val items: List<Photo>,

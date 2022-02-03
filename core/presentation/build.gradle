@@ -33,28 +33,40 @@ android {
 
 dependencies {
     def dependencies = rootProject.ext.dependencies
+    def daggerDependencies = dependencies.dagger
     def androidDependencies = dependencies.android
     def testDependencies = dependencies.test
 
     implementation project(':core:store')
+    implementation project(':core:domain')
+    implementation project(':core:injection')
+
+    //dagger
+    implementation daggerDependencies.android
+
+    //navigation
+    implementation dependencies.navigation.ui
+    implementation dependencies.navigation.fragment
 
     //kotlin
-    implementation            dependencies.kotlinStdlib
-    implementation            dependencies.coroutines
+    implementation dependencies.kotlinStdlib
+    implementation dependencies.coroutines
+
+    implementation dependencies.cicerone
 
     //android
-    implementation            androidDependencies.appcompat
-    implementation            androidDependencies.coreKtx
-    implementation            androidDependencies.constraintlayout
-    implementation            androidDependencies.legacySupportV4
-    implementation            androidDependencies.recyclerview
-    implementation            androidDependencies.vectordrawable
-    implementation            androidDependencies.material
+    implementation androidDependencies.appcompat
+    implementation androidDependencies.coreKtx
+    implementation androidDependencies.constraintlayout
+    implementation androidDependencies.legacySupportV4
+    implementation androidDependencies.recyclerview
+    implementation androidDependencies.vectordrawable
+    implementation androidDependencies.material
 
     //test
-    testImplementation        testDependencies.junit
-    testImplementation        testDependencies.coroutines
-    testImplementation        testDependencies.mockk
+    testImplementation testDependencies.junit
+    testImplementation testDependencies.coroutines
+    testImplementation testDependencies.mockk
     androidTestImplementation testDependencies.androidMockk
     androidTestImplementation testDependencies.androidJunit
     androidTestImplementation testDependencies.androidEspresso

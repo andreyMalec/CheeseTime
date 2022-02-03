@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#333</color>
+    <color name="colorPrimaryDark">#efca34</color>
+    <color name="colorAccent">#333</color>
+    <color name="backgroundLight">#FFF9C0</color>
+    <color name="colorError">#FF575D</color>
+    <color name="colorWhite">#FFF</color>
+    <color name="colorTextDisabled">#999</color>
+    <color name="colorShadow">#33000000</color>
+    <color name="colorShadowLight">#10000000</color>
+    <color name="colorShadowBackgroundLight">#B0FFF9C0</color>
+
+
+    <color name="badge1">#eda63b</color>
+    <color name="badge2">#FFEF58</color>
+    <color name="badge3">#FFE183</color>
+    <color name="badge4">#DEE205</color>
+    <color name="badge5">#8f42ce</color>
+    <color name="badge6">#ce428d</color>
+    <color name="badge7">#ef6651</color>
+    <color name="badge8">#9BDC10</color>
+    <color name="badge9">#AFB21E</color>
+    <color name="badge10">#ea3844</color>
+    <color name="badge11">#37d2dd</color>
+    <color name="badge12">#4259ce</color>
+</resources>

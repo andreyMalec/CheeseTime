@@ -1,21 +1,35 @@
 package com.malec.cheesetime.app
 
 import android.app.Application
-import com.malec.cheesetime.di.AppInjector
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
-import javax.inject.Inject
+import com.malec.cheesetime.di.AppComponent
+import com.malec.cheesetime.di.DaggerAppComponent
+import com.malec.cheesetime.di.ProvideComponents
+import com.malec.cheesetime.di.module.ContextModule
+import com.malec.injection.ComponentOwner
+import com.malec.injection.InjectionHolder
 
-class App : Application(), HasAndroidInjector {
-    @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
+class App : Application(), ComponentOwner<AppComponent> {
+
+    private val componentOwnerLifecycle =
+        InjectionHolder.instance.getComponentOwnerLifeCycle(this)
 
     override fun onCreate() {
-        AppInjector.init(this)
-
         super.onCreate()
+        componentOwnerLifecycle.onCreate()
+        InjectionHolder.init(this)
     }
 
-    override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
+    override fun provideComponent(): AppComponent {
+        val appComponent = DaggerAppComponent.builder()
+            .contextModule(ContextModule(this))
+            .build()
+
+        ProvideComponents.provide(AppComponent::class.java)
+
+        return appComponent
+    }
+
+    override fun inject(component: AppComponent) {
+        component.inject(this)
+    }
 }

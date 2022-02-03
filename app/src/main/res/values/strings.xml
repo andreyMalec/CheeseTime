@@ -10,29 +10,12 @@
     <string name="empty_fields_error">Fields can\'t be empty</string>
     <string name="required_field_error">Required field</string>
 
-    <string name="toolbar_manage_cheese">Manage cheese</string>
-    <string name="toolbar_manage_task">Manage task</string>
-    <string name="toolbar_n_selected">Selected: %1$d</string>
-
     <string name="press_again_exit">Press again to exit</string>
-    <string name="search_hint">Search…</string>
     <string name="scan_code">Scan a barcode</string>
-
-    <string name="logout_dialog_message">Do you really want to logout?</string>
-    <string name="delete_photo_dialog_message">Delete photo?</string>
-    <string name="delete_cheese_dialog_message">Delete cheese?</string>
-    <string name="delete_selected_cheese_dialog_message">Delete selected cheeses: %1$d?</string>
-    <string name="delete_task_dialog_message">Delete task?</string>
-    <string name="delete_selected_task_dialog_message">Delete selected tasks: %1$d?</string>
-    <string name="delete_dialog_ok">Delete</string>
-    <string name="logout_dialog_ok">Logout</string>
-    <string name="dialog_cancel">Cancel</string>
 
     <string name="menu_profile">Profile:</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_logout">Logout</string>
-    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
-    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
     <string name="settings_cheese_recipes">Recipes:</string>
     <string name="settings_barcode">Barcode</string>
@@ -44,15 +27,6 @@
     <string name="tabCheeseList">Cheeses</string>
     <string name="tabReports">Reports</string>
 
-    <string name="filter_title">Filter:</string>
-    <string name="filter_date_start">Date (start)</string>
-    <string name="filter_date_end">Date (end)</string>
-    <string name="filter_cheese_type">Cheese type</string>
-    <string name="filter_cheese_type_any">Any</string>
-    <string name="filter_sort_title">Sort by:</string>
-    <string name="filter_archived">Archived</string>
-    <string name="filter_clear">Clear filter</string>
-
     <string name="cheese_created">New cheese successfully created</string>
     <string name="cheese_updated">Selected cheese successfully updated</string>
     <string name="cheese_deleted">Selected cheese successfully deleted</string>
@@ -60,59 +34,13 @@
     <string name="task_updated">Selected task successfully updated</string>
     <string name="task_deleted">Selected task successfully deleted</string>
 
-    <string name="cheese_name">Name:</string>
-    <string name="cheese_date">Maturation date:</string>
-    <string name="cheese_recipe">Recipe:</string>
-    <string name="cheese_comment">Comment:</string>
-    <string name="cheese_milk">Milk</string>
-    <string name="cheese_composition">Composition</string>
-    <string name="cheese_stages">Stages</string>
-    <string name="cheese_volume">Current volume:</string>
-    <string name="cheese_volume_max">Full volume:</string>
-    <string name="cheese_color">Badge color</string>
-    <string name="cheese_photo">Gallery</string>
-
     <string-array name="attach_source">
         <item>Select from gallery</item>
         <item>Make a new photo</item>
     </string-array>
     <string name="attach_text">Select image source</string>
 
-    <string name="task_cheese">Choose cheese:</string>
-    <string name="task_todo">What to do:</string>
-    <string name="task_date">Date/time:</string>
-    <string-array name="task_date_preset">
-        <item>10 min</item>
-        <item>15 min</item>
-        <item>30 min</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>5 hours</item>
-        <item>24 hours</item>
-    </string-array>
-    <string name="task_comment">Comment:</string>
-
-    <string name="milk_type">Type:</string>
-    <string name="milk_volume">Volume:</string>
-    <string name="milk_age">Age:</string>
-
-    <string name="n_stage">%1$d stage:</string>
-
     <string name="photo_download">Download</string>
-    <string name="photo_downloaded_successful">Selected photo successfully downloaded to the gallery</string>
     <string name="photo_share">Share</string>
     <string name="photo_delete">Delete</string>
-
-    <string name="date_pick">Pick</string>
-    <string name="date_today">Today</string>
-    <string name="date_yesterday">Yesterday</string>
-    <string name="date_now">Now</string>
-    <string name="date_expired">Expired</string>
-    <string name="date_in_n_hours">In %1$d hours</string>
-    <string name="date_in_n_hours2">In %1$d hours</string>
-    <string name="date_in_n_hours3">In %1$d hours</string>
-    <string name="date_in_n_minutes">In %1$d minutes</string>
-    <string name="date_in_n_minutes2">In %1$d minutes</string>
-    <string name="date_in_n_minutes3">In %1$d minutes</string>
-    <string name="date_in_30_min">In 30 min.</string>
 </resources>

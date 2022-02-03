@@ -8,11 +8,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager.widget.ViewPager
 import com.malec.cheesetime.databinding.FragmentFullscreenPhotoBinding
-import com.malec.cheesetime.di.Injectable
-import com.malec.cheesetime.model.Photo
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageViewModel
+import com.malec.domain.model.Photo
 
-class FullscreenPhotoFragment : PhotoManager(), Injectable {
+class FullscreenPhotoFragment : PhotoManager(), com.malec.injection.Injectable {
     override val viewModel: CheeseManageViewModel by activityViewModels {
         viewModelFactory
     }

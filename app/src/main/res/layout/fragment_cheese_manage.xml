@@ -6,7 +6,7 @@
 
         <variable
             name="cheese"
-            type="com.malec.cheesetime.model.Cheese" />
+            type="com.malec.domain.model.Cheese" />
 
         <import type="com.malec.cheesetime.ui.BindingAdapter" />
     </data>
@@ -129,7 +129,7 @@
                     android:text="@={cheese.comment}" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.malec.cheesetime.ui.customView.DropDownLayout
+            <com.malec.presentation.customview.DropDownLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -160,9 +160,9 @@
                     android:ems="10"
                     android:hint="@string/milk_age"
                     android:text="@={cheese.milkAge}" />
-            </com.malec.cheesetime.ui.customView.DropDownLayout>
+            </com.malec.presentation.customview.DropDownLayout>
 
-            <com.malec.cheesetime.ui.customView.DropDownLayout
+            <com.malec.presentation.customview.DropDownLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -174,9 +174,9 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:text="@={cheese.composition}" />
-            </com.malec.cheesetime.ui.customView.DropDownLayout>
+            </com.malec.presentation.customview.DropDownLayout>
 
-            <com.malec.cheesetime.ui.customView.DropDownLayout
+            <com.malec.presentation.customview.DropDownLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -189,7 +189,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <com.malec.cheesetime.ui.customView.ActionButton
+                <com.malec.presentation.customview.ActionButton
                     android:id="@+id/stageAddButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -199,7 +199,7 @@
                     app:ab_elevation="2dp"
                     app:ab_image="@drawable/icon_add"
                     app:ab_size="small" />
-            </com.malec.cheesetime.ui.customView.DropDownLayout>
+            </com.malec.presentation.customview.DropDownLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -394,7 +394,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <com.malec.cheesetime.ui.customView.ActionButton
+            <com.malec.presentation.customview.ActionButton
                 android:id="@+id/photoAddButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

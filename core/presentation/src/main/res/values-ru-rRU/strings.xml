@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">CheeseTime</string>
+
+    <string name="empty_fields_error">Поля не могут быть пустыми</string>
+    <string name="required_field_error">Необходимое поле</string>
+
+    <string name="error">Произошла непредвиденная ошибка</string>
+
+    <string name="dialog_cancel">Отмена</string>
+
+    <string name="photo_downloaded_successful">Выбраное фото успешно загружено в галерею</string>
+
+    <string name="filter_cheese_type_any">Любой</string>
+
+    <string name="logout_dialog_message">Вы действительно хотите выйти из системы?</string>
+    <string name="delete_photo_dialog_message">Удалить фото?</string>
+    <string name="delete_cheese_dialog_message">Удалить сыр?</string>
+    <string name="delete_selected_cheese_dialog_message">Удалить выбранные сыры: %1$d?</string>
+    <string name="delete_task_dialog_message">Удалить задачу?</string>
+    <string name="delete_selected_task_dialog_message">Удалить выбранные задачи: %1$d?</string>
+    <string name="delete_dialog_ok">Удалить</string>
+    <string name="logout_dialog_ok">Выйти</string>
+</resources>

@@ -19,16 +19,16 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.switchmaterial.SwitchMaterial
+import com.malec.cheeselist.databinding.FragmentCheeseListBinding
+import com.malec.cheeselist.presentation.view.CheeseAdapter
 import com.malec.cheesetime.R
-import com.malec.cheesetime.databinding.FragmentCheeseListBinding
-import com.malec.cheesetime.di.Injectable
-import com.malec.cheesetime.model.CheeseSort
-import com.malec.cheesetime.ui.allertDialogBuilder.CheeseDeleteDialog
-import com.malec.cheesetime.ui.main.DeleteSwipeCallback
-import com.malec.cheesetime.util.DateTimePicker
+import com.malec.domain.model.CheeseSort
+import com.malec.presentation.DeleteSwipeCallback
+import com.malec.presentation.dialog.CheeseDeleteDialog
+import com.malec.presentation.dialog.DateTimePicker
 import javax.inject.Inject
 
-class CheeseListFragment : Fragment(), Injectable {
+class CheeseListFragment : Fragment(), com.malec.injection.Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -166,10 +166,10 @@ class CheeseListFragment : Fragment(), Injectable {
             cheeseTypeAdapter.notifyDataSetChanged()
         })
 
-        viewModel.cheeseList.observe(viewLifecycleOwner, {
-            adapter.submitList(it)
-            binding.swipeRefresh.isRefreshing = false
-        })
+//        viewModel.cheeseList.observe(viewLifecycleOwner, {
+//            adapter.submitList(it)
+//            binding.swipeRefresh.isRefreshing = false
+//        })
     }
 
     private fun updateMenu() {
@@ -259,13 +259,19 @@ class CheeseListFragment : Fragment(), Injectable {
     private fun prepareFilterDialog(itemId: Int) {
         when (itemId) {
             R.id.filterDateStart -> {
-                DateTimePicker(requireActivity()).pickDate {
+                DateTimePicker(
+                    requireActivity(),
+                    requireActivity().supportFragmentManager
+                ).pickDate {
                     dateFilterStart?.title = getString(R.string.filter_date_start) + ": " + it
                     viewModel.dateFilterStart.value = it
                 }
             }
             R.id.filterDateEnd -> {
-                DateTimePicker(requireActivity()).pickDate {
+                DateTimePicker(
+                    requireActivity(),
+                    requireActivity().supportFragmentManager
+                ).pickDate {
                     dateFilterEnd?.title = getString(R.string.filter_date_end) + ": " + it
                     viewModel.dateFilterEnd.value = it
                 }

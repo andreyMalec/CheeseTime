@@ -3,7 +3,8 @@ package com.malec.cheesetime.util
 import android.content.Context
 import android.graphics.Bitmap
 import com.bumptech.glide.Glide
-import com.malec.cheesetime.model.Photo
+import com.malec.domain.model.Photo
+import com.malec.domain.util.UriSharer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.FileOutputStream

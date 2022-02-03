@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.malec.cheesetime.databinding.ItemRecipeBinding
-import com.malec.cheesetime.model.Recipe
-import com.malec.cheesetime.ui.BindingListAdapter
+import com.malec.domain.model.Recipe
+import com.malec.presentation.base.BindingListAdapter
 
 class RecipeAdapter(private val vm: RecipeAction) :
     BindingListAdapter<Recipe, ItemRecipeBinding>(diffUtilCallback) {

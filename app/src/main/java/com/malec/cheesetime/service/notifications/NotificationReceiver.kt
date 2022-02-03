@@ -6,10 +6,9 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.malec.cheesetime.R
-import com.malec.cheesetime.ui.login.LoginActivity
+import com.malec.main.presentation.view.MainActivity
 
 class NotificationReceiver : BroadcastReceiver() {
     private lateinit var channelId: String
@@ -23,7 +22,7 @@ class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         channelId = context.getString(R.string.app_name)
 
-        val notificationIntent = Intent(context, LoginActivity::class.java)
+        val notificationIntent = Intent(context, MainActivity::class.java)
         val contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0)
 
         val notificationTitle = intent.getStringExtra(NOTIFICATION_TITLE) ?: ""
@@ -46,18 +45,16 @@ class NotificationReceiver : BroadcastReceiver() {
     }
 
     private fun createChannel(notificationManager: NotificationManager) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationManager.createNotificationChannel(
-                NotificationChannel(
-                    channelId,
-                    channelId,
-                    NotificationManager.IMPORTANCE_DEFAULT
-                ).apply {
-                    description = channelId
-                    enableVibration(true)
-                    setShowBadge(true)
-                }
-            )
-        }
+        notificationManager.createNotificationChannel(
+            NotificationChannel(
+                channelId,
+                channelId,
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = channelId
+                enableVibration(true)
+                setShowBadge(true)
+            }
+        )
     }
 }

@@ -18,7 +18,7 @@ ext {
     materialVersion =               '1.4.0'
     coroutinesVersion =             '1.6.0'
     gsonVersion =                   '2.8.9'
-    ciceroneVersion =               '6.5'
+    ciceroneVersion =               '7.1'
 
     //firebase
     firebaseAuthVersion =           '21.0.1'

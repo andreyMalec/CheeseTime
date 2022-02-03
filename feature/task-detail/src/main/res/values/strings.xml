@@ -1,0 +1,8 @@
+<resources>
+    <string name="toolbar_edit_task">Editing a task</string>
+
+    <string name="task_cheese">Choose cheese:</string>
+    <string name="task_todo">What to do:</string>
+    <string name="task_date">Date/time:</string>
+    <string name="task_comment">Comment:</string>
+</resources>

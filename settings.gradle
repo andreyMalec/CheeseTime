@@ -1,5 +1,16 @@
 rootProject.name = "CheeseTime"
 
 include ':app'
+include ':core:domain'
 include ':core:store'
 include ':core:presentation'
+include ':feature:signin'
+include ':core:interactor'
+include ':core:injection'
+include ':feature:main'
+include ':feature:tabs'
+include ':feature:cheese-list'
+include ':feature:task-list'
+include ':feature:report-list'
+include ':feature:task-detail'
+include ':feature:cheese-detail'

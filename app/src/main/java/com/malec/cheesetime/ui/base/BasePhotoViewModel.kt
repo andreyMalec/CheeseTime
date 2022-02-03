@@ -4,12 +4,12 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.github.terrakok.cicerone.Router
-import com.malec.cheesetime.model.Photo
-import com.malec.cheesetime.service.Resources
 import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.util.BitmapDecoder
 import com.malec.cheesetime.util.PhotoDownloader
 import com.malec.cheesetime.util.PhotoSharer
+import com.malec.domain.model.Photo
+import com.malec.presentation.Resources
 import java.util.*
 
 abstract class BasePhotoViewModel(

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_hint">Search…</string>
+    <string name="toolbar_n_selected">Selected: %1$d</string>
+
+    <string name="filter_title">Filter:</string>
+    <string name="filter_date_start">Date (start)</string>
+    <string name="filter_date_end">Date (end)</string>
+    <string name="filter_cheese_type">Cheese type</string>
+    <string name="filter_sort_title">Sort by:</string>
+    <string name="filter_archived">Archived</string>
+    <string name="filter_clear">Clear filter</string>
+</resources>

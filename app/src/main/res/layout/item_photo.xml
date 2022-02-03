@@ -6,7 +6,7 @@
 
         <variable
             name="photo"
-            type="com.malec.cheesetime.model.Photo" />
+            type="com.malec.domain.model.Photo" />
 
         <import type="com.malec.cheesetime.ui.BindingAdapter" />
     </data>

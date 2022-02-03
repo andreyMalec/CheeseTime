@@ -15,7 +15,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import com.malec.cheesetime.R
 import com.malec.cheesetime.databinding.FragmentRecipeManageBinding
-import com.malec.cheesetime.model.Recipe
+import com.malec.domain.model.Recipe
 
 class RecipeManageDialogFragment(
     private val recipe: Recipe? = null,

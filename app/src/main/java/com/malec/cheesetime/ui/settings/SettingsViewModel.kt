@@ -5,14 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import com.malec.cheesetime.model.Recipe
-import com.malec.cheesetime.repo.UserRepo
+import com.malec.domain.model.Recipe
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SettingsViewModel @Inject constructor(
     private val context: Context,
-    private val userRepo: UserRepo,
+    private val userRepo: com.malec.domain.repository.UserRepo,
     private val router: Router
 ) : ViewModel() {
     val recipes = MutableLiveData<List<Recipe>>()

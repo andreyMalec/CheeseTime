@@ -1,0 +1,8 @@
+<resources>
+    <string name="toolbar_edit_task">Редактирование задачи</string>
+
+    <string name="task_cheese">Выберите сыр:</string>
+    <string name="task_todo">Что сделать:</string>
+    <string name="task_date">Дата/время:</string>
+    <string name="task_comment">Комментарий:</string>
+</resources>

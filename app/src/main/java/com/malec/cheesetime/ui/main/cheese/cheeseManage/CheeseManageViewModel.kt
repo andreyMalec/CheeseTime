@@ -2,25 +2,24 @@ package com.malec.cheesetime.ui.main.cheese.cheeseManage
 
 import androidx.lifecycle.MutableLiveData
 import com.github.terrakok.cicerone.Router
-import com.malec.cheesetime.model.Cheese
-import com.malec.cheesetime.model.Photo
-import com.malec.cheesetime.model.Recipe
-import com.malec.cheesetime.model.StringValue
-import com.malec.cheesetime.repo.CheeseRepo
-import com.malec.cheesetime.repo.UserRepo
-import com.malec.cheesetime.service.Resources
 import com.malec.cheesetime.ui.Screens
 import com.malec.cheesetime.ui.base.BasePhotoViewModel
 import com.malec.cheesetime.ui.base.ManageViewModel
 import com.malec.cheesetime.util.BitmapDecoder
 import com.malec.cheesetime.util.PhotoDownloader
 import com.malec.cheesetime.util.PhotoSharer
+import com.malec.domain.model.Cheese
+import com.malec.domain.model.Photo
+import com.malec.domain.model.Recipe
+import com.malec.domain.model.StringValue
+import com.malec.domain.repository.CheeseRepo
+import com.malec.presentation.Resources
 import javax.inject.Inject
 
 class CheeseManageViewModel @Inject constructor(
     private val repo: CheeseRepo,
     override val router: Router,
-    private val userRepo: UserRepo,
+    private val userRepo: com.malec.domain.repository.UserRepo,
     override val res: Resources,
     override val bitmapDecoder: BitmapDecoder,
     override val photoDownloader: PhotoDownloader,
@@ -103,13 +102,13 @@ class CheeseManageViewModel @Inject constructor(
     }
 
     fun deleteCheese() {
-        cheese.value?.let {
-            safeRun {
-                repo.deleteById(it.id)
-                repo.deletePhotos(photos.value)
-                manageResult.value = res.stringCheeseDeleted()
-            }
-        }
+//        cheese.value?.let {
+//            safeRun {
+//                repo.delete(it.id)
+//                repo.deletePhotos(photos.value)
+//                manageResult.value = res.stringCheeseDeleted()
+//            }
+//        }
     }
 
     fun onPhotoClick(photo: Photo) {
@@ -166,16 +165,16 @@ class CheeseManageViewModel @Inject constructor(
                 mCheese?.isArchived,
                 mPhotos?.map { it.name }
             )
-
-            repo.updatePhotos(mCheese?.photos, mPhotos)
-            manageResult.value = if (mCheese?.id == 0L) {
-                repo.create(cheese)
-                res.stringCheeseCreated()
-            } else {
-                repo.update(cheese)
-                res.stringCheeseUpdated()
-            }
-            isProgressVisible.value = false
+//
+//            repo.updatePhotos(mCheese?.photos, mPhotos)
+//            manageResult.value = if (mCheese?.id == 0L) {
+//                repo.create(cheese)
+//                res.stringCheeseCreated()
+//            } else {
+//                repo.update(cheese)
+//                res.stringCheeseUpdated()
+//            }
+//            isProgressVisible.value = false
         }
     }
 

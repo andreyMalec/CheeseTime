@@ -1,0 +1,81 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+
+android {
+    def config = rootProject.ext
+    compileSdkVersion config.androidCompileSdkVersion
+    buildToolsVersion config.androidBuildToolsVersion
+
+    defaultConfig {
+        minSdkVersion config.androidMinSdkVersion
+        targetSdkVersion config.androidTargetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    def dependencies = rootProject.ext.dependencies
+    def androidDependencies = dependencies.android
+    def daggerDependencies = dependencies.dagger
+    def testDependencies = dependencies.test
+
+    implementation project(':core:store')
+    implementation project(':core:domain')
+    implementation project(':core:injection')
+    implementation project(':core:interactor')
+    implementation project(':core:presentation')
+
+    //dagger
+    kapt daggerDependencies.androidProcessor
+    kapt daggerDependencies.compiler
+    implementation daggerDependencies.android
+    implementation daggerDependencies.androidSupport
+
+    //navigation
+    implementation dependencies.navigation.ui
+    implementation dependencies.navigation.fragment
+
+    //kotlin
+    implementation dependencies.kotlinStdlib
+    implementation dependencies.coroutines
+
+    implementation dependencies.cicerone
+
+    implementation dependencies.loopinglayout
+
+    //android
+    implementation androidDependencies.appcompat
+    implementation androidDependencies.coreKtx
+    implementation androidDependencies.constraintlayout
+    implementation androidDependencies.legacySupportV4
+    implementation androidDependencies.recyclerview
+    implementation androidDependencies.vectordrawable
+    implementation androidDependencies.material
+
+    //test
+    testImplementation testDependencies.junit
+    testImplementation testDependencies.coroutines
+    testImplementation testDependencies.mockk
+    androidTestImplementation testDependencies.androidMockk
+    androidTestImplementation testDependencies.androidJunit
+    androidTestImplementation testDependencies.androidEspresso
+}

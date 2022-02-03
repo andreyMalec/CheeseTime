@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.malec.cheesetime.databinding.ItemRemovableEdittextBinding
-import com.malec.cheesetime.model.StringValue
-import com.malec.cheesetime.ui.BindingListAdapter
+import com.malec.domain.model.StringValue
+import com.malec.presentation.base.BindingListAdapter
 
 class StringAdapter(private val vm: RemovableEditTextAction) :
     BindingListAdapter<StringValue, ItemRemovableEdittextBinding>(diffUtilCallback) {

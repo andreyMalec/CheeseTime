@@ -10,23 +10,8 @@
     <string name="empty_fields_error">Поля не могут быть пустыми</string>
     <string name="required_field_error">Необходимое поле</string>
 
-    <string name="toolbar_manage_cheese">Управление сыром</string>
-    <string name="toolbar_manage_task">Управление задачей</string>
-    <string name="toolbar_n_selected">Выбрано: %1$d</string>
-
     <string name="press_again_exit">Нажмите еще раз для выхода</string>
-    <string name="search_hint">Поиск…</string>
     <string name="scan_code">Отсканируйте штрих-код</string>
-
-    <string name="logout_dialog_message">Вы действительно хотите выйти из системы?</string>
-    <string name="delete_photo_dialog_message">Удалить фото?</string>
-    <string name="delete_cheese_dialog_message">Удалить сыр?</string>
-    <string name="delete_selected_cheese_dialog_message">Удалить выбранные сыры: %1$d?</string>
-    <string name="delete_task_dialog_message">Удалить задачу?</string>
-    <string name="delete_selected_task_dialog_message">Удалить выбранные задачи: %1$d?</string>
-    <string name="delete_dialog_ok">Удалить</string>
-    <string name="logout_dialog_ok">Выйти</string>
-    <string name="dialog_cancel">Отмена</string>
 
     <string name="menu_profile">Профиль:</string>
     <string name="menu_settings">Настройки</string>
@@ -42,15 +27,6 @@
     <string name="tabCheeseList">Сыры</string>
     <string name="tabReports">Отчеты</string>
 
-    <string name="filter_title">Фильтр:</string>
-    <string name="filter_date_start">Дата начала</string>
-    <string name="filter_date_end">Дата окончания</string>
-    <string name="filter_cheese_type">Тип сыра</string>
-    <string name="filter_cheese_type_any">Любой</string>
-    <string name="filter_sort_title">Сортировать по:</string>
-    <string name="filter_archived">Архив</string>
-    <string name="filter_clear">Очистить фильтр</string>
-
     <string name="cheese_created">Новый сыр успешно создан</string>
     <string name="cheese_updated">Выбраный сыр успешно обновлен</string>
     <string name="cheese_deleted">Выбраный сыр успешно удален</string>
@@ -58,59 +34,13 @@
     <string name="task_updated">Выбраная задача успешно обновлена</string>
     <string name="task_deleted">Выбраная задача успешно удалена</string>
 
-    <string name="cheese_name">Название:</string>
-    <string name="cheese_date">Дата вызревания:</string>
-    <string name="cheese_recipe">Рецепт:</string>
-    <string name="cheese_comment">Комментарий:</string>
-    <string name="cheese_milk">Молоко</string>
-    <string name="cheese_composition">Состав</string>
-    <string name="cheese_stages">Этапы</string>
-    <string name="cheese_volume">Текущий объем:</string>
-    <string name="cheese_volume_max">Полный объем:</string>
-    <string name="cheese_color">Цвет значка</string>
-    <string name="cheese_photo">Галерея</string>
-
     <string-array name="attach_source">
         <item>Выбрать из галереи</item>
         <item>Сделать новое фото</item>
     </string-array>
     <string name="attach_text">Выберите источник изображения</string>
 
-    <string name="task_cheese">Выберите сыр:</string>
-    <string name="task_todo">Что сделать:</string>
-    <string name="task_date">Дата/время:</string>
-    <string-array name="task_date_preset">
-        <item>10 мин</item>
-        <item>15 мин</item>
-        <item>30 мин</item>
-        <item>1 час</item>
-        <item>3 часа</item>
-        <item>5 часов</item>
-        <item>24 часа</item>
-    </string-array>
-    <string name="task_comment">Комментарий:</string>
-
-    <string name="milk_type">Тип:</string>
-    <string name="milk_volume">Объем:</string>
-    <string name="milk_age">Возраст:</string>
-
-    <string name="n_stage">%1$d этап:</string>
-
     <string name="photo_download">Скачать</string>
-    <string name="photo_downloaded_successful">Выбраное фото успешно загружено в галерею</string>
     <string name="photo_share">Поделиться</string>
     <string name="photo_delete">Удалить</string>
-
-    <string name="date_pick">Выбрать</string>
-    <string name="date_today">Сегодня</string>
-    <string name="date_yesterday">Вчера</string>
-    <string name="date_now">Сейчас</string>
-    <string name="date_expired">Просрочено</string>
-    <string name="date_in_n_hours">Через %1$d часа</string>
-    <string name="date_in_n_hours2">Через %1$d часов</string>
-    <string name="date_in_n_hours3">Через %1$d час</string>
-    <string name="date_in_n_minutes">Через %1$d минуты</string>
-    <string name="date_in_n_minutes2">Через %1$d минут</string>
-    <string name="date_in_n_minutes3">Через %1$d минуту</string>
-    <string name="date_in_30_min">Через 30 мин.</string>
 </resources>

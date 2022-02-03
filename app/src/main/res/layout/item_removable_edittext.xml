@@ -6,7 +6,7 @@
 
         <variable
             name="value"
-            type="com.malec.cheesetime.model.StringValue" />
+            type="com.malec.domain.model.StringValue" />
     </data>
 
     <LinearLayout

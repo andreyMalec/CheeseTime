@@ -1,16 +1,16 @@
 package com.malec.cheesetime.repo
 
-import com.malec.cheesetime.model.Cheese
 import com.malec.cheesetime.model.CheeseFilter
 import com.malec.cheesetime.model.filteredBy
-import com.malec.cheesetime.service.network.CheeseApi
-import com.malec.cheesetime.service.network.StorageApi
-import com.malec.cheesetime.util.CheeseSharer
+import com.malec.domain.api.CheeseApi
+import com.malec.domain.api.StorageApi
+import com.malec.domain.model.Cheese
+import com.malec.domain.repository.CheeseRepo
+import com.malec.domain.util.CheeseSharer
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import junit.framework.Assert.*
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
@@ -66,31 +66,31 @@ class CheeseRepoTest {
 
     @Test
     fun testGetAllFiltered() = runBlocking {
-        val data = repo.getAllFiltered(parmesanFilter).first()
+        val data = repo.getAllFilteredFlow(parmesanFilter).first()
         assertEquals(0, data.size)
 
         repo.create(newParmesan)
-        val updatedData = repo.getAllFiltered(parmesanFilter).first()
+        val updatedData = repo.getAllFilteredFlow(parmesanFilter).first()
         assertEquals(1, updatedData.size)
         assertEquals(newParmesan, updatedData[0])
     }
 
     @Test
     fun testGetAllTitleContains() = runBlocking {
-        val data = repo.getAllTitleContains(parmesanFilter, "new parmesan").first()
+        val data = repo.getAllTitleContainsFlow(parmesanFilter, "new parmesan").first()
         assertEquals(0, data.size)
 
         repo.create(newParmesan)
-        val updatedData = repo.getAllTitleContains(parmesanFilter, "new parmesan").first()
+        val updatedData = repo.getAllTitleContainsFlow(parmesanFilter, "new parmesan").first()
         assertEquals(0, updatedData.size)
 
         repo.create(anotherNewParmesan)
-        val updatedData2 = repo.getAllTitleContains(parmesanFilter, "new parmesan").first()
+        val updatedData2 = repo.getAllTitleContainsFlow(parmesanFilter, "new parmesan").first()
         assertEquals(1, updatedData2.size)
 
         assertEquals(anotherNewParmesan, updatedData2[0])
 
-        val newData = repo.getAllTitleContains(emptyFilter, "name").first()
+        val newData = repo.getAllTitleContainsFlow(emptyFilter, "name").first()
         assertEquals(3, newData.size)
     }
 
@@ -130,7 +130,7 @@ class CheeseRepoTest {
         repo.create(newParmesan)
         assertEquals(4, testData.size)
         assertNotNull(repo.getById(50))
-        repo.deleteById(50)
+        repo.delete(50)
         assertNull(repo.getById(50))
         assertEquals(3, testData.size)
     }
@@ -166,7 +166,7 @@ class CheeseRepoTest {
             testData
         }
         coEvery {
-            api.getAllFiltered(any())
+            api.getAllFilteredFlow(any())
         } answers {
             flowOf(testData.filteredBy(firstArg()))
         }

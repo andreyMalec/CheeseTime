@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.malec.cheesetime.Permission
 import com.malec.cheesetime.PermissionListener
 import com.malec.cheesetime.Permissions
-import com.malec.cheesetime.model.Photo
 import com.malec.cheesetime.ui.allertDialogBuilder.PhotoDeleteDialog
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageViewModel
+import com.malec.domain.model.Photo
 import javax.inject.Inject
 
 abstract class PhotoManager : Fragment() {

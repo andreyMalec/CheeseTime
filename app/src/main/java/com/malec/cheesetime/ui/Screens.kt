@@ -1,25 +1,18 @@
 package com.malec.cheesetime.ui
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.provider.MediaStore
 import com.github.terrakok.cicerone.androidx.ActivityScreen
 import com.github.terrakok.cicerone.androidx.FragmentScreen
 import com.google.zxing.integration.android.IntentIntegrator
-import com.malec.cheesetime.model.Cheese
-import com.malec.cheesetime.model.Task
-import com.malec.cheesetime.repo.UserRepo.Companion.googleSignInClient
-import com.malec.cheesetime.ui.login.LoginActivity
-import com.malec.cheesetime.ui.main.MainActivity
-import com.malec.cheesetime.ui.main.cheese.cheeseList.CheeseListFragment
-import com.malec.cheesetime.ui.main.cheese.cheeseManage.CheeseManageActivity
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.fragments.CheeseManageFragment
 import com.malec.cheesetime.ui.main.cheese.cheeseManage.fragments.FullscreenPhotoFragment
-import com.malec.cheesetime.ui.main.report.ReportsFragment
-import com.malec.cheesetime.ui.main.task.taskList.TaskListFragment
-import com.malec.cheesetime.ui.main.task.taskManage.TaskManageActivity
 import com.malec.cheesetime.ui.settings.SettingsActivity
 import com.malec.cheesetime.util.CameraIntentCreator
+import com.malec.domain.repository.UserRepo.Companion.googleSignInClient
+import com.malec.main.presentation.view.MainActivity
 
 object Screens {
     const val CODE_GALLERY = 10
@@ -38,32 +31,28 @@ object Screens {
 
     const val SCAN = "Scan"
 
-    fun taskList() = FragmentScreen(TASK_LIST) {
-        TaskListFragment()
-    }
-
-    fun cheeseList() = FragmentScreen(CHEESE_LIST) {
-        CheeseListFragment()
-    }
-
-    fun reports() = FragmentScreen(REPORTS) {
-        ReportsFragment()
-    }
-
     fun main() = ActivityScreen {
         it.createIntent<MainActivity>()
-    }
-
-    fun login() = ActivityScreen {
-        it.createIntent<LoginActivity>()
     }
 
     fun galleryPick() = ActivityScreen(GALLERY) {
         Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
     }
 
+    object GalleryPickScreen : ActivityScreen {
+        override val screenKey = GALLERY
+        override fun createIntent(context: Context) =
+            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+    }
+
     fun cameraPick() = ActivityScreen(CAMERA) {
         CameraIntentCreator(it).create()
+    }
+
+    object CameraPickScreen : ActivityScreen {
+        override val screenKey = CAMERA
+        override fun createIntent(context: Context) =
+            CameraIntentCreator(context).create()
     }
 
     fun scan() = ActivityScreen(SCAN) {
@@ -71,6 +60,15 @@ object Screens {
             setOrientationLocked(false)
             setDesiredBarcodeFormats(IntentIntegrator.CODE_128)
         }.createScanIntent()
+    }
+
+    object ScanScreen : ActivityScreen {
+        override val screenKey = SCAN
+        override fun createIntent(context: Context): Intent =
+            IntentIntegrator(context as Activity).apply {
+                setOrientationLocked(false)
+                setDesiredBarcodeFormats(IntentIntegrator.CODE_128)
+            }.createScanIntent()
     }
 
     fun settings() = ActivityScreen {
@@ -81,13 +79,12 @@ object Screens {
         googleSignInClient(it).signInIntent
     }
 
-    fun taskManage(task: Task? = null) = ActivityScreen {
-        it.createIntent<TaskManageActivity>(task)
+    object GoogleLoginScreen : ActivityScreen {
+        override val screenKey = GOOGLE_LOGIN
+        override fun createIntent(context: Context) =
+            googleSignInClient(context).signInIntent
     }
 
-    fun cheeseManage(cheese: Cheese? = null) = ActivityScreen {
-        it.createIntent<CheeseManageActivity>(cheese)
-    }
 
     fun cheeseManageFragment() = FragmentScreen {
         CheeseManageFragment()

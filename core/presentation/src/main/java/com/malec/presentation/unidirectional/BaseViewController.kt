@@ -9,9 +9,12 @@ import com.malec.store.BaseStore
 import kotlinx.coroutines.*
 
 abstract class BaseViewController<State, Action, View : BaseView<State>>(
-    private val store: BaseStore<State, Action>
+    protected val store: BaseStore<State, Action>
 ) : ViewController, LifecycleEventObserver {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+
+    private var isFirstAttach = true
+    protected var isAttach = false
 
     private var createdView: LifecycleOwner? = null
     private var view: View? = null
@@ -22,24 +25,29 @@ abstract class BaseViewController<State, Action, View : BaseView<State>>(
 
     override fun firstViewAttach() {}
 
-    override fun detach() {
-        scope.cancel()
-    }
-
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         when (event) {
             Lifecycle.Event.ON_CREATE -> {
                 createdView = source
             }
             Lifecycle.Event.ON_RESUME -> {
+                isAttach = true
                 view = source as View
                 subscription = scope.launch {
                     store.state.collect {
                         view?.renderState(it)
                     }
                 }
+                attach()
+                if (isFirstAttach) {
+                    isFirstAttach = false
+                    firstViewAttach()
+                }
             }
-            Lifecycle.Event.ON_PAUSE -> subscription?.cancel()
+            Lifecycle.Event.ON_PAUSE -> {
+                isAttach = false
+                subscription?.cancel()
+            }
             Lifecycle.Event.ON_DESTROY -> onDestroy(source)
             else -> {}
         }
@@ -77,6 +85,7 @@ abstract class BaseViewController<State, Action, View : BaseView<State>>(
     private fun destroy(owner: LifecycleOwner) {
         if (owner == createdView) {
             store.dispose()
+            scope.cancel()
         }
     }
 }
