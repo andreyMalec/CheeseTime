@@ -1,7 +1,6 @@
 package com.malec.store
 
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 
 class TestActionSource : ActionSource<TestAction>(
     source = {
@@ -12,10 +11,11 @@ class TestActionSource : ActionSource<TestAction>(
                 i++
                 kotlinx.coroutines.delay(1000)
                 emit(TestAction.Action("TestActionSource, $i"))
+
             }
         }
     },
     error = {
-        TestAction.Action(it.toString())
+        TestAction.NoAction
     }
 )

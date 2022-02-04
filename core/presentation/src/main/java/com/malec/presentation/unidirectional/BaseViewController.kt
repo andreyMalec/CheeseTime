@@ -27,33 +27,45 @@ abstract class BaseViewController<State, Action, View : BaseView<State>>(
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         when (event) {
-            Lifecycle.Event.ON_CREATE -> {
-                createdView = source
-            }
-            Lifecycle.Event.ON_RESUME -> {
-                isAttach = true
-                view = source as View
-                subscription = scope.launch {
-                    store.state.collect {
-                        view?.renderState(it)
-                    }
-                }
-                attach()
-                if (isFirstAttach) {
-                    isFirstAttach = false
-                    firstViewAttach()
-                }
-            }
-            Lifecycle.Event.ON_PAUSE -> {
-                isAttach = false
-                subscription?.cancel()
-            }
+            Lifecycle.Event.ON_CREATE -> onCreate(source)
+            Lifecycle.Event.ON_START -> onStart(source)
+            Lifecycle.Event.ON_RESUME -> onResume(source)
+            Lifecycle.Event.ON_PAUSE -> onPause(source)
+            Lifecycle.Event.ON_STOP -> onStop(source)
             Lifecycle.Event.ON_DESTROY -> onDestroy(source)
             else -> {}
         }
     }
 
-    private fun onDestroy(owner: LifecycleOwner) {
+    protected open fun onCreate(owner: LifecycleOwner) {
+        createdView = owner
+    }
+
+    protected open fun onStart(owner: LifecycleOwner) {}
+
+    protected open fun onResume(owner: LifecycleOwner) {
+        isAttach = true
+        view = owner as View
+        subscription = scope.launch {
+            store.state.collect {
+                view?.renderState(it)
+            }
+        }
+        attach()
+        if (isFirstAttach) {
+            isFirstAttach = false
+            firstViewAttach()
+        }
+    }
+
+    protected open fun onPause(owner: LifecycleOwner) {
+        isAttach = false
+        subscription?.cancel()
+    }
+
+    protected open fun onStop(owner: LifecycleOwner) {}
+
+    protected open fun onDestroy(owner: LifecycleOwner) {
         if (owner is Fragment) {
             owner.activity?.let { activity ->
                 if (activity.isFinishing) {

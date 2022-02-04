@@ -8,7 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 class TestStoreTest {
     private val errorHandler = object : ErrorHandler {
         override fun handle(t: Throwable) {
-
+            println(t)
         }
     }
 
@@ -56,15 +56,15 @@ class TestStoreTest {
         Assert.assertEquals(
             listOf(
                 "init",
-                "test data",
-                "test data 2",
-                "test data 3",
-                "test bind data",
-                "test bind data 2",
-                "test bind data 3",
-                "test side data",
-                "test side data 2",
-                "test side data 3",
+                "TestActionSource, 0",
+                "TestActionSource2",
+                "TestActionSource3, 0",
+                "TestBindActionSource",
+                "TestBindActionSource2",
+                "TestBindActionSource3",
+                "TestSideEffect",
+                "TestSideEffect2",
+                "TestSideEffect3",
                 "no action"
             ).sorted(), actions.sorted()
         )
@@ -90,8 +90,10 @@ class TestStoreTest {
     }
 
     @Test
-    fun `test x50`() = runBlocking {
-        repeat(50) {
+    fun `test x25`() = runBlocking {
+        var i = 1
+        repeat(25) {
+            println("try ${i++}")
             test()
             delay(100)
         }

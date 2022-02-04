@@ -3,15 +3,16 @@ package com.malec.tabs.presentation.store.actionhandler
 import com.malec.store.ActionHandler
 import com.malec.tabs.dependencies.TabsOutput
 import com.malec.tabs.presentation.store.TabsAction
+import com.malec.tabs.presentation.store.TabsState
 
 class OpenTabActionHandler(
     private val tabsOutput: TabsOutput
-) : ActionHandler<TabsAction>(
+) : ActionHandler<TabsState, TabsAction>(
     requirement = { action ->
         action is TabsAction.OpenTasks || action is TabsAction.OpenCheeses ||
                 action is TabsAction.OpenReports
     },
-    handler = { action ->
+    handler = { _, action ->
         when (action) {
             is TabsAction.OpenTasks -> tabsOutput.openTaskList()
             is TabsAction.OpenCheeses -> tabsOutput.openCheeseList()

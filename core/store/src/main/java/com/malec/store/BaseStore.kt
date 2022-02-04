@@ -1,7 +1,6 @@
 package com.malec.store
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -10,17 +9,17 @@ abstract class BaseStore<State, Action>(
     private val reducer: Reducer<State, Action>,
     private val errorHandler: ErrorHandler,
     private val sideEffects: Iterable<SideEffect<State, Action>> = CopyOnWriteArrayList(),
-    private val bindActionSources: Iterable<BindActionSource<Action>> = CopyOnWriteArrayList(),
+    private val bindActionSources: Iterable<BindActionSource<State, Action>> = CopyOnWriteArrayList(),
     private val actionSources: Iterable<ActionSource<Action>> = CopyOnWriteArrayList(),
-    private val actionHandlers: Iterable<ActionHandler<Action>> = CopyOnWriteArrayList()
+    private val actionHandlers: Iterable<ActionHandler<State, Action>> = CopyOnWriteArrayList()
 ) : Store<State, Action> {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    private val _actions = MutableSharedFlow<Action>(0, 10, BufferOverflow.DROP_OLDEST)
+    private val _actions = MutableSharedFlow<Action>()
     private val actions = _actions.asSharedFlow()
 
-    private val _state = MutableSharedFlow<State>(1, 10, BufferOverflow.DROP_OLDEST)
+    private val _state = MutableSharedFlow<State>(1)
     override val state = _state.asSharedFlow() as Flow<State>
 
     private var _currentState: State = currentState
@@ -47,7 +46,7 @@ abstract class BaseStore<State, Action>(
         scope.cancel()
     }
 
-    private suspend fun handleActions() {
+    private suspend inline fun handleActions() {
         actions.collect { action ->
             val state = reducer.reduce(currentState, action)
             _state.emit(state)
@@ -56,15 +55,15 @@ abstract class BaseStore<State, Action>(
                 dispatchSideEffect(state, action)
             }
             scope.launch(Dispatchers.IO) {
-                dispatchActionHandler(action)
+                dispatchActionHandler(state, action)
             }
             scope.launch(Dispatchers.IO) {
-                dispatchBindActionSource(action)
+                dispatchBindActionSource(state, action)
             }
         }
     }
 
-    private suspend fun dispatchSideEffect(state: State, action: Action) {
+    private suspend inline fun dispatchSideEffect(state: State, action: Action) {
         sideEffects.filter { sideEffect ->
             sideEffect.requirement(state, action)
         }.forEach { sideEffect ->
@@ -77,10 +76,13 @@ abstract class BaseStore<State, Action>(
         }
     }
 
-    private suspend fun dispatchActionSource() {
+    private suspend inline fun dispatchActionSource() {
         actionSources.map { actionSource ->
             try {
-                actionSource()
+                actionSource().catch {
+                    errorHandler.handle(it)
+                    emit(actionSource(it))
+                }
             } catch (t: Throwable) {
                 errorHandler.handle(t)
                 flowOf(actionSource(t))
@@ -90,12 +92,15 @@ abstract class BaseStore<State, Action>(
         }
     }
 
-    private suspend fun dispatchBindActionSource(action: Action) {
+    private suspend inline fun dispatchBindActionSource(state: State, action: Action) {
         bindActionSources.filter { bindActionSource ->
             bindActionSource.requirement(action)
         }.map { bindActionSource ->
             try {
-                bindActionSource(action)
+                bindActionSource(state, action).catch {
+                    errorHandler.handle(it)
+                    emit(bindActionSource(it))
+                }
             } catch (t: Throwable) {
                 errorHandler.handle(t)
                 flowOf(bindActionSource(t))
@@ -105,13 +110,13 @@ abstract class BaseStore<State, Action>(
         }
     }
 
-    private suspend fun dispatchActionHandler(action: Action) {
+    private suspend inline fun dispatchActionHandler(state: State, action: Action) {
         actionHandlers.filter { actionHandler ->
             actionHandler.requirement(action)
         }.forEach { actionHandler ->
             try {
                 withContext(actionHandler.dispatcher) {
-                    actionHandler(action)
+                    actionHandler(state, action)
                 }
             } catch (t: Throwable) {
                 errorHandler.handle(t)

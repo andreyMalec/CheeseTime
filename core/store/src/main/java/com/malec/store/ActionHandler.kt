@@ -3,10 +3,10 @@ package com.malec.store
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
-open class ActionHandler<Action>(
+open class ActionHandler<State, Action>(
     val requirement: (Action) -> Boolean,
-    private val handler: suspend (Action) -> Unit,
+    private val handler: suspend (State, Action) -> Unit,
     val dispatcher: CoroutineDispatcher = Dispatchers.Main
 ) {
-    suspend operator fun invoke(action: Action) = handler(action)
+    suspend operator fun invoke(state: State, action: Action) = handler(state, action)
 }

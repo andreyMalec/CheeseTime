@@ -2,9 +2,9 @@ package com.malec.store
 
 import kotlinx.coroutines.flow.flowOf
 
-class TestBindActionSource2 : BindActionSource<TestAction>(
+class TestBindActionSource2 : BindActionSource<TestState, TestAction>(
     requirement = { action -> action is TestAction.Action2 },
-    source = {
+    source = { _, _ ->
         flowOf(TestAction.BindAction2("TestBindActionSource2"))
     },
     error = { TestAction.BindAction2("TestBindActionSource2") }

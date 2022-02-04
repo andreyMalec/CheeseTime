@@ -1,7 +1,6 @@
 package com.malec.store
 
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 
 class TestActionSource3 : ActionSource<TestAction>(
     source = {

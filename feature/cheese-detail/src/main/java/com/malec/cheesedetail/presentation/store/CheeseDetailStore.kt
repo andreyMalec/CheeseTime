@@ -8,9 +8,9 @@ class CheeseDetailStore(
     reducer: CheeseDetailReducer,
     errorHandler: ErrorHandler,
     sideEffects: List<SideEffect<CheeseDetailState, CheeseDetailAction>> = CopyOnWriteArrayList(),
-    bindActionSources: List<BindActionSource<CheeseDetailAction>> = CopyOnWriteArrayList(),
+    bindActionSources: List<BindActionSource<CheeseDetailState, CheeseDetailAction>> = CopyOnWriteArrayList(),
     actionSources: List<ActionSource<CheeseDetailAction>> = CopyOnWriteArrayList(),
-    actionHandlers: List<ActionHandler<CheeseDetailAction>> = CopyOnWriteArrayList()
+    actionHandlers: List<ActionHandler<CheeseDetailState, CheeseDetailAction>> = CopyOnWriteArrayList()
 ) : BaseStore<CheeseDetailState, CheeseDetailAction>(
     currentState,
     reducer,

@@ -8,9 +8,9 @@ class TaskListStore(
     reducer: TaskListReducer,
     errorHandler: ErrorHandler,
     sideEffects: List<SideEffect<TaskListState, TaskListAction>> = CopyOnWriteArrayList(),
-    bindActionSources: List<BindActionSource<TaskListAction>> = CopyOnWriteArrayList(),
+    bindActionSources: List<BindActionSource<TaskListState, TaskListAction>> = CopyOnWriteArrayList(),
     actionSources: List<ActionSource<TaskListAction>> = CopyOnWriteArrayList(),
-    actionHandlers: List<ActionHandler<TaskListAction>> = CopyOnWriteArrayList()
+    actionHandlers: List<ActionHandler<TaskListState, TaskListAction>> = CopyOnWriteArrayList()
 ) : BaseStore<TaskListState, TaskListAction>(
     currentState,
     reducer,

@@ -8,9 +8,9 @@ class SignInStore(
     reducer: SignInReducer,
     errorHandler: ErrorHandler,
     sideEffects: List<SideEffect<SignInState, SignInAction>> = CopyOnWriteArrayList(),
-    bindActionSources: List<BindActionSource<SignInAction>> = CopyOnWriteArrayList(),
+    bindActionSources: List<BindActionSource<SignInState, SignInAction>> = CopyOnWriteArrayList(),
     actionSources: List<ActionSource<SignInAction>> = CopyOnWriteArrayList(),
-    actionHandlers: List<ActionHandler<SignInAction>> = CopyOnWriteArrayList()
+    actionHandlers: List<ActionHandler<SignInState, SignInAction>> = CopyOnWriteArrayList()
 ) : BaseStore<SignInState, SignInAction>(
     currentState,
     reducer,

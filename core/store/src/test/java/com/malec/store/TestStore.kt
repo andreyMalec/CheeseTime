@@ -6,9 +6,9 @@ class TestStore(
     currentState: TestState,
     reducer: TestReducer,
     errorHandler: ErrorHandler,
-    actionHandlers: Iterable<ActionHandler<TestAction>> = CopyOnWriteArrayList(),
+    actionHandlers: Iterable<ActionHandler<TestState, TestAction>> = CopyOnWriteArrayList(),
     actionSources: Iterable<ActionSource<TestAction>> = CopyOnWriteArrayList(),
-    bindActionSources: Iterable<BindActionSource<TestAction>> = CopyOnWriteArrayList(),
+    bindActionSources: Iterable<BindActionSource<TestState, TestAction>> = CopyOnWriteArrayList(),
     sideEffects: Iterable<SideEffect<TestState, TestAction>> = CopyOnWriteArrayList()
 ) : BaseStore<TestState, TestAction>(
     currentState,

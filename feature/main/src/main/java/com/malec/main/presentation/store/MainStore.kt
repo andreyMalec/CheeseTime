@@ -9,7 +9,7 @@ class MainStore(
     currentState: MainState,
     mainReducer: MainReducer,
     errorHandler: ErrorHandler,
-    actionHandlers: Iterable<ActionHandler<MainAction>> = CopyOnWriteArrayList()
+    actionHandlers: Iterable<ActionHandler<MainState, MainAction>> = CopyOnWriteArrayList()
 ) : BaseStore<MainState, MainAction>(
     currentState,
     mainReducer,

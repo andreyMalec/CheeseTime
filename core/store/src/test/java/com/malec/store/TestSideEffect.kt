@@ -5,5 +5,5 @@ class TestSideEffect : SideEffect<TestState, TestAction>(
     effect = { _, _ ->
         TestAction.SideAction("TestSideEffect")
     },
-    error = { TestAction.SideAction("TestSideEffect") }
+    error = { TestAction.SideAction(it.toString()) }
 )

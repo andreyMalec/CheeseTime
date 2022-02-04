@@ -8,9 +8,9 @@ class TabsStore(
     reducer: TabsReducer,
     errorHandler: ErrorHandler,
     sideEffects: List<SideEffect<TabsState, TabsAction>> = CopyOnWriteArrayList(),
-    bindActionSources: List<BindActionSource<TabsAction>> = CopyOnWriteArrayList(),
+    bindActionSources: List<BindActionSource<TabsState, TabsAction>> = CopyOnWriteArrayList(),
     actionSources: List<ActionSource<TabsAction>> = CopyOnWriteArrayList(),
-    actionHandlers: List<ActionHandler<TabsAction>> = CopyOnWriteArrayList()
+    actionHandlers: List<ActionHandler<TabsState, TabsAction>> = CopyOnWriteArrayList()
 ) : BaseStore<TabsState, TabsAction>(
     currentState,
     reducer,

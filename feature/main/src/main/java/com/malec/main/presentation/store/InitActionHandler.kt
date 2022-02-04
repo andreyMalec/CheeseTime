@@ -7,9 +7,9 @@ import com.malec.store.ActionHandler
 class InitActionHandler(
     private val repo: UserRepo,
     private val mainOutput: MainOutput
-) : ActionHandler<MainAction>(
+) : ActionHandler<MainState, MainAction>(
     requirement = { action -> action is MainAction.Init },
-    handler = { _ ->
+    handler = { _, _ ->
         if (repo.isUserAuthorized())
             mainOutput.main()
         else
