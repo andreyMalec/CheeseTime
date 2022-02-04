@@ -21,7 +21,6 @@
         <activity
             android:name=".ui.settings.SettingsActivity"
             android:theme="@style/AppTheme.Closeable" />
-        <activity android:name=".ui.main.task.taskManage.TaskManageActivity" />
         <activity
             android:name="com.malec.main.presentation.view.MainActivity"
             android:exported="true"

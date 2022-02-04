@@ -73,6 +73,23 @@ class TestStoreTest {
     }
 
     @Test
+    fun test2() = runBlocking {
+        val store = store()
+
+        val job = CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
+            store.state.collect { state ->
+                println(state.value)
+                actions.add(state.value)
+            }
+        }
+        delay(3000)
+        store.dispatchAction(TestAction.NoAction)
+        delay(60000)
+        job.cancel()
+        actions.clear()
+    }
+
+    @Test
     fun `test x50`() = runBlocking {
         repeat(50) {
             test()

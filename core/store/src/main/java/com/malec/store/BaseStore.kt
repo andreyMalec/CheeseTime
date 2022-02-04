@@ -52,9 +52,15 @@ abstract class BaseStore<State, Action>(
             val state = reducer.reduce(currentState, action)
             _state.emit(state)
             _currentState = state
-            dispatchSideEffect(state, action)
-            dispatchActionHandler(action)
-            dispatchBindActionSource(action)
+            scope.launch(Dispatchers.IO) {
+                dispatchSideEffect(state, action)
+            }
+            scope.launch(Dispatchers.IO) {
+                dispatchActionHandler(action)
+            }
+            scope.launch(Dispatchers.IO) {
+                dispatchBindActionSource(action)
+            }
         }
     }
 
